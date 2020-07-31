@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Group-2.png</file>
+        <file>icons8_lock_2.png</file>
+        <file>icons8_lock_21.png</file>
+        <file>JostSemi-Regular.otf</file>
+        <file>k2vr-logo.png</file>
+        <file>kMainWindow.qml</file>
+        <file>Vector-Union-2.png</file>
+    </qresource>
+</RCC>
