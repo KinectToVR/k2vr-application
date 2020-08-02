@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.12.3, 2020-07-25T17:29:21. -->
+<!-- Written by QtCreator 4.12.3, 2020-08-02T15:47:47. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -206,8 +206,9 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/AkaYa!/Desktop/KinectToVR/KinectToVR-360/KinectToVR-360.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/AkaYa!/Desktop/KinectToVR/KinectToVR-360/KinectToVR-360.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">KinectToVR-3602</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/AkaYa!/Desktop/k2vr-application/KinectToVR-360/KinectToVR-360.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/AkaYa!/Desktop/k2vr-application/KinectToVR-360/KinectToVR-360.pro</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>

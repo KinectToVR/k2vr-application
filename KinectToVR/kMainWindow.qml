@@ -358,6 +358,7 @@ Item {
             }
             onClicked: {
                 _cppContext.cppSlot("BEGINCALIBRATION")
+                calibrationWindow.visible = true
             }
         }
 
@@ -442,11 +443,9 @@ Item {
             }
             objectName: "disconnectTrackersButton"
             onClicked: {
-                _cppContext.cppSlot("DISCONNECTTRACKERS")
+                _cppContext.cppSlot("TRACKERSCONNECTCHANGED")
                 connected = !connected
-                connected ? disconnectTrackersButton.textL
-                            = "Disconnect Trackers" : disconnectTrackersButton.textL
-                            = "Reconnect Trackers"
+                disconnectTrackersButton.textL = connected ? "Disconnect Trackers" : "Reconnect Trackers"
             }
         }
 
@@ -673,7 +672,7 @@ Item {
                     elide: Text.ElideRight
                     verticalAlignment: Text.AlignVCenter
                 }
-                highlighted: control.highlightedIndex === index
+                highlighted: hipsComboBox.highlightedIndex === index
             }
 
             contentItem: Text {
@@ -811,7 +810,7 @@ Item {
                     elide: Text.ElideRight
                     verticalAlignment: Text.AlignVCenter
                 }
-                highlighted: control.highlightedIndex === index
+                highlighted: feetComboBox.highlightedIndex === index
             }
 
             contentItem: Text {
@@ -950,14 +949,14 @@ Item {
                     elide: Text.ElideRight
                     verticalAlignment: Text.AlignVCenter
                 }
-                highlighted: control.highlightedIndex === index
+                highlighted: filterComboBox.highlightedIndex === index
             }
 
             contentItem: Text {
                 leftPadding: 25
                 color: "#ffffff"
+                text: " Linear Interpolation"
                 width: filterComboBox.width - 110
-                text: filterComboBox.displayText
                 font.weight: Font.Bold
                 font.bold: false
                 font.pointSize: 48
@@ -1322,11 +1321,12 @@ Item {
             id: offsetsControl
             width: 3915
             height: 2292
-            visible: true
+            visible: false
             clip: false
             antialiasing: true
             y: -parent.y
             z: 100
+            property int visibleOffsetsWindowIndex: 0
 
             Rectangle {
                 id: rectangleioo
@@ -1334,7 +1334,7 @@ Item {
                 height: 2292
                 y: 0
                 color: "#cc000010"
-                radius: 40
+                radius: 59
                 visible: true
             }
 
@@ -1364,19 +1364,22 @@ Item {
 
                 SpinBox {
                     id: controlW
-                    from: 0
-                    value: 110
-                    to: 100 * 100
-                    stepSize: 100
+                    from: -36000
+                    value: 0
+                    to: 36000
+                    stepSize: 10
                     anchors.centerIn: parent
                     editable: true
 
-                    property int decimals: 3
+                    onValueChanged: _cppContext.cppSlot("WAISTPITCH", qsTr(value))
+
+                    property int decimals: 2
                     property real realValue: value / 100
+                    x: 1033
                     width: 806
                     height: 181
                     anchors.verticalCenterOffset: 1026
-                    anchors.horizontalCenterOffset: 1436
+                    anchors.horizontalCenterOffset: 1439
 
                     validator: DoubleValidator {
                         bottom: Math.min(controlW.from, controlW.to)
@@ -1507,19 +1510,21 @@ Item {
 
                 SpinBox {
                     id: control1W
-                    from: 0
-                    value: 110
-                    to: 100 * 100
-                    stepSize: 100
+                    from: -36000
+                    value: 0
+                    to: 36000
+                    stepSize: 10
                     anchors.centerIn: parent
                     editable: true
 
-                    property int decimals: 3
+                    property int decimals: 2
                     property real realValue: value / 100
+                    x: 1033
                     width: 806
                     height: 181
                     anchors.verticalCenterOffset: 1267
-                    anchors.horizontalCenterOffset: 1436
+                    anchors.horizontalCenterOffset: 1439
+
 
                     validator: DoubleValidator {
                         bottom: Math.min(control1W.from, control1W.to)
@@ -1650,19 +1655,21 @@ Item {
 
                 SpinBox {
                     id: control2W
-                    from: 0
-                    value: 110
-                    to: 100 * 100
-                    stepSize: 100
+                    from: -36000
+                    value: 0
+                    to: 36000
+                    stepSize: 10
                     anchors.centerIn: parent
                     editable: true
 
-                    property int decimals: 3
+                    property int decimals: 2
                     property real realValue: value / 100
+                    x: 1033
                     width: 806
                     height: 181
                     anchors.verticalCenterOffset: 1501
-                    anchors.horizontalCenterOffset: 1436
+                    anchors.horizontalCenterOffset: 1439
+
 
                     validator: DoubleValidator {
                         bottom: Math.min(control2W.from, control2W.to)
@@ -1793,14 +1800,14 @@ Item {
 
                 SpinBox {
                     id: control3W
-                    from: 0
-                    value: 110
-                    to: 100 * 100
-                    stepSize: 100
+                    from: -100000
+                    value: 0
+                    to: 100000
+                    stepSize: 1
                     anchors.centerIn: parent
                     editable: true
 
-                    property int decimals: 3
+                    property int decimals: 2
                     property real realValue: value / 100
                     x: 2261
                     width: 806
@@ -1937,14 +1944,14 @@ Item {
 
                 SpinBox {
                     id: control4W
-                    from: 0
-                    value: 110
-                    to: 100 * 100
-                    stepSize: 100
+                    from: -100000
+                    value: 0
+                    to: 100000
+                    stepSize: 1
                     anchors.centerIn: parent
                     editable: true
 
-                    property int decimals: 3
+                    property int decimals: 2
                     property real realValue: value / 100
                     x: 2261
                     width: 806
@@ -2081,20 +2088,20 @@ Item {
 
                 SpinBox {
                     id: control5W
-                    from: 0
-                    value: 110
-                    to: 100 * 100
-                    stepSize: 100
+                    from: -100000
+                    value: 0
+                    to: 100000
+                    stepSize: 1
                     anchors.centerIn: parent
                     editable: true
 
-                    property int decimals: 3
+                    property int decimals: 2
                     property real realValue: value / 100
                     x: 2261
                     width: 806
                     height: 181
                     anchors.verticalCenterOffset: 1501
-                    anchors.horizontalCenterOffset: 2669
+                    anchors.horizontalCenterOffset: 2661
 
                     validator: DoubleValidator {
                         bottom: Math.min(control5W.from, control5W.to)
@@ -2340,14 +2347,14 @@ Item {
 
                 SpinBox {
                     id: controlL
-                    from: 0
-                    value: 110
-                    to: 100 * 100
-                    stepSize: 100
+                    from: -36000
+                    value: 0
+                    to: 36000
+                    stepSize: 10
                     anchors.centerIn: parent
                     editable: true
 
-                    property int decimals: 3
+                    property int decimals: 2
                     property real realValue: value / 100
                     x: 1033
                     width: 806
@@ -2484,14 +2491,14 @@ Item {
 
                 SpinBox {
                     id: control1L
-                    from: 0
-                    value: 110
-                    to: 100 * 100
-                    stepSize: 100
+                    from: -36000
+                    value: 0
+                    to: 36000
+                    stepSize: 10
                     anchors.centerIn: parent
                     editable: true
 
-                    property int decimals: 3
+                    property int decimals: 2
                     property real realValue: value / 100
                     x: 1033
                     width: 806
@@ -2628,14 +2635,14 @@ Item {
 
                 SpinBox {
                     id: control2L
-                    from: 0
-                    value: 110
-                    to: 100 * 100
-                    stepSize: 100
+                    from: -36000
+                    value: 0
+                    to: 36000
+                    stepSize: 10
                     anchors.centerIn: parent
                     editable: true
 
-                    property int decimals: 3
+                    property int decimals: 2
                     property real realValue: value / 100
                     x: 1033
                     width: 806
@@ -2772,20 +2779,20 @@ Item {
 
                 SpinBox {
                     id: control3L
-                    from: 0
-                    value: 110
-                    to: 100 * 100
-                    stepSize: 100
+                    from: -100000
+                    value: 0
+                    to: 100000
+                    stepSize: 1
                     anchors.centerIn: parent
                     editable: true
 
-                    property int decimals: 3
+                    property int decimals: 2
                     property real realValue: value / 100
                     x: 2261
                     width: 806
                     height: 181
                     anchors.verticalCenterOffset: 1026
-                    anchors.horizontalCenterOffset: 2666
+                    anchors.horizontalCenterOffset: 2661
 
                     validator: DoubleValidator {
                         bottom: Math.min(control3L.from, control3L.to)
@@ -2916,14 +2923,14 @@ Item {
 
                 SpinBox {
                     id: control4L
-                    from: 0
-                    value: 110
-                    to: 100 * 100
-                    stepSize: 100
+                    from: -100000
+                    value: 0
+                    to: 100000
+                    stepSize: 1
                     anchors.centerIn: parent
                     editable: true
 
-                    property int decimals: 3
+                    property int decimals: 2
                     property real realValue: value / 100
                     x: 2261
                     width: 806
@@ -3060,20 +3067,20 @@ Item {
 
                 SpinBox {
                     id: control5L
-                    from: 0
-                    value: 110
-                    to: 100 * 100
-                    stepSize: 100
+                    from: -100000
+                    value: 0
+                    to: 100000
+                    stepSize: 1
                     anchors.centerIn: parent
                     editable: true
 
-                    property int decimals: 3
+                    property int decimals: 2
                     property real realValue: value / 100
                     x: 2261
                     width: 806
                     height: 181
                     anchors.verticalCenterOffset: 1501
-                    anchors.horizontalCenterOffset: 2666
+                    anchors.horizontalCenterOffset: 2661
 
                     validator: DoubleValidator {
                         bottom: Math.min(control5L.from, control5L.to)
@@ -3319,19 +3326,21 @@ Item {
 
                 SpinBox {
                     id: controlR
-                    from: 0
-                    value: 110
-                    to: 100 * 100
-                    stepSize: 100
+                    from: -36000
+                    value: 0
+                    to: 36000
+                    stepSize: 10
                     anchors.centerIn: parent
                     editable: true
 
-                    property int decimals: 3
+                    property int decimals: 2
                     property real realValue: value / 100
+                    x: 1033
                     width: 806
                     height: 181
                     anchors.verticalCenterOffset: 1026
-                    anchors.horizontalCenterOffset: 1436
+                    anchors.horizontalCenterOffset: 1439
+
 
                     validator: DoubleValidator {
                         bottom: Math.min(controlR.from, controlR.to)
@@ -3462,19 +3471,21 @@ Item {
 
                 SpinBox {
                     id: control1R
-                    from: 0
-                    value: 110
-                    to: 100 * 100
-                    stepSize: 100
+                    from: -36000
+                    value: 0
+                    to: 36000
+                    stepSize: 10
                     anchors.centerIn: parent
                     editable: true
 
-                    property int decimals: 3
+                    property int decimals: 2
                     property real realValue: value / 100
+                    x: 1033
                     width: 806
                     height: 181
                     anchors.verticalCenterOffset: 1267
-                    anchors.horizontalCenterOffset: 1436
+                    anchors.horizontalCenterOffset: 1439
+
 
                     validator: DoubleValidator {
                         bottom: Math.min(control1R.from, control1R.to)
@@ -3605,19 +3616,21 @@ Item {
 
                 SpinBox {
                     id: control2R
-                    from: 0
-                    value: 110
-                    to: 100 * 100
-                    stepSize: 100
+                    from: -36000
+                    value: 0
+                    to: 36000
+                    stepSize: 10
                     anchors.centerIn: parent
                     editable: true
 
-                    property int decimals: 3
+                    property int decimals: 2
                     property real realValue: value / 100
+                    x: 1033
                     width: 806
                     height: 181
                     anchors.verticalCenterOffset: 1501
-                    anchors.horizontalCenterOffset: 1436
+                    anchors.horizontalCenterOffset: 1439
+
 
                     validator: DoubleValidator {
                         bottom: Math.min(control2R.from, control2R.to)
@@ -3748,19 +3761,21 @@ Item {
 
                 SpinBox {
                     id: control3R
-                    from: 0
-                    value: 110
-                    to: 100 * 100
-                    stepSize: 100
+                    from: -100000
+                    value: 0
+                    to: 100000
+                    stepSize: 1
                     anchors.centerIn: parent
                     editable: true
 
-                    property int decimals: 3
+                    property int decimals: 2
                     property real realValue: value / 100
+                    x: 2261
                     width: 806
                     height: 181
                     anchors.verticalCenterOffset: 1026
-                    anchors.horizontalCenterOffset: 2664
+                    anchors.horizontalCenterOffset: 2661
+
 
                     validator: DoubleValidator {
                         bottom: Math.min(control3R.from, control3R.to)
@@ -3891,19 +3906,21 @@ Item {
 
                 SpinBox {
                     id: control4R
-                    from: 0
-                    value: 110
-                    to: 100 * 100
-                    stepSize: 100
+                    from: -100000
+                    value: 0
+                    to: 100000
+                    stepSize: 1
                     anchors.centerIn: parent
                     editable: true
 
-                    property int decimals: 3
+                    property int decimals: 2
                     property real realValue: value / 100
+                    x: 2261
                     width: 806
                     height: 181
                     anchors.verticalCenterOffset: 1267
-                    anchors.horizontalCenterOffset: 2664
+                    anchors.horizontalCenterOffset: 2661
+
 
                     validator: DoubleValidator {
                         bottom: Math.min(control4R.from, control4R.to)
@@ -4034,21 +4051,20 @@ Item {
 
                 SpinBox {
                     id: control5R
-                    from: 0
-                    value: 110
-                    to: 100 * 100
-                    stepSize: 100
+                    from: -100000
+                    value: 0
+                    to: 100000
+                    stepSize: 1
                     anchors.centerIn: parent
                     editable: true
 
-                    property int decimals: 3
+                    property int decimals: 2
                     property real realValue: value / 100
                     x: 2261
                     width: 806
                     height: 181
-                    visible: true
                     anchors.verticalCenterOffset: 1501
-                    anchors.horizontalCenterOffset: 2664
+                    anchors.horizontalCenterOffset: 2661
 
                     validator: DoubleValidator {
                         bottom: Math.min(control5R.from, control5R.to)
@@ -4311,7 +4327,9 @@ Item {
                 height: 193
                 hoverEnabled: true
                 onHoveredChanged: {
-                    waistOffsetButton.hovered ? owbg.color = "#42C929" : owbg.color = "#20910B"
+                    owbg.color = waistOffsetButton.hovered ? 
+                                (offsetsControl.visibleOffsetsWindowIndex === 0 ? "#3EB828" : "#7081FF") : 
+                                (offsetsControl.visibleOffsetsWindowIndex === 0 ? "#20910B" : "#1630EE")
                 }
 
                 Text {
@@ -4348,6 +4366,7 @@ Item {
                     waistOffsetControl.visible = true
                     leftFootOffsetControl.visible = false
                     rightFootOffsetControl.visible = false
+                    offsetsControl.visibleOffsetsWindowIndex = 0
 
                     owbg.color = "#20910B"
                     olfbg.color = "#1630ee"
@@ -4365,7 +4384,9 @@ Item {
                 highlighted: false
                 flat: true
                 onHoveredChanged: {
-                    leftFootOffsetButton.hovered ? olfbg.color = "#42C929" : olfbg.color = "#20910B"
+                    olfbg.color = leftFootOffsetButton.hovered ? 
+                                (offsetsControl.visibleOffsetsWindowIndex === 1 ? "#3EB828" : "#7081FF") : 
+                                (offsetsControl.visibleOffsetsWindowIndex === 1 ? "#20910B" : "#1630EE")
                 }
                 background: Rectangle {
                     id: olfbg
@@ -4393,10 +4414,17 @@ Item {
                     waistOffsetControl.visible = false
                     leftFootOffsetControl.visible = true
                     rightFootOffsetControl.visible = false
+                    offsetsControl.visibleOffsetsWindowIndex = 1
 
                     owbg.color = "#1630ee"
-                    olfbg.color = "#20910B"
-                    orfbg.color = "#1630ee"
+                    if(connectOffsetsCheckBox.checked === true) {
+                        olfbg.color = "#20910B"
+                        orfbg.color = "#20910B"
+                    }
+                    else {
+                        olfbg.color = "#20910B"
+                        orfbg.color = "#1630ee"
+                    }
                 }
             }
 
@@ -4410,8 +4438,11 @@ Item {
                 highlighted: false
                 flat: true
                 onHoveredChanged: {
-                    rightFootOffsetButton.hovered ? orfbg.color = "#42C929" : orfbg.color
-                                                    = "#20910B"
+                    orfbg.color = rightFootOffsetButton.hovered ? 
+                                (offsetsControl.visibleOffsetsWindowIndex === 2 ? "#3EB828" : 
+                                    (offsetsControl.visibleOffsetsWindowIndex === 1 && connectOffsetsCheckBox.checked ? "#3EB828" : "#7081FF")) : 
+                                (offsetsControl.visibleOffsetsWindowIndex === 2 ? "#20910B" : 
+                                    (offsetsControl.visibleOffsetsWindowIndex === 1 && connectOffsetsCheckBox.checked ? "#20910B" : "#1630EE"))
                 }
                 background: Rectangle {
                     id: orfbg
@@ -4443,12 +4474,22 @@ Item {
                 }
                 onClicked: {
                     waistOffsetControl.visible = false
-                    leftFootOffsetControl.visible = false
-                    rightFootOffsetControl.visible = true
-
+                    
                     owbg.color = "#1630ee"
-                    olfbg.color = "#1630ee"
-                    orfbg.color = "#20910B"
+                    if(connectOffsetsCheckBox.checked === true) {
+                        olfbg.color = "#20910B"
+                        orfbg.color = "#20910B"
+                        leftFootOffsetControl.visible = true
+                        rightFootOffsetControl.visible = false
+                        offsetsControl.visibleOffsetsWindowIndex = 1
+                    }
+                    else {
+                        olfbg.color = "#1630ee"
+                        orfbg.color = "#20910B"
+                        leftFootOffsetControl.visible = false
+                        rightFootOffsetControl.visible = true
+                        offsetsControl.visibleOffsetsWindowIndex = 2
+                    }
                 }
             }
 
@@ -4463,11 +4504,23 @@ Item {
                 visible: true
                 checkState: Qt.Checked
                 checked: true
-                onCheckStateChanged: _cppContext.cppSlot(
-                                         "CONNECTOFFSETSCHANGED")
+                onCheckStateChanged: {
+                    if(offsetsControl.visibleOffsetsWindowIndex === 1 || offsetsControl.visibleOffsetsWindowIndex === 2){
+                        waistOffsetControl.visible = true
+                        leftFootOffsetControl.visible = false
+                        rightFootOffsetControl.visible = false
+                        offsetsControl.visibleOffsetsWindowIndex = 0
+
+                        owbg.color = "#20910B"
+                        olfbg.color = "#1630ee"
+                        orfbg.color = "#1630ee"
+                    }
+                    _cppContext.multiCpp("CONNECTOFFSETSCHANGED", connectOffsetsCheckBox.checked)
+                }
+                
                 hoverEnabled: true
                 onHoveredChanged: {
-                    checkBox.hovered ? cobg.color = "#7180EE" : cobg.color = "#0D21B3"
+                    cobg.color = connectOffsetsCheckBox.hovered ? "#7180EE" : "#1630EE"
                 }
 
                 indicator: Rectangle {
@@ -4548,7 +4601,7 @@ Item {
                 }
                 highlighted: false
                 onHoveredChanged:  {
-                    orfbg1.color = confirmOffsetButton.hovered ? "" : "#1630ee"
+                    orfbg1.color = confirmOffsetButton.hovered ? "#7081FF" : "#1630ee"
                 }
 
                 onClicked: {
@@ -4595,14 +4648,204 @@ Item {
                     offsetsControl.visible = false
                     _cppContext.cppSlot("OFFSETSCANCELLED")
                 }
+                onHoveredChanged:  {
+                    orfbg2.color = cancelOffsetButton.hovered ? "#5D6BD4" : "#0d21b3"
+                }
             }
+        }
+
+        Item {
+            id: calibrationWindow
+            width: 3915
+            height: 2292
+            visible: false
+            clip: false
+            antialiasing: true
+            y: -parent.y
+            z: 100
+
+            Rectangle {
+                width: 3915
+                height: 2292
+                y: 0
+                color: "#cc000010"
+                radius: 59
+                visible: true
+            }
+
+            Rectangle {
+                x: 652
+                y: 358
+                width: 2618
+                height: 1504
+                anchors.centerIn: parent
+                color: "#0d21b3"
+                radius: 40
+                id: chooseCalibTab
+
+                Label {
+                    x: 22
+                    y: 42
+                    width: 1649
+                    height: 181
+                    color: "#ffffff"
+                    text: "Pick a calibration mode"
+                    anchors.verticalCenterOffset: -573
+                    anchors.horizontalCenterOffset: 0
+                    anchors.centerIn: parent
+                    font.pointSize: 94
+                    font.family: "JostSemi"
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                Button {
+                    id: autoCalibButton
+                    x: 90
+                    y: 300
+                    width: 1180
+                    height: 1123
+                    highlighted: false
+                    flat: true
+                    hoverEnabled: true
+                    onHoveredChanged: {
+                        bgac.color = autoCalibButton.hovered ? "#7180EE" : "#1630ee"
+                    }
+                    background: Rectangle {
+                        id: bgac
+                        color: "#1630ee"
+                        radius: 20
+                    }
+
+                    objectName: "autoCalibButton"
+                    onClicked: {
+                        _cppContext.cppSlot("START_AUTOCALIB")
+                    }
+
+                    Label {
+                        x: 22
+                        y: 42
+                        width: 1180
+                        height: 993
+                        color: "#ffffff"
+                        text: "Automatic"
+                        horizontalAlignment: Text.AlignHCenter
+                        font.bold: true
+                        font.pointSize: 70
+                        font.family: "JostSemi"
+                        anchors.centerIn: parent
+
+                        Label {
+                            x: 0
+                            y: 860
+                            width: 1180
+                            height: 200
+                            color: "#ffffff"
+                            text: "Stand still in 3 different spots then\nlook in the direction of the sensor"
+                            horizontalAlignment: Text.AlignHCenter
+                            font.bold: true
+                            font.pointSize: 48
+                            font.family: "JostSemi"
+                        }
+                    }
+
+                    Image {
+                        x: 1146
+                        y: 682
+                        width: 1053
+                        height: 618
+                        anchors.verticalCenterOffset: -39
+                        anchors.horizontalCenterOffset: 1
+                        fillMode: Image.PreserveAspectFit
+                        source: "Group-15.png"
+                        anchors.centerIn: parent
+                    }
+
+                }
+
+                Button {
+                    id: manualCalibButton
+                    x: 1348
+                    y: 300
+                    width: 1180
+                    height: 1123
+                    highlighted: false
+                    flat: true
+                    background: Rectangle {
+                        id: bgmc
+                        color: "#1630ee"
+                        radius: 20
+                    }
+                    objectName: "manualCalibButton"
+
+                    onClicked: {
+                        _cppContext.cppSlot("START_MANUALCALIB")
+                    }
+                    onHoveredChanged: {
+                        bgmc.color = manualCalibButton.hovered ? "#7180EE" : "#1630ee"
+                    }
+                    hoverEnabled: true
+
+                    Label {
+                        x: 22
+                        y: 42
+                        width: 1180
+                        height: 993
+                        color: "#ffffff"
+                        text: "Manual"
+                        font.kerning: false
+                        font.preferShaping: false
+                        anchors.centerIn: parent
+                        font.pointSize: 70
+                        font.family: "JostSemi"
+                        font.bold: true
+                        horizontalAlignment: Text.AlignHCenter
+                        Label {
+                            x: 0
+                            y: 860
+                            width: 1180
+                            height: 200
+                            color: "#ffffff"
+                            text: "Use joysticks or trackpads to move\nand rotate the virtual trackers"
+                            font.pointSize: 48
+                            font.family: "JostSemi"
+                            font.bold: true
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+                    }
+
+                    Image {
+                        x: 1146
+                        y: 682
+                        width: 1053
+                        height: 618
+                        anchors.centerIn: parent
+                        anchors.horizontalCenterOffset: 1
+                        source: "Group-16.png"
+                        fillMode: Image.PreserveAspectFit
+                        anchors.verticalCenterOffset: -39
+                    }
+                }
+
+
+                
+
+
+
+
+            }
+
+
+
         }
     }
 }
 
+
+
+
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.6600000262260437}
+    D{i:0;formeditorZoom:0.33000001311302185}
 }
 ##^##*/
-
