@@ -1,5 +1,9 @@
 # KinectToVRのメインアプリケーション
 
+![](https://img.shields.io/badge/%E7%95%8C%E9%9D%A2%E3%83%86%E3%82%B9%E3%83%88-%E2%96%B3-yellowgreen) 
+![](https://img.shields.io/badge/%E3%82%B9%E3%82%B1%E3%83%AB%E3%83%88%E3%83%B3%E7%B5%B5-CPU30%EF%BC%85-orange) 
+![](https://img.shields.io/badge/%E6%AD%A3%E5%B8%B8%E5%8A%A0%E5%B7%A5-CPU7%25-yellowgreen)　
+
 ## コードのビルドの諭示
 Qtの5.15(MSVC2019)のインストールやセットアップ。    
 Boostの1.72とOpenCVの3.4.0、OpenVRの1.12.5、    

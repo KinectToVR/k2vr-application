@@ -1,0 +1,152 @@
+﻿  Generate moc_predefs.h
+  Rcc'ing resources.qrc...
+  Moc'ing buttonHandlers.h...
+  Moc'ing getVariable.h...
+  Moc'ing openvroverlaycontroller.h...
+  KinectToVR.cpp
+  Logging.cpp
+  Settings.cpp
+  buttonHandlers.cpp
+C:\Users\AkaYa!\Desktop\k2vr-application\KinectToVR\Settings.cpp(20,63): warning C4100: 'version': unreferenced formal parameter
+C:\Users\AkaYa!\Desktop\k2vr-application\boost\serialization\access.hpp(116): message : see reference to function template instantiation 'void Settings::serialize<Archive>(Archive &,const unsigned int)' being compiled
+          with
+          [
+              Archive=boost::archive::text_oarchive
+          ] (compiling source file Settings.cpp)
+C:\Users\AkaYa!\Desktop\k2vr-application\boost\serialization\serialization.hpp(68): message : see reference to function template instantiation 'void boost::serialization::access::serialize<Archive,T>(Archive &,T &,const unsigned int)' being compiled
+          with
+          [
+              Archive=boost::archive::text_oarchive,
+              T=Settings
+          ] (compiling source file Settings.cpp)
+C:\Users\AkaYa!\Desktop\k2vr-application\boost\serialization\serialization.hpp(126): message : see reference to function template instantiation 'void boost::serialization::serialize<Archive,T>(Archive &,T &,const unsigned int)' being compiled
+          with
+          [
+              Archive=boost::archive::text_oarchive,
+              T=Settings
+          ] (compiling source file Settings.cpp)
+C:\Users\AkaYa!\Desktop\k2vr-application\boost\archive\detail\oserializer.hpp(157): message : see reference to function template instantiation 'void boost::serialization::serialize_adl<Archive,T>(Archive &,T &,const unsigned int)' being compiled
+          with
+          [
+              Archive=boost::archive::text_oarchive,
+              T=Settings
+          ] (compiling source file Settings.cpp)
+C:\Users\AkaYa!\Desktop\k2vr-application\boost\archive\detail\oserializer.hpp(149): message : while compiling class template member function 'void boost::archive::detail::oserializer<Archive,T>::save_object_data(boost::archive::detail::basic_oarchive &,const void *) const'
+          with
+          [
+              Archive=boost::archive::text_oarchive,
+              T=Settings
+          ] (compiling source file Settings.cpp)
+C:\Users\AkaYa!\Desktop\k2vr-application\boost\archive\detail\oserializer.hpp(263): message : see reference to class template instantiation 'boost::archive::detail::oserializer<Archive,T>' being compiled
+          with
+          [
+              Archive=boost::archive::text_oarchive,
+              T=Settings
+          ] (compiling source file Settings.cpp)
+C:\Users\AkaYa!\Desktop\k2vr-application\boost\archive\detail\oserializer.hpp(315): message : see reference to function template instantiation 'void boost::archive::detail::save_non_pointer_type<Archive>::save_standard::invoke<T>(Archive &,const T &)' being compiled
+          with
+          [
+              Archive=boost::archive::text_oarchive,
+              T=Settings
+          ] (compiling source file Settings.cpp)
+C:\Users\AkaYa!\Desktop\k2vr-application\boost\archive\detail\oserializer.hpp(315): message : see reference to function template instantiation 'void boost::archive::detail::save_non_pointer_type<Archive>::save_standard::invoke<T>(Archive &,const T &)' being compiled
+          with
+          [
+              Archive=boost::archive::text_oarchive,
+              T=Settings
+          ] (compiling source file Settings.cpp)
+C:\Users\AkaYa!\Desktop\k2vr-application\boost\archive\detail\oserializer.hpp(539): message : see reference to function template instantiation 'void boost::archive::detail::save_non_pointer_type<Archive>::invoke<const T>(Archive &,const T &)' being compiled
+          with
+          [
+              Archive=boost::archive::text_oarchive,
+              T=Settings
+          ] (compiling source file Settings.cpp)
+C:\Users\AkaYa!\Desktop\k2vr-application\boost\archive\detail\oserializer.hpp(539): message : see reference to function template instantiation 'void boost::archive::detail::save_non_pointer_type<Archive>::invoke<const T>(Archive &,const T &)' being compiled
+          with
+          [
+              Archive=boost::archive::text_oarchive,
+              T=Settings
+          ] (compiling source file Settings.cpp)
+C:\Users\AkaYa!\Desktop\k2vr-application\boost\archive\detail\common_oarchive.hpp(71): message : see reference to function template instantiation 'void boost::archive::save<Archive,T>(Archive &,T &)' being compiled
+          with
+          [
+              Archive=boost::archive::text_oarchive,
+              T=Settings
+          ] (compiling source file Settings.cpp)
+C:\Users\AkaYa!\Desktop\k2vr-application\boost\archive\basic_text_oarchive.hpp(83): message : see reference to function template instantiation 'void boost::archive::detail::common_oarchive<Archive>::save_override<T>(T &)' being compiled
+          with
+          [
+              Archive=boost::archive::text_oarchive,
+              T=Settings
+          ] (compiling source file Settings.cpp)
+C:\Users\AkaYa!\Desktop\k2vr-application\boost\archive\basic_text_oarchive.hpp(83): message : see reference to function template instantiation 'void boost::archive::detail::common_oarchive<Archive>::save_override<T>(T &)' being compiled
+          with
+          [
+              Archive=boost::archive::text_oarchive,
+              T=Settings
+          ] (compiling source file Settings.cpp)
+C:\Users\AkaYa!\Desktop\k2vr-application\boost\archive\detail\interface_oarchive.hpp(70): message : see reference to function template instantiation 'void boost::archive::basic_text_oarchive<Archive>::save_override<const T>(T &)' being compiled
+          with
+          [
+              Archive=boost::archive::text_oarchive,
+              T=Settings
+          ] (compiling source file Settings.cpp)
+C:\Users\AkaYa!\Desktop\k2vr-application\boost\archive\detail\interface_oarchive.hpp(70): message : see reference to function template instantiation 'void boost::archive::basic_text_oarchive<Archive>::save_override<const T>(T &)' being compiled
+          with
+          [
+              Archive=boost::archive::text_oarchive,
+              T=Settings
+          ] (compiling source file Settings.cpp)
+C:\Users\AkaYa!\Desktop\k2vr-application\KinectToVR\Settings.cpp(38): message : see reference to function template instantiation 'Archive &boost::archive::detail::interface_oarchive<Archive>::operator <<<Settings>(const T &)' being compiled
+          with
+          [
+              Archive=boost::archive::text_oarchive,
+              T=Settings
+          ]
+C:\Users\AkaYa!\Desktop\k2vr-application\KinectToVR\Settings.cpp(38): message : see reference to function template instantiation 'Archive &boost::archive::detail::interface_oarchive<Archive>::operator <<<Settings>(const T &)' being compiled
+          with
+          [
+              Archive=boost::archive::text_oarchive,
+              T=Settings
+          ]
+C:\Users\AkaYa!\Desktop\k2vr-application\KinectHandlerBase.h(30,49): warning C4100: 'stat': unreferenced formal parameter (compiling source file KinectToVR.cpp)
+  easylogging++.cc
+  getVariable.cpp
+  openvroverlaycontroller.cpp
+C:\Users\AkaYa!\Desktop\k2vr-application\KinectToVR\easylogging++.cc(2187,57): warning C4100: 'data': unreferenced formal parameter
+C:\Users\AkaYa!\Desktop\k2vr-application\KinectHandlerBase.h(30,49): warning C4100: 'stat': unreferenced formal parameter (compiling source file getVariable.cpp)
+  runtimeConfig.cpp
+C:\Users\AkaYa!\Desktop\k2vr-application\KinectHandlerBase.h(30,49): warning C4100: 'stat': unreferenced formal parameter (compiling source file runtimeConfig.cpp)
+C:\Users\AkaYa!\Desktop\k2vr-application\KinectToVR\runtimeConfig.cpp(14,30): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+C:\Users\AkaYa!\Desktop\k2vr-application\KinectToVR\runtimeConfig.cpp(14,15): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+C:\Users\AkaYa!\Desktop\k2vr-application\KinectToVR\runtimeConfig.cpp(13,37): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+C:\Users\AkaYa!\Desktop\k2vr-application\KinectToVR\runtimeConfig.cpp(38,55): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\AkaYa!\Desktop\k2vr-application\KinectToVR\runtimeConfig.cpp(38,45): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\AkaYa!\Desktop\k2vr-application\KinectToVR\runtimeConfig.cpp(38,35): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\AkaYa!\Desktop\k2vr-application\KinectToVR\runtimeConfig.cpp(38,25): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\AkaYa!\Desktop\k2vr-application\KinectToVR\runtimeConfig.cpp(42,64): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+C:\Users\AkaYa!\Desktop\k2vr-application\KinectToVR\runtimeConfig.cpp(42,54): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+C:\Users\AkaYa!\Desktop\k2vr-application\KinectToVR\runtimeConfig.cpp(42,44): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+C:\Users\AkaYa!\Desktop\k2vr-application\KinectToVR\runtimeConfig.cpp(42,34): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
+  qrc_resources.cpp
+  moc_buttonHandlers.cpp
+  moc_getVariable.cpp
+  moc_openvroverlaycontroller.cpp
+     Creating library release\\KinectToVR.lib and object release\\KinectToVR.exp
+  KinectToVR.vcxproj -> C:\Users\AkaYa!\Desktop\k2vr-application\KinectToVR\release\KinectToVR.dll

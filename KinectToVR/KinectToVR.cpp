@@ -110,6 +110,9 @@ KINECTTOVR_LIB int run(int argc, char *argv[], KinectHandlerBase& Kinect)
                 process.headsetPosition = pExchangeE(vrDevicesPose[0].mDeviceToAbsoluteTracking);
                 process.headsetOrientation = pExchangeQE(vrDevicesPose[0].mDeviceToAbsoluteTracking);
 
+                /* Get information if overlay is currently active and displayed */
+                //process.
+
                 /* Process controllers input and position (if they are connected) */
                 for (int id = 0; id < 2; id++) {
                     if ((unsigned int)process.controllerID[id] != vr::k_unTrackedDeviceIndexInvalid) {

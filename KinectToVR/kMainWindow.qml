@@ -249,7 +249,7 @@ Item {
     //---------------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------------
     Item {
-        id: generalControlTab
+        id: controlTabs
         x: 0
         width: 3916
         height: 2068
@@ -264,1056 +264,1070 @@ Item {
         antialiasing: true
         y: 216
 
-        Canvas {
-            width: 1979
-            height: 1368
-            anchors.bottom: parent.bottom
-            anchors.rightMargin: 0
-            anchors.right: parent.right
-            anchors.leftMargin: 1606
-            anchors.topMargin: 0
-            anchors.top: parent.top
-            anchors.left: parent.left
-        }
-
-        StackView {
-            id: pages1
-            x: 0
-            y: 0
-            z: -10
-            width: 3915
-            height: 2068
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.topMargin: 0
-
-            Image {
-                id: image
-                x: 0
-                y: -215
-                width: 3915
-                height: 2282
-                visible: false
-                anchors.leftMargin: 0
-                anchors.left: parent.left
-                anchors.right: parent.right
-                fillMode: Image.Stretch
-                source: "../main.png"
-            }
-        }
-
-        Label {
-            id: label1
-            x: 50
-            y: 42
-            width: 294
-            height: 78
-            color: "#66ccff"
-            text: qsTr("Trackers:")
-            font.bold: true
-            font.pointSize: 48
-            font.family: "JostSemi"
-        }
-
-        Button {
-            id: calibrationButton
-            objectName: "caibrationButton"
-            x: 50
-            y: 141
-            width: 776
-            height: 200
-            hoverEnabled: true
-            onHoveredChanged: {
-                calibrationButton.hovered ? bg.color = "#42C929" : bg.color = "#20910B"
-            }
-
-            Text {
-                text: qsTr("Begin Calibration")
-                font.bold: true
-                rightPadding: 0
-                bottomPadding: 0
-                leftPadding: 0
-                topPadding: 0
-                anchors.rightMargin: 0
-                anchors.bottomMargin: 0
-                anchors.leftMargin: 0
-                anchors.topMargin: 0
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                color: "White"
-                font.pointSize: 48
-                font.family: "JostSemi"
-                anchors.centerIn: parent
-            }
-            highlighted: false
-            flat: true
-            background: Rectangle {
-                id: bg
-                color: "#20910B"
-                radius: 20
-            }
-            onClicked: {
-                _cppContext.cppSlot("BEGINCALIBRATION")
-                calibrationWindow.visible = true
-            }
-        }
-
-        Button {
-            id: offsetsButton
-            objectName: "offsetsButton"
-            x: 877
-            y: 141
-            width: 628
-            height: 200
-            highlighted: false
-            flat: true
-            hoverEnabled: true
-            onHoveredChanged: {
-                offsetsButton.hovered ? bg1.color = "#7180EE" : bg1.color = "#1630ee"
-            }
-            Text {
-                color: "#ffffff"
-                text: qsTr("Adjust Offsets")
-                font.bold: true
-                anchors.centerIn: parent
-                verticalAlignment: Text.AlignVCenter
-                anchors.topMargin: 0
-                anchors.rightMargin: 0
-                anchors.bottomMargin: 0
-                font.family: "JostSemi"
-                topPadding: 0
-                bottomPadding: 0
-                horizontalAlignment: Text.AlignHCenter
-                anchors.leftMargin: 0
-                leftPadding: 0
-                font.pointSize: 48
-                rightPadding: 0
-            }
-            background: Rectangle {
-                id: bg1
-                color: "#1630EE"
-                radius: 20
-            }
-            onClicked: {
-                _cppContext.cppSlot("SHOWOFFSETS")
-                offsetsControl.visible = true
-            }
-        }
-
-        Button {
-            property bool connected: true
-            property var textL: "Disconnect Trackers"
-            id: disconnectTrackersButton
-            x: 50
-            y: 390
-            width: 1455
-            height: 128
-            highlighted: false
-            flat: true
-            hoverEnabled: true
-            onHoveredChanged: {
-                disconnectTrackersButton.hovered ? bg2.color = "#7180EE" : bg2.color = "#1630ee"
-            }
-            Text {
-                color: "#ffffff"
-                text: disconnectTrackersButton.textL
-                font.bold: true
-                anchors.centerIn: parent
-                anchors.topMargin: 0
-                verticalAlignment: Text.AlignVCenter
-                anchors.rightMargin: 0
-                anchors.bottomMargin: 0
-                bottomPadding: 0
-                topPadding: 0
-                font.family: "JostSemi"
-                anchors.leftMargin: 0
-                horizontalAlignment: Text.AlignHCenter
-                leftPadding: 0
-                rightPadding: 0
-                font.pointSize: 48
-            }
-            background: Rectangle {
-                id: bg2
-                color: "#1630ee"
-                radius: 20
-            }
-            objectName: "disconnectTrackersButton"
-            onClicked: {
-                _cppContext.cppSlot("TRACKERSCONNECTCHANGED")
-                connected = !connected
-                disconnectTrackersButton.textL = connected ? "Disconnect Trackers" : "Reconnect Trackers"
-            }
-        }
-
-        Label {
-            id: label11
-            x: 50
-            y: 991
-            width: 556
-            height: 82
-            color: "#66ccff"
-            text: qsTr("Tracking Settings:")
-            font.bold: true
-            font.family: "JostSemi"
-            font.pointSize: 48
-        }
-
-        Label {
-            id: label2
-            x: 127
-            y: 1160
-            width: 215
-            height: 82
-            color: "#66ccff"
-            text: qsTr("Waist:")
-            font.bold: true
-            horizontalAlignment: Text.AlignRight
-            font.family: "JostSemi"
-            font.pointSize: 48
-        }
-
-        Label {
-            id: label3
-            x: 127
-            y: 1395
-            width: 215
-            height: 82
-            color: "#66ccff"
-            text: qsTr("Feet:")
-            font.bold: true
-            horizontalAlignment: Text.AlignRight
-            font.family: "JostSemi"
-            font.pointSize: 48
-        }
-
-        Label {
-            id: label4
-            x: 127
-            y: 1634
-            width: 215
-            height: 82
-            color: "#66ccff"
-            text: qsTr("Filter:")
-            font.bold: true
-            horizontalAlignment: Text.AlignRight
-            font.family: "JostSemi"
-            font.pointSize: 48
-        }
-
-        Label {
-            id: label5
-            x: 375
-            y: 1860
-            width: 912
-            height: 82
-            color: "#66ccff"
-            text: qsTr("Mirror tracking when turning:")
-            font.bold: true
-            font.family: "JostSemi"
-            horizontalAlignment: Text.AlignRight
-            font.pointSize: 48
-        }
-
-        CheckBox {
-            id: checkBox
-            objectName: "flipCheckBox"
-            x: 1319
-            y: 1804
-            width: 191
-            height: 186
-            text: qsTr("")
-            visible: true
-            checkState: Qt.Checked
-            checked: true
-            onCheckStateChanged: _cppContext.cppSlot("FLIPCHANGED")
-            hoverEnabled: true
-            onHoveredChanged: {
-                checkBox.hovered ? bg01.color = "#7180EE" : bg01.color = "#0D21B3"
-            }
-
-            indicator: Rectangle {
-                implicitWidth: parent.width
-                implicitHeight: parent.height
-                radius: 20
-                border.width: 20
-                border.color: "#FFFFFF"
-
-                Rectangle {
-                    id: bg01
-                    x: 14
-                    y: 14
-                    implicitWidth: parent.width / 1.17
-                    implicitHeight: parent.height / 1.17
-                    radius: 12
-                    color: "#0D21B3"
-                    border.width: 0
-                }
-
-                Rectangle {
-                    visible: checkBox.checked
-                    x: 74
-                    y: 81
-                    width: 37
-                    height: 15
-                    implicitWidth: parent.width / 1.17
-                    implicitHeight: parent.height / 1.17
-                    radius: 12
-                    color: "#ffffff"
-                    border.width: 0
-                    transform: Rotation {
-                        angle: 45
-                    }
-
-                    Rectangle {
-                        x: 22
-                        y: 15
-                        width: 54
-                        height: 15
-                        implicitWidth: parent.width / 1.17
-                        implicitHeight: parent.height / 1.17
-                        radius: 12
-                        color: "#ffffff"
-                        border.width: 0
-                        transform: Rotation {
-                            angle: -90
-                        }
-                    }
-                }
-            }
-        }
-
-        Rectangle {
-            id: rectangle11
-            x: 0
-            y: 8
-            width: 3915
-            height: 2068
-            color: "#0d21b3"
-            z: -11
-            radius: 60
-        }
-
-        Rectangle {
-            id: rectangle111
-            x: 0
-            y: 0
-            width: 3915
-            height: 104
-            color: "#0d21b3"
-            z: -12
-        }
-
-        ComboBox {
-            id: hipsComboBox
-            x: 380
-            y: 1101
-            width: 1130
-            height: 185
-            font.bold: false
-            font.pointSize: 53
-            font.family: "JostSemi"
-            hoverEnabled: true
-            model: [" Device-inferred Rotation", " Follow Headset", " Disable Rotation"]
-            onDisplayTextChanged: _cppContext.multiCpp("HIPS",
-                                                       hipsComboBox.displayText)
-            onHoveredChanged: {
-                hipsComboBox.hovered ? bg02.color = "#7180EE" : bg02.color = "#0D21B3"
-            }
-
-            Rectangle {
-                x: 953
-                y: 42
-                width: 163
-                height: 101
-                z: 10
-                color: bg02.color
-
-                Rectangle {
-                    x: 41
-                    y: 30
-                    width: 60
-                    height: 15
-                    implicitWidth: parent.width / 1.17
-                    implicitHeight: parent.height / 1.17
-                    radius: 12
-                    color: "#ffffff"
-                    border.width: 0
-                    transform: Rotation {
-                        angle: 45
-                    }
-
-                    Rectangle {
-                        x: 45
-                        y: 15
-                        width: 61
-                        height: 15
-                        implicitWidth: parent.width / 1.17
-                        implicitHeight: parent.height / 1.17
-                        radius: 12
-                        color: "#ffffff"
-                        border.width: 0
-                        transform: Rotation {
-                            angle: -90
-                        }
-                    }
-                }
-            }
-
-            delegate: ItemDelegate {
-                width: hipsComboBox.width
-                contentItem: Text {
-                    text: modelData
-                    color: "#FFFFFF"
-                    font: hipsComboBox.font
-                    elide: Text.ElideRight
-                    verticalAlignment: Text.AlignVCenter
-                }
-                highlighted: hipsComboBox.highlightedIndex === index
-            }
-
-            contentItem: Text {
-                leftPadding: 25
-                color: "#ffffff"
-                width: hipsComboBox.width - 110
-                text: hipsComboBox.displayText
-                font.weight: Font.Bold
-                font.bold: false
-                font.pointSize: 48
-                font.family: "JostSemi"
-                styleColor: "#ffffff"
-                verticalAlignment: Text.AlignVCenter
-                elide: Text.ElideRight
-            }
-
-            background: Rectangle {
-                implicitWidth: 120
-                implicitHeight: 40
-                border.color: "white"
-                border.width: 20
-                radius: 20
-                Rectangle {
-                    id: bg02
-                    x: 13
-                    y: 13
-                    width: 1103
-                    height: parent.height - 28
-                    implicitWidth: 120
-                    implicitHeight: 40
-                    border.color: "#0D21B3"
-                    border.width: 0
-                    radius: 12
-                    color: "#0D21B3"
-                }
-            }
-
-            popup: Popup {
-                y: hipsComboBox.height + 17
-                width: hipsComboBox.width
-                implicitHeight: contentItem.implicitHeight
-                bottomPadding: 5
-                topPadding: 5
-
-                contentItem: ListView {
-                    clip: true
-                    implicitHeight: contentHeight + 30
-                    model: hipsComboBox.popup.visible ? hipsComboBox.delegateModel : null
-                    currentIndex: hipsComboBox.highlightedIndex
-
-                    //ScrollIndicator.vertical: ScrollIndicator { }
-                }
-
-                background: Rectangle {
-                    border.color: "white"
-                    border.width: 20
-                    radius: 20
-                    color: "white"
-                    Rectangle {
-                        x: 13
-                        y: 13
-                        height: parent.height - 28
-                        width: parent.width - 28
-                        border.color: "#0D21B3"
-                        border.width: 0
-                        radius: 12
-                        color: "#0D21B3"
-                    }
-                }
-            }
-        }
-
-        ComboBox {
-            id: feetComboBox
-            x: 380
-            y: 1340
-            width: 1130
-            height: 185
-            font.bold: false
-            font.pointSize: 53
-            font.family: "JostSemi"
-            hoverEnabled: true
-            model: [" Device-inferred Rotation", " Follow Headset", " Disable Rotation"]
-            onDisplayTextChanged: _cppContext.multiCpp("FEET",
-                                                       feetComboBox.displayText)
-            onHoveredChanged: {
-                feetComboBox.hovered ? bg03.color = "#7180EE" : bg03.color = "#0D21B3"
-            }
-
-            Rectangle {
-                x: 953
-                y: 42
-                width: 163
-                height: 101
-                z: 10
-                color: bg03.color
-
-                Rectangle {
-                    x: 41
-                    y: 30
-                    width: 60
-                    height: 15
-                    implicitWidth: parent.width / 1.17
-                    implicitHeight: parent.height / 1.17
-                    radius: 12
-                    color: "#ffffff"
-                    border.width: 0
-                    transform: Rotation {
-                        angle: 45
-                    }
-
-                    Rectangle {
-                        x: 45
-                        y: 15
-                        width: 61
-                        height: 15
-                        implicitWidth: parent.width / 1.17
-                        implicitHeight: parent.height / 1.17
-                        radius: 12
-                        color: "#ffffff"
-                        border.width: 0
-                        transform: Rotation {
-                            angle: -90
-                        }
-                    }
-                }
-            }
-
-            delegate: ItemDelegate {
-                width: feetComboBox.width
-                contentItem: Text {
-                    text: modelData
-                    color: "#FFFFFF"
-                    font: feetComboBox.font
-                    elide: Text.ElideRight
-                    verticalAlignment: Text.AlignVCenter
-                }
-                highlighted: feetComboBox.highlightedIndex === index
-            }
-
-            contentItem: Text {
-                leftPadding: 25
-                color: "#ffffff"
-                width: feetComboBox.width - 110
-                text: feetComboBox.displayText
-                font.weight: Font.Bold
-                font.bold: false
-                font.pointSize: 48
-                font.family: "JostSemi"
-                styleColor: "#ffffff"
-                verticalAlignment: Text.AlignVCenter
-                elide: Text.ElideRight
-            }
-
-            background: Rectangle {
-                implicitWidth: 120
-                implicitHeight: 40
-                border.color: "white"
-                border.width: 20
-                radius: 20
-                Rectangle {
-                    id: bg03
-                    x: 13
-                    y: 13
-                    width: 1103
-                    height: parent.height - 28
-                    implicitWidth: 120
-                    implicitHeight: 40
-                    border.color: "#0D21B3"
-                    border.width: 0
-                    radius: 12
-                    color: "#0D21B3"
-                }
-            }
-
-            popup: Popup {
-                y: feetComboBox.height + 17
-                width: feetComboBox.width
-                implicitHeight: contentItem.implicitHeight
-                bottomPadding: 5
-                topPadding: 5
-
-                contentItem: ListView {
-                    clip: true
-                    implicitHeight: contentHeight + 30
-                    model: feetComboBox.popup.visible ? feetComboBox.delegateModel : null
-                    currentIndex: feetComboBox.highlightedIndex
-
-                    //ScrollIndicator.vertical: ScrollIndicator { }
-                }
-
-                background: Rectangle {
-                    border.color: "white"
-                    border.width: 20
-                    radius: 20
-                    color: "white"
-                    Rectangle {
-                        x: 13
-                        y: 13
-                        height: parent.height - 28
-                        width: parent.width - 28
-                        border.color: "#0D21B3"
-                        border.width: 0
-                        radius: 12
-                        color: "#0D21B3"
-                    }
-                }
-            }
-        }
-
-        ComboBox {
-            id: filterComboBox
-            x: 380
-            y: 1580
-            width: 1130
-            height: 185
-            editable: false
-            font.bold: false
-            font.pointSize: 53
-            font.family: "JostSemi"
-            hoverEnabled: true
-            model: [" Linear Interpolation", " Lowpass Optical", " Extended Kalman", " Disable Filter"]
-            onDisplayTextChanged: _cppContext.multiCpp(
-                                      "FILTER", filterComboBox.displayText)
-            onHoveredChanged: {
-                filterComboBox.hovered ? bg04.color = "#7180EE" : bg04.color = "#0D21B3"
-            }
-
-            Rectangle {
-                x: 953
-                y: 42
-                width: 163
-                height: 101
-                z: 10
-                color: bg04.color
-
-                Rectangle {
-                    x: 41
-                    y: 30
-                    width: 60
-                    height: 15
-                    implicitWidth: parent.width / 1.17
-                    implicitHeight: parent.height / 1.17
-                    radius: 12
-                    color: "#ffffff"
-                    border.width: 0
-                    transform: Rotation {
-                        angle: 45
-                    }
-
-                    Rectangle {
-                        x: 45
-                        y: 15
-                        width: 61
-                        height: 15
-                        implicitWidth: parent.width / 1.17
-                        implicitHeight: parent.height / 1.17
-                        radius: 12
-                        color: "#ffffff"
-                        border.width: 0
-                        transform: Rotation {
-                            angle: -90
-                        }
-                    }
-                }
-            }
-
-            delegate: ItemDelegate {
-                width: filterComboBox.width
-                contentItem: Text {
-                    text: modelData
-                    color: "#FFFFFF"
-                    font: filterComboBox.font
-                    elide: Text.ElideRight
-                    verticalAlignment: Text.AlignVCenter
-                }
-                highlighted: filterComboBox.highlightedIndex === index
-            }
-
-            contentItem: Text {
-                leftPadding: 25
-                color: "#ffffff"
-                text: " Linear Interpolation"
-                width: filterComboBox.width - 110
-                font.weight: Font.Bold
-                font.bold: false
-                font.pointSize: 48
-                font.family: "JostSemi"
-                styleColor: "#ffffff"
-                verticalAlignment: Text.AlignVCenter
-                elide: Text.ElideRight
-            }
-
-            background: Rectangle {
-                implicitWidth: 120
-                implicitHeight: 40
-                border.color: "white"
-                border.width: 20
-                radius: 20
-                Rectangle {
-                    id: bg04
-                    x: 13
-                    y: 13
-                    width: 1103
-                    height: parent.height - 28
-                    implicitWidth: 120
-                    implicitHeight: 40
-                    border.color: "#0D21B3"
-                    border.width: 0
-                    radius: 12
-                    color: "#0D21B3"
-                }
-            }
-
-            popup: Popup {
-                y: filterComboBox.height + 17
-                width: filterComboBox.width
-                implicitHeight: contentItem.implicitHeight
-                bottomPadding: 5
-                topPadding: 5
-
-                contentItem: ListView {
-                    clip: true
-                    implicitHeight: contentHeight + 40
-                    model: filterComboBox.popup.visible ? filterComboBox.delegateModel : null
-                    currentIndex: filterComboBox.highlightedIndex
-
-                    //ScrollIndicator.vertical: ScrollIndicator { }
-                }
-
-                background: Rectangle {
-                    border.color: "white"
-                    border.width: 20
-                    radius: 20
-                    color: "white"
-                    Rectangle {
-                        x: 13
-                        y: 13
-                        height: parent.height - 28
-                        width: parent.width - 28
-                        border.color: "#0D21B3"
-                        border.width: 0
-                        radius: 12
-                        color: "#0D21B3"
-                    }
-                }
-            }
-        }
-
-        Button {
-            property bool connected: true
-            property bool show: true
-            property var textL: "    Skeleton"
-            id: skeletonButton
-            x: 1649
-            y: 1940
-            z: 1
-            width: 417
-            height: 106
-            highlighted: false
-            flat: true
-            hoverEnabled: true
-            onHoveredChanged: {
-                skeletonButton.hovered ? bg001.color = "#5266F3" : bg001.color = "#0D21B3"
-            }
-            Text {
-                color: "#ffffff"
-                text: skeletonButton.textL
-                font.bold: true
-                anchors.centerIn: parent
-                anchors.topMargin: 0
-                verticalAlignment: Text.AlignVCenter
-                anchors.rightMargin: 0
-                anchors.bottomMargin: 0
-                bottomPadding: 0
-                topPadding: 0
-                font.family: "JostSemi"
-                anchors.leftMargin: 0
-                horizontalAlignment: Text.AlignHCenter
-                leftPadding: 0
-                rightPadding: 0
-                font.pointSize: 37
-            }
-
-            Image {
-                id: image11
-                x: 23
-                y: 18
-                width: 92
-                height: 70
-                source: "Vector-Union-2.png"
-                fillMode: Image.PreserveAspectFit
-            }
-
-            background: Rectangle {
-                id: bg001
-                color: "#0D21B3"
-                radius: 20
-            }
-            objectName: "skeletonButton"
-            onClicked: {
-                _cppContext.cppSlot("SKELETON")
-                connected = !connected
-                show = !show
-            }
-        }
-
-        Label {
-            id: label6
-            x: 3273
-            y: 46
-            z: 1
-            width: 612
-            height: 56
-            color: "#8cffffff"
-            text: qsTr("Kinect for Xbox ___ (V_)")
-            font.bold: true
-            font.pointSize: 38
-            font.family: "JostSemi"
-            anchors.verticalCenterOffset: 24
-            anchors.verticalCenter: rectangle1.verticalCenter
-        }
-
         Item {
-            id: pt
-            objectName: "noSkeletonFound"
-            x: 1909
-            y: 728
-            width: 1727
-            height: 749
-
-            Rectangle {
-                id: rectangle3
-                x: 0
-                y: 0
-                width: 2247
-                height: 2076
-                color: "#000000"
-                anchors.leftMargin: -301
-                anchors.topMargin: -728
-                anchors.top: parent.top
-                anchors.left: parent.left
-                z: -1
-            }
+            id: generalControlTab
 
             Canvas {
-                id: painterCanvas
-                property bool painted: false
-                objectName: "painterCanvas"
-                x: -301
-                y: -728
-                width: 2028
-                height: 2068
-                anchors.bottomMargin: 0
-                anchors.bottom: rectangle3.bottom
-                anchors.rightMargin: -279
+                width: 1979
+                height: 1368
+                anchors.bottom: parent.bottom
+                anchors.rightMargin: 0
                 anchors.right: parent.right
-                anchors.top: rectangle3.top
-                anchors.left: rectangle3.left
-                visible: true
+                anchors.leftMargin: 1606
+                anchors.topMargin: 0
+                anchors.top: parent.top
+                anchors.left: parent.left
+            }
 
-                onPaint: {
-                    painterCanvas.visible = _get.get(qsTr("SKELETONSTATE"))
-                            && skeletonButton.show
-                    var cx = getContext("2d")
-                    cx.reset()
+            StackView {
+                id: pages1
+                x: 0
+                y: 0
+                z: -10
+                width: 3915
+                height: 2068
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.topMargin: 0
 
-                    cx.lineWidth = 12
-                    cx.strokeStyle = Qt.rgba(1, 1, 1, 1)
-                    cx.beginPath()
+                Image {
+                    id: image
+                    x: 0
+                    y: -215
+                    width: 3915
+                    height: 2282
+                    visible: false
+                    anchors.leftMargin: 0
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    fillMode: Image.Stretch
+                    source: "../main.png"
+                }
+            }
 
-                    cx.moveTo(_get.get(qsTr("KINECTPOSE"), 3, 0),
-                              _get.get(qsTr("KINECTPOSE"), 3, 1))
-                    cx.lineTo(_get.get(qsTr("KINECTPOSE"), 2, 0),
-                              _get.get(qsTr("KINECTPOSE"), 2, 1))
-                    cx.moveTo(_get.get(qsTr("KINECTPOSE"), 2, 0),
-                              _get.get(qsTr("KINECTPOSE"), 2, 1))
-                    cx.lineTo(_get.get(qsTr("KINECTPOSE"), 4, 0),
-                              _get.get(qsTr("KINECTPOSE"), 4, 1))
-                    cx.moveTo(_get.get(qsTr("KINECTPOSE"), 2, 0),
-                              _get.get(qsTr("KINECTPOSE"), 2, 1))
-                    cx.lineTo(_get.get(qsTr("KINECTPOSE"), 8, 0),
-                              _get.get(qsTr("KINECTPOSE"), 8, 1))
-                    cx.moveTo(_get.get(qsTr("KINECTPOSE"), 2, 0),
-                              _get.get(qsTr("KINECTPOSE"), 2, 1))
-                    cx.lineTo(_get.get(qsTr("KINECTPOSE"), 1, 0),
-                              _get.get(qsTr("KINECTPOSE"), 1, 1))
-                    cx.moveTo(_get.get(qsTr("KINECTPOSE"), 1, 0),
-                              _get.get(qsTr("KINECTPOSE"), 1, 1))
-                    cx.lineTo(_get.get(qsTr("KINECTPOSE"), 0, 0),
-                              _get.get(qsTr("KINECTPOSE"), 0, 1))
-                    cx.moveTo(_get.get(qsTr("KINECTPOSE"), 0, 0),
-                              _get.get(qsTr("KINECTPOSE"), 0, 1))
-                    cx.lineTo(_get.get(qsTr("KINECTPOSE"), 12, 0),
-                              _get.get(qsTr("KINECTPOSE"), 12, 1))
-                    cx.moveTo(_get.get(qsTr("KINECTPOSE"), 0, 0),
-                              _get.get(qsTr("KINECTPOSE"), 0, 1))
-                    cx.lineTo(_get.get(qsTr("KINECTPOSE"), 16, 0),
-                              _get.get(qsTr("KINECTPOSE"), 16, 1))
+            Label {
+                id: label1
+                x: 50
+                y: 42
+                width: 294
+                height: 78
+                color: "#66ccff"
+                text: qsTr("Trackers:")
+                font.bold: true
+                font.pointSize: 48
+                font.family: "JostSemi"
+            }
 
-                    cx.moveTo(_get.get(qsTr("KINECTPOSE"), 4, 0),
-                              _get.get(qsTr("KINECTPOSE"), 4, 1))
-                    cx.lineTo(_get.get(qsTr("KINECTPOSE"), 5, 0),
-                              _get.get(qsTr("KINECTPOSE"), 5, 1))
-                    cx.moveTo(_get.get(qsTr("KINECTPOSE"), 5, 0),
-                              _get.get(qsTr("KINECTPOSE"), 5, 1))
-                    cx.lineTo(_get.get(qsTr("KINECTPOSE"), 6, 0),
-                              _get.get(qsTr("KINECTPOSE"), 6, 1))
-                    cx.moveTo(_get.get(qsTr("KINECTPOSE"), 6, 0),
-                              _get.get(qsTr("KINECTPOSE"), 6, 1))
-                    cx.lineTo(_get.get(qsTr("KINECTPOSE"), 7, 0),
-                              _get.get(qsTr("KINECTPOSE"), 7, 1))
-
-                    cx.moveTo(_get.get(qsTr("KINECTPOSE"), 8, 0),
-                              _get.get(qsTr("KINECTPOSE"), 8, 1))
-                    cx.lineTo(_get.get(qsTr("KINECTPOSE"), 9, 0),
-                              _get.get(qsTr("KINECTPOSE"), 9, 1))
-                    cx.moveTo(_get.get(qsTr("KINECTPOSE"), 9, 0),
-                              _get.get(qsTr("KINECTPOSE"), 9, 1))
-                    cx.lineTo(_get.get(qsTr("KINECTPOSE"), 10, 0),
-                              _get.get(qsTr("KINECTPOSE"), 10, 1))
-                    cx.moveTo(_get.get(qsTr("KINECTPOSE"), 10, 0),
-                              _get.get(qsTr("KINECTPOSE"), 10, 1))
-                    cx.lineTo(_get.get(qsTr("KINECTPOSE"), 11, 0),
-                              _get.get(qsTr("KINECTPOSE"), 11, 1))
-
-                    cx.moveTo(_get.get(qsTr("KINECTPOSE"), 12, 0),
-                              _get.get(qsTr("KINECTPOSE"), 12, 1))
-                    cx.lineTo(_get.get(qsTr("KINECTPOSE"), 13, 0),
-                              _get.get(qsTr("KINECTPOSE"), 13, 1))
-                    cx.moveTo(_get.get(qsTr("KINECTPOSE"), 13, 0),
-                              _get.get(qsTr("KINECTPOSE"), 13, 1))
-                    cx.lineTo(_get.get(qsTr("KINECTPOSE"), 14, 0),
-                              _get.get(qsTr("KINECTPOSE"), 14, 1))
-                    cx.moveTo(_get.get(qsTr("KINECTPOSE"), 14, 0),
-                              _get.get(qsTr("KINECTPOSE"), 14, 1))
-                    cx.lineTo(_get.get(qsTr("KINECTPOSE"), 15, 0),
-                              _get.get(qsTr("KINECTPOSE"), 15, 1))
-
-                    cx.moveTo(_get.get(qsTr("KINECTPOSE"), 16, 0),
-                              _get.get(qsTr("KINECTPOSE"), 16, 1))
-                    cx.lineTo(_get.get(qsTr("KINECTPOSE"), 17, 0),
-                              _get.get(qsTr("KINECTPOSE"), 17, 1))
-                    cx.moveTo(_get.get(qsTr("KINECTPOSE"), 17, 0),
-                              _get.get(qsTr("KINECTPOSE"), 17, 1))
-                    cx.lineTo(_get.get(qsTr("KINECTPOSE"), 18, 0),
-                              _get.get(qsTr("KINECTPOSE"), 18, 1))
-                    cx.moveTo(_get.get(qsTr("KINECTPOSE"), 18, 0),
-                              _get.get(qsTr("KINECTPOSE"), 18, 1))
-                    cx.lineTo(_get.get(qsTr("KINECTPOSE"), 19, 0),
-                              _get.get(qsTr("KINECTPOSE"), 19, 1))
-
-                    cx.moveTo(0, 0)
-                    cx.lineTo(0, 0)
-
-                    cx.closePath()
-                    cx.stroke()
+            Button {
+                id: calibrationButton
+                objectName: "caibrationButton"
+                x: 50
+                y: 141
+                width: 776
+                height: 200
+                hoverEnabled: true
+                onHoveredChanged: {
+                    calibrationButton.hovered ? bg.color = "#42C929" : bg.color = "#20910B"
                 }
 
-                Timer {
-                    interval: 12
-                    running: true //_get.get(qsTr("SKELETONSTATE")) === 1
-                    repeat: true
-                    onTriggered: {
-                        painterCanvas.requestPaint()
+                Text {
+                    text: qsTr("Begin Calibration")
+                    font.bold: true
+                    rightPadding: 0
+                    bottomPadding: 0
+                    leftPadding: 0
+                    topPadding: 0
+                    anchors.rightMargin: 0
+                    anchors.bottomMargin: 0
+                    anchors.leftMargin: 0
+                    anchors.topMargin: 0
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    color: "White"
+                    font.pointSize: 48
+                    font.family: "JostSemi"
+                    anchors.centerIn: parent
+                }
+                highlighted: false
+                flat: true
+                background: Rectangle {
+                    id: bg
+                    color: "#20910B"
+                    radius: 20
+                }
+                onClicked: {
+                    _cppContext.cppSlot("BEGINCALIBRATION")
+                    calibrationWindow.visible = true
+                    generalControlTab.enabled = false
+                }
+            }
+
+            Button {
+                id: offsetsButton
+                objectName: "offsetsButton"
+                x: 877
+                y: 141
+                width: 628
+                height: 200
+                highlighted: false
+                flat: true
+                hoverEnabled: true
+                onHoveredChanged: {
+                    offsetsButton.hovered ? bg1.color = "#7180EE" : bg1.color = "#1630ee"
+                }
+                Text {
+                    color: "#ffffff"
+                    text: qsTr("Adjust Offsets")
+                    font.bold: true
+                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    anchors.topMargin: 0
+                    anchors.rightMargin: 0
+                    anchors.bottomMargin: 0
+                    font.family: "JostSemi"
+                    topPadding: 0
+                    bottomPadding: 0
+                    horizontalAlignment: Text.AlignHCenter
+                    anchors.leftMargin: 0
+                    leftPadding: 0
+                    font.pointSize: 48
+                    rightPadding: 0
+                }
+                background: Rectangle {
+                    id: bg1
+                    color: "#1630EE"
+                    radius: 20
+                }
+                onClicked: {
+                    _cppContext.cppSlot("SHOWOFFSETS")
+                    offsetsControl.visible = true
+                    generalControlTab.enabled = false
+                }
+            }
+
+            Button {
+                property bool connected: true
+                property var textL: "Disconnect Trackers"
+                id: disconnectTrackersButton
+                x: 50
+                y: 390
+                width: 1455
+                height: 128
+                highlighted: false
+                flat: true
+                hoverEnabled: true
+                onHoveredChanged: {
+                    disconnectTrackersButton.hovered ? bg2.color = "#7180EE" : bg2.color = "#1630ee"
+                }
+                Text {
+                    color: "#ffffff"
+                    text: disconnectTrackersButton.textL
+                    font.bold: true
+                    anchors.centerIn: parent
+                    anchors.topMargin: 0
+                    verticalAlignment: Text.AlignVCenter
+                    anchors.rightMargin: 0
+                    anchors.bottomMargin: 0
+                    bottomPadding: 0
+                    topPadding: 0
+                    font.family: "JostSemi"
+                    anchors.leftMargin: 0
+                    horizontalAlignment: Text.AlignHCenter
+                    leftPadding: 0
+                    rightPadding: 0
+                    font.pointSize: 48
+                }
+                background: Rectangle {
+                    id: bg2
+                    color: "#1630ee"
+                    radius: 20
+                }
+                objectName: "disconnectTrackersButton"
+                onClicked: {
+                    _cppContext.cppSlot("TRACKERSCONNECTCHANGED")
+                    connected = !connected
+                    disconnectTrackersButton.textL
+                            = connected ? "Disconnect Trackers" : "Reconnect Trackers"
+                }
+            }
+
+            Label {
+                id: label11
+                x: 50
+                y: 991
+                width: 556
+                height: 82
+                color: "#66ccff"
+                text: qsTr("Tracking Settings:")
+                font.bold: true
+                font.family: "JostSemi"
+                font.pointSize: 48
+            }
+
+            Label {
+                id: label2
+                x: 127
+                y: 1160
+                width: 215
+                height: 82
+                color: "#66ccff"
+                text: qsTr("Waist:")
+                font.bold: true
+                horizontalAlignment: Text.AlignRight
+                font.family: "JostSemi"
+                font.pointSize: 48
+            }
+
+            Label {
+                id: label3
+                x: 127
+                y: 1395
+                width: 215
+                height: 82
+                color: "#66ccff"
+                text: qsTr("Feet:")
+                font.bold: true
+                horizontalAlignment: Text.AlignRight
+                font.family: "JostSemi"
+                font.pointSize: 48
+            }
+
+            Label {
+                id: label4
+                x: 127
+                y: 1634
+                width: 215
+                height: 82
+                color: "#66ccff"
+                text: qsTr("Filter:")
+                font.bold: true
+                horizontalAlignment: Text.AlignRight
+                font.family: "JostSemi"
+                font.pointSize: 48
+            }
+
+            Label {
+                id: label5
+                x: 375
+                y: 1860
+                width: 912
+                height: 82
+                color: "#66ccff"
+                text: qsTr("Mirror tracking when turning:")
+                font.bold: true
+                font.family: "JostSemi"
+                horizontalAlignment: Text.AlignRight
+                font.pointSize: 48
+            }
+
+            CheckBox {
+                id: checkBox
+                objectName: "flipCheckBox"
+                x: 1319
+                y: 1804
+                width: 191
+                height: 186
+                text: qsTr("")
+                visible: true
+                checkState: Qt.Checked
+                checked: true
+                onCheckStateChanged: _cppContext.cppSlot("FLIPCHANGED")
+                hoverEnabled: true
+                onHoveredChanged: {
+                    checkBox.hovered ? bg01.color = "#7180EE" : bg01.color = "#0D21B3"
+                }
+
+                indicator: Rectangle {
+                    implicitWidth: parent.width
+                    implicitHeight: parent.height
+                    radius: 20
+                    border.width: 20
+                    border.color: "#FFFFFF"
+
+                    Rectangle {
+                        id: bg01
+                        x: 14
+                        y: 14
+                        implicitWidth: parent.width / 1.17
+                        implicitHeight: parent.height / 1.17
+                        radius: 12
+                        color: "#0D21B3"
+                        border.width: 0
+                    }
+
+                    Rectangle {
+                        visible: checkBox.checked
+                        x: 74
+                        y: 81
+                        width: 37
+                        height: 15
+                        implicitWidth: parent.width / 1.17
+                        implicitHeight: parent.height / 1.17
+                        radius: 12
+                        color: "#ffffff"
+                        border.width: 0
+                        transform: Rotation {
+                            angle: 45
+                        }
+
+                        Rectangle {
+                            x: 22
+                            y: 15
+                            width: 54
+                            height: 15
+                            implicitWidth: parent.width / 1.17
+                            implicitHeight: parent.height / 1.17
+                            radius: 12
+                            color: "#ffffff"
+                            border.width: 0
+                            transform: Rotation {
+                                angle: -90
+                            }
+                        }
                     }
                 }
             }
 
-            Item {
-                visible: skeletonButton.show && !painterCanvas.visible
+            Rectangle {
+                id: rectangle11
+                x: 0
+                y: 8
+                width: 3915
+                height: 2068
+                color: "#0d21b3"
+                z: -11
+                radius: 60
+            }
 
-                Label {
-                    id: label7
-                    x: 190
-                    y: 32
-                    width: 1504
-                    height: 176
-                    color: "#ffffff"
-                    text: qsTr("No skeleton found")
-                    font.bold: true
-                    font.pointSize: 127
-                    font.family: "JostSemi"
+            Rectangle {
+                id: rectangle111
+                x: 0
+                y: 0
+                width: 3915
+                height: 104
+                color: "#0d21b3"
+                z: -12
+            }
+
+            ComboBox {
+                id: hipsComboBox
+                x: 380
+                y: 1101
+                width: 1130
+                height: 185
+                font.bold: false
+                font.pointSize: 53
+                font.family: "JostSemi"
+                hoverEnabled: true
+                model: [" Device-inferred Rotation", " Follow Headset", " Disable Rotation"]
+                onDisplayTextChanged: _cppContext.multiCpp(
+                                          "HIPS", hipsComboBox.displayText)
+                onHoveredChanged: {
+                    hipsComboBox.hovered ? bg02.color = "#7180EE" : bg02.color = "#0D21B3"
                 }
 
-                TextArea {
-                    x: 72
-                    y: 250
-                    width: 1529
-                    height: 398
-                    Text {
-                        x: 13
-                        y: 14
+                Rectangle {
+                    x: 953
+                    y: 42
+                    width: 163
+                    height: 101
+                    z: 10
+                    color: bg02.color
+
+                    Rectangle {
+                        x: 41
+                        y: 30
+                        width: 60
+                        height: 15
+                        implicitWidth: parent.width / 1.17
+                        implicitHeight: parent.height / 1.17
+                        radius: 12
                         color: "#ffffff"
-                        text: "Make sure the device works properly\nand stand at least 3 meters (9 feet)\naway from the sensor."
-                        lineHeight: 1.2
-                        padding: 0
-                        horizontalAlignment: Text.AlignHCenter
-                        font.bold: true
-                        font.pointSize: 65
-                        font.family: "JostSemi"
+                        border.width: 0
+                        transform: Rotation {
+                            angle: 45
+                        }
+
+                        Rectangle {
+                            x: 45
+                            y: 15
+                            width: 61
+                            height: 15
+                            implicitWidth: parent.width / 1.17
+                            implicitHeight: parent.height / 1.17
+                            radius: 12
+                            color: "#ffffff"
+                            border.width: 0
+                            transform: Rotation {
+                                angle: -90
+                            }
+                        }
                     }
+                }
+
+                delegate: ItemDelegate {
+                    width: hipsComboBox.width
+                    contentItem: Text {
+                        text: modelData
+                        color: "#FFFFFF"
+                        font: hipsComboBox.font
+                        elide: Text.ElideRight
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                    highlighted: hipsComboBox.highlightedIndex === index
+                }
+
+                contentItem: Text {
+                    leftPadding: 25
+                    color: "#ffffff"
+                    width: hipsComboBox.width - 110
+                    text: hipsComboBox.displayText
+                    font.weight: Font.Bold
+                    font.bold: false
+                    font.pointSize: 48
+                    font.family: "JostSemi"
+                    styleColor: "#ffffff"
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
+                }
+
+                background: Rectangle {
+                    implicitWidth: 120
+                    implicitHeight: 40
+                    border.color: "white"
+                    border.width: 20
+                    radius: 20
+                    Rectangle {
+                        id: bg02
+                        x: 13
+                        y: 13
+                        width: 1103
+                        height: parent.height - 28
+                        implicitWidth: 120
+                        implicitHeight: 40
+                        border.color: "#0D21B3"
+                        border.width: 0
+                        radius: 12
+                        color: "#0D21B3"
+                    }
+                }
+
+                popup: Popup {
+                    y: hipsComboBox.height + 17
+                    width: hipsComboBox.width
+                    implicitHeight: contentItem.implicitHeight
+                    bottomPadding: 5
+                    topPadding: 5
+
+                    contentItem: ListView {
+                        clip: true
+                        implicitHeight: contentHeight + 30
+                        model: hipsComboBox.popup.visible ? hipsComboBox.delegateModel : null
+                        currentIndex: hipsComboBox.highlightedIndex
+
+                        //ScrollIndicator.vertical: ScrollIndicator { }
+                    }
+
+                    background: Rectangle {
+                        border.color: "white"
+                        border.width: 20
+                        radius: 20
+                        color: "white"
+                        Rectangle {
+                            x: 13
+                            y: 13
+                            height: parent.height - 28
+                            width: parent.width - 28
+                            border.color: "#0D21B3"
+                            border.width: 0
+                            radius: 12
+                            color: "#0D21B3"
+                        }
+                    }
+                }
+            }
+
+            ComboBox {
+                id: feetComboBox
+                x: 380
+                y: 1340
+                width: 1130
+                height: 185
+                font.bold: false
+                font.pointSize: 53
+                font.family: "JostSemi"
+                hoverEnabled: true
+                model: [" Device-inferred Rotation", " Follow Headset", " Disable Rotation"]
+                onDisplayTextChanged: _cppContext.multiCpp(
+                                          "FEET", feetComboBox.displayText)
+                onHoveredChanged: {
+                    feetComboBox.hovered ? bg03.color = "#7180EE" : bg03.color = "#0D21B3"
+                }
+
+                Rectangle {
+                    x: 953
+                    y: 42
+                    width: 163
+                    height: 101
+                    z: 10
+                    color: bg03.color
+
+                    Rectangle {
+                        x: 41
+                        y: 30
+                        width: 60
+                        height: 15
+                        implicitWidth: parent.width / 1.17
+                        implicitHeight: parent.height / 1.17
+                        radius: 12
+                        color: "#ffffff"
+                        border.width: 0
+                        transform: Rotation {
+                            angle: 45
+                        }
+
+                        Rectangle {
+                            x: 45
+                            y: 15
+                            width: 61
+                            height: 15
+                            implicitWidth: parent.width / 1.17
+                            implicitHeight: parent.height / 1.17
+                            radius: 12
+                            color: "#ffffff"
+                            border.width: 0
+                            transform: Rotation {
+                                angle: -90
+                            }
+                        }
+                    }
+                }
+
+                delegate: ItemDelegate {
+                    width: feetComboBox.width
+                    contentItem: Text {
+                        text: modelData
+                        color: "#FFFFFF"
+                        font: feetComboBox.font
+                        elide: Text.ElideRight
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                    highlighted: feetComboBox.highlightedIndex === index
+                }
+
+                contentItem: Text {
+                    leftPadding: 25
+                    color: "#ffffff"
+                    width: feetComboBox.width - 110
+                    text: feetComboBox.displayText
+                    font.weight: Font.Bold
+                    font.bold: false
+                    font.pointSize: 48
+                    font.family: "JostSemi"
+                    styleColor: "#ffffff"
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
+                }
+
+                background: Rectangle {
+                    implicitWidth: 120
+                    implicitHeight: 40
+                    border.color: "white"
+                    border.width: 20
+                    radius: 20
+                    Rectangle {
+                        id: bg03
+                        x: 13
+                        y: 13
+                        width: 1103
+                        height: parent.height - 28
+                        implicitWidth: 120
+                        implicitHeight: 40
+                        border.color: "#0D21B3"
+                        border.width: 0
+                        radius: 12
+                        color: "#0D21B3"
+                    }
+                }
+
+                popup: Popup {
+                    y: feetComboBox.height + 17
+                    width: feetComboBox.width
+                    implicitHeight: contentItem.implicitHeight
+                    bottomPadding: 5
+                    topPadding: 5
+
+                    contentItem: ListView {
+                        clip: true
+                        implicitHeight: contentHeight + 30
+                        model: feetComboBox.popup.visible ? feetComboBox.delegateModel : null
+                        currentIndex: feetComboBox.highlightedIndex
+
+                        //ScrollIndicator.vertical: ScrollIndicator { }
+                    }
+
+                    background: Rectangle {
+                        border.color: "white"
+                        border.width: 20
+                        radius: 20
+                        color: "white"
+                        Rectangle {
+                            x: 13
+                            y: 13
+                            height: parent.height - 28
+                            width: parent.width - 28
+                            border.color: "#0D21B3"
+                            border.width: 0
+                            radius: 12
+                            color: "#0D21B3"
+                        }
+                    }
+                }
+            }
+
+            ComboBox {
+                id: filterComboBox
+                x: 380
+                y: 1580
+                width: 1130
+                height: 185
+                editable: false
+                font.bold: false
+                font.pointSize: 53
+                font.family: "JostSemi"
+                hoverEnabled: true
+                model: [" Linear Interpolation", " Lowpass Optical", " Extended Kalman", " Disable Filter"]
+                onDisplayTextChanged: _cppContext.multiCpp(
+                                          "FILTER", filterComboBox.displayText)
+                onHoveredChanged: {
+                    filterComboBox.hovered ? bg04.color = "#7180EE" : bg04.color = "#0D21B3"
+                }
+
+                Rectangle {
+                    x: 953
+                    y: 42
+                    width: 163
+                    height: 101
+                    z: 10
+                    color: bg04.color
+
+                    Rectangle {
+                        x: 41
+                        y: 30
+                        width: 60
+                        height: 15
+                        implicitWidth: parent.width / 1.17
+                        implicitHeight: parent.height / 1.17
+                        radius: 12
+                        color: "#ffffff"
+                        border.width: 0
+                        transform: Rotation {
+                            angle: 45
+                        }
+
+                        Rectangle {
+                            x: 45
+                            y: 15
+                            width: 61
+                            height: 15
+                            implicitWidth: parent.width / 1.17
+                            implicitHeight: parent.height / 1.17
+                            radius: 12
+                            color: "#ffffff"
+                            border.width: 0
+                            transform: Rotation {
+                                angle: -90
+                            }
+                        }
+                    }
+                }
+
+                delegate: ItemDelegate {
+                    width: filterComboBox.width
+                    contentItem: Text {
+                        text: modelData
+                        color: "#FFFFFF"
+                        font: filterComboBox.font
+                        elide: Text.ElideRight
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                    highlighted: filterComboBox.highlightedIndex === index
+                }
+
+                contentItem: Text {
+                    leftPadding: 25
+                    color: "#ffffff"
+                    text: " Linear Interpolation"
+                    width: filterComboBox.width - 110
+                    font.weight: Font.Bold
+                    font.bold: false
+                    font.pointSize: 48
+                    font.family: "JostSemi"
+                    styleColor: "#ffffff"
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
+                }
+
+                background: Rectangle {
+                    implicitWidth: 120
+                    implicitHeight: 40
+                    border.color: "white"
+                    border.width: 20
+                    radius: 20
+                    Rectangle {
+                        id: bg04
+                        x: 13
+                        y: 13
+                        width: 1103
+                        height: parent.height - 28
+                        implicitWidth: 120
+                        implicitHeight: 40
+                        border.color: "#0D21B3"
+                        border.width: 0
+                        radius: 12
+                        color: "#0D21B3"
+                    }
+                }
+
+                popup: Popup {
+                    y: filterComboBox.height + 17
+                    width: filterComboBox.width
+                    implicitHeight: contentItem.implicitHeight
+                    bottomPadding: 5
+                    topPadding: 5
+
+                    contentItem: ListView {
+                        clip: true
+                        implicitHeight: contentHeight + 40
+                        model: filterComboBox.popup.visible ? filterComboBox.delegateModel : null
+                        currentIndex: filterComboBox.highlightedIndex
+
+                        //ScrollIndicator.vertical: ScrollIndicator { }
+                    }
+
+                    background: Rectangle {
+                        border.color: "white"
+                        border.width: 20
+                        radius: 20
+                        color: "white"
+                        Rectangle {
+                            x: 13
+                            y: 13
+                            height: parent.height - 28
+                            width: parent.width - 28
+                            border.color: "#0D21B3"
+                            border.width: 0
+                            radius: 12
+                            color: "#0D21B3"
+                        }
+                    }
+                }
+            }
+
+            Button {
+                property bool connected: true
+                property bool show: true
+                property var textL: "    Skeleton"
+                id: skeletonButton
+                x: 1649
+                y: 1940
+                z: 1
+                width: 417
+                height: 106
+                highlighted: false
+                flat: true
+                hoverEnabled: true
+                onHoveredChanged: {
+                    skeletonButton.hovered ? bg001.color = "#5266F3" : bg001.color = "#0D21B3"
+                }
+                Text {
+                    color: "#ffffff"
+                    text: skeletonButton.textL
+                    font.bold: true
+                    anchors.centerIn: parent
+                    anchors.topMargin: 0
+                    verticalAlignment: Text.AlignVCenter
+                    anchors.rightMargin: 0
+                    anchors.bottomMargin: 0
+                    bottomPadding: 0
+                    topPadding: 0
+                    font.family: "JostSemi"
+                    anchors.leftMargin: 0
+                    horizontalAlignment: Text.AlignHCenter
+                    leftPadding: 0
+                    rightPadding: 0
+                    font.pointSize: 37
                 }
 
                 Image {
-                    id: alert
-                    x: 34
-                    y: 63
-                    width: 133
-                    height: 126
-                    source: "Group-2.png"
+                    id: image11
+                    x: 23
+                    y: 18
+                    width: 92
+                    height: 70
+                    source: "Vector-Union-2.png"
+                    fillMode: Image.PreserveAspectFit
+                }
+
+                background: Rectangle {
+                    id: bg001
+                    color: "#0D21B3"
+                    radius: 20
+                }
+                objectName: "skeletonButton"
+                onClicked: {
+                    _cppContext.cppSlot("SKELETON")
+                    connected = !connected
+                    show = !show
                 }
             }
 
-            Rectangle {
-                id: rectangle2
-                x: 5
-                y: 5
-                width: 94
-                height: 2012
-                color: "#000000"
-                anchors.topMargin: -728
-                anchors.top: parent.top
-                z: -1
-                anchors.leftMargin: 1912
-                anchors.left: parent.left
+            Label {
+                id: label6
+                x: 3273
+                y: 46
+                z: 1
+                width: 612
+                height: 56
+                color: "#8cffffff"
+                text: qsTr("Kinect for Xbox ___ (V_)")
+                font.bold: true
+                font.pointSize: 38
+                font.family: "JostSemi"
+                anchors.verticalCenterOffset: 24
+                anchors.verticalCenter: rectangle1.verticalCenter
             }
 
-            Rectangle {
-                x: 1912
-                y: -722
-                width: 94
-                height: 2062
-                color: "#000000"
-                anchors.topMargin: 12
-                radius: 60
-                anchors.horizontalCenter: rectangle2.horizontalCenter
-                anchors.right: rectangle2.right
-                anchors.bottom: rectangle3.bottom
-                anchors.top: rectangle2.top
-                anchors.left: rectangle2.left
+            Item {
+                id: pt
+                objectName: "noSkeletonFound"
+                x: 1909
+                y: 728
+                width: 1727
+                height: 749
+
+                Rectangle {
+                    id: rectangle3
+                    x: 0
+                    y: 0
+                    width: 2247
+                    height: 2076
+                    color: "#000000"
+                    anchors.leftMargin: -301
+                    anchors.topMargin: -728
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    z: -1
+                }
+
+                Canvas {
+                    id: painterCanvas
+                    property bool painted: false
+                    property bool run: true
+                    objectName: "painterCanvas"
+                    x: -301
+                    y: -728
+                    width: 2028
+                    height: 2068
+                    anchors.bottomMargin: 0
+                    anchors.bottom: rectangle3.bottom
+                    anchors.rightMargin: -279
+                    anchors.right: parent.right
+                    anchors.top: rectangle3.top
+                    anchors.left: rectangle3.left
+                    visible: true
+
+                    onPaint: {
+                        painterCanvas.visible = _get.get(qsTr("SKELETONSTATE"))
+                                && skeletonButton.show
+                        var cx = getContext("2d")
+                        cx.reset()
+
+                        cx.lineWidth = 12
+                        cx.strokeStyle = Qt.rgba(1, 1, 1, 1)
+                        cx.beginPath()
+
+                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 3, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 3, 1))
+                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 2, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 2, 1))
+                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 2, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 2, 1))
+                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 4, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 4, 1))
+                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 2, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 2, 1))
+                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 8, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 8, 1))
+                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 2, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 2, 1))
+                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 1, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 1, 1))
+                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 1, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 1, 1))
+                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 0, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 0, 1))
+                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 0, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 0, 1))
+                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 12, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 12, 1))
+                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 0, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 0, 1))
+                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 16, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 16, 1))
+
+                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 4, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 4, 1))
+                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 5, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 5, 1))
+                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 5, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 5, 1))
+                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 6, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 6, 1))
+                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 6, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 6, 1))
+                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 7, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 7, 1))
+
+                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 8, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 8, 1))
+                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 9, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 9, 1))
+                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 9, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 9, 1))
+                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 10, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 10, 1))
+                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 10, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 10, 1))
+                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 11, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 11, 1))
+
+                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 12, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 12, 1))
+                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 13, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 13, 1))
+                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 13, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 13, 1))
+                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 14, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 14, 1))
+                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 14, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 14, 1))
+                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 15, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 15, 1))
+
+                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 16, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 16, 1))
+                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 17, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 17, 1))
+                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 17, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 17, 1))
+                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 18, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 18, 1))
+                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 18, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 18, 1))
+                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 19, 0),
+                                  _get.get(qsTr("KINECTPOSE"), 19, 1))
+
+                        cx.moveTo(0, 0)
+                        cx.lineTo(0, 0)
+
+                        cx.closePath()
+                        cx.stroke()
+                    }
+
+                    Timer {
+                        interval: 12
+                        running: true
+                        repeat: true
+                        onTriggered: {
+                            if(painterCanvas.run) 
+                                painterCanvas.requestPaint()
+
+                            if(_get.get(qsTr("SKELETONSTATE")) && skeletonButton.show)
+                                painterCanvas.run = true
+                            else
+                                painterCanvas.run = false
+                        }
+                    }
+                }
+
+                Item {
+                    visible: skeletonButton.show && !painterCanvas.visible
+
+                    Label {
+                        id: label7
+                        x: 190
+                        y: 32
+                        width: 1504
+                        height: 176
+                        color: "#ffffff"
+                        text: qsTr("No skeleton found")
+                        font.bold: true
+                        font.pointSize: 127
+                        font.family: "JostSemi"
+                    }
+
+                    TextArea {
+                        x: 72
+                        y: 250
+                        width: 1529
+                        height: 398
+                        Text {
+                            x: 13
+                            y: 14
+                            color: "#ffffff"
+                            text: "Make sure the device works properly\nand stand at least 3 meters (9 feet)\naway from the sensor."
+                            lineHeight: 1.2
+                            padding: 0
+                            horizontalAlignment: Text.AlignHCenter
+                            font.bold: true
+                            font.pointSize: 65
+                            font.family: "JostSemi"
+                        }
+                    }
+
+                    Image {
+                        id: alert
+                        x: 34
+                        y: 63
+                        width: 133
+                        height: 126
+                        source: "Group-2.png"
+                    }
+                }
+
+                Rectangle {
+                    id: rectangle2
+                    x: 5
+                    y: 5
+                    width: 94
+                    height: 2012
+                    color: "#000000"
+                    anchors.topMargin: -728
+                    anchors.top: parent.top
+                    z: -1
+                    anchors.leftMargin: 1912
+                    anchors.left: parent.left
+                }
+
+                Rectangle {
+                    x: 1912
+                    y: -722
+                    width: 94
+                    height: 2062
+                    color: "#000000"
+                    anchors.topMargin: 12
+                    radius: 60
+                    anchors.horizontalCenter: rectangle2.horizontalCenter
+                    anchors.right: rectangle2.right
+                    anchors.bottom: rectangle3.bottom
+                    anchors.top: rectangle2.top
+                    anchors.left: rectangle2.left
+                }
             }
         }
 
@@ -1371,7 +1385,8 @@ Item {
                     anchors.centerIn: parent
                     editable: true
 
-                    onValueChanged: _cppContext.cppSlot("WAISTPITCH", qsTr(value))
+                    onValueChanged: _cppContext.multiCpp("WAISTPITCH",
+                                                         '' + value)
 
                     property int decimals: 2
                     property real realValue: value / 100
@@ -1383,20 +1398,23 @@ Item {
 
                     validator: DoubleValidator {
                         bottom: Math.min(controlW.from, controlW.to)
-                        top:  Math.max(controlW.from, controlW.to)
+                        top: Math.max(controlW.from, controlW.to)
                     }
 
-                    textFromValue: function(value, locale) {
-                        return Number(value / 100).toLocaleString(locale, 'f', controlW.decimals) + qsTr("deg")
+                    textFromValue: function (value, locale) {
+                        return Number(value / 100).toLocaleString(
+                                    locale, 'f',
+                                    controlW.decimals) + qsTr("deg")
                     }
 
-                    valueFromText: function(text, locale) {
+                    valueFromText: function (text, locale) {
                         return Number.fromLocaleString(locale, text) * 100
                     }
 
                     contentItem: TextInput {
                         z: 5
-                        text: controlW.textFromValue(controlW.value, controlW.locale)
+                        text: controlW.textFromValue(controlW.value,
+                                                     controlW.locale)
                         anchors.bottomMargin: 15
                         anchors.rightMargin: 280
                         anchors.topMargin: 15
@@ -1525,23 +1543,25 @@ Item {
                     anchors.verticalCenterOffset: 1267
                     anchors.horizontalCenterOffset: 1439
 
-
                     validator: DoubleValidator {
                         bottom: Math.min(control1W.from, control1W.to)
-                        top:  Math.max(control1W.from, control1W.to)
+                        top: Math.max(control1W.from, control1W.to)
                     }
 
-                    textFromValue: function(value, locale) {
-                        return Number(value / 100).toLocaleString(locale, 'f', control1W.decimals) + qsTr("deg")
+                    textFromValue: function (value, locale) {
+                        return Number(value / 100).toLocaleString(
+                                    locale, 'f',
+                                    control1W.decimals) + qsTr("deg")
                     }
 
-                    valueFromText: function(text, locale) {
+                    valueFromText: function (text, locale) {
                         return Number.fromLocaleString(locale, text) * 100
                     }
 
                     contentItem: TextInput {
                         z: 5
-                        text: control1W.textFromValue(control1W.value, control1W.locale)
+                        text: control1W.textFromValue(control1W.value,
+                                                      control1W.locale)
                         anchors.bottomMargin: 15
                         anchors.rightMargin: 280
                         anchors.topMargin: 15
@@ -1670,23 +1690,25 @@ Item {
                     anchors.verticalCenterOffset: 1501
                     anchors.horizontalCenterOffset: 1439
 
-
                     validator: DoubleValidator {
                         bottom: Math.min(control2W.from, control2W.to)
-                        top:  Math.max(control2W.from, control2W.to)
+                        top: Math.max(control2W.from, control2W.to)
                     }
 
-                    textFromValue: function(value, locale) {
-                        return Number(value / 100).toLocaleString(locale, 'f', control2W.decimals) + qsTr("deg")
+                    textFromValue: function (value, locale) {
+                        return Number(value / 100).toLocaleString(
+                                    locale, 'f',
+                                    control2W.decimals) + qsTr("deg")
                     }
 
-                    valueFromText: function(text, locale) {
+                    valueFromText: function (text, locale) {
                         return Number.fromLocaleString(locale, text) * 100
                     }
 
                     contentItem: TextInput {
                         z: 5
-                        text: control2W.textFromValue(control2W.value, control2W.locale)
+                        text: control2W.textFromValue(control2W.value,
+                                                      control2W.locale)
                         anchors.bottomMargin: 15
                         anchors.rightMargin: 280
                         anchors.topMargin: 15
@@ -1817,20 +1839,22 @@ Item {
 
                     validator: DoubleValidator {
                         bottom: Math.min(control3W.from, control3W.to)
-                        top:  Math.max(control3W.from, control3W.to)
+                        top: Math.max(control3W.from, control3W.to)
                     }
 
-                    textFromValue: function(value, locale) {
-                        return Number(value / 100).toLocaleString(locale, 'f', control3W.decimals) + qsTr("m")
+                    textFromValue: function (value, locale) {
+                        return Number(value / 100).toLocaleString(
+                                    locale, 'f', control3W.decimals) + qsTr("m")
                     }
 
-                    valueFromText: function(text, locale) {
+                    valueFromText: function (text, locale) {
                         return Number.fromLocaleString(locale, text) * 100
                     }
 
                     contentItem: TextInput {
                         z: 5
-                        text: control3W.textFromValue(control3W.value, control3W.locale)
+                        text: control3W.textFromValue(control3W.value,
+                                                      control3W.locale)
                         anchors.bottomMargin: 15
                         anchors.rightMargin: 280
                         anchors.topMargin: 15
@@ -1961,20 +1985,22 @@ Item {
 
                     validator: DoubleValidator {
                         bottom: Math.min(control4W.from, control4W.to)
-                        top:  Math.max(control4W.from, control4W.to)
+                        top: Math.max(control4W.from, control4W.to)
                     }
 
-                    textFromValue: function(value, locale) {
-                        return Number(value / 100).toLocaleString(locale, 'f', control4W.decimals) + qsTr("m")
+                    textFromValue: function (value, locale) {
+                        return Number(value / 100).toLocaleString(
+                                    locale, 'f', control4W.decimals) + qsTr("m")
                     }
 
-                    valueFromText: function(text, locale) {
+                    valueFromText: function (text, locale) {
                         return Number.fromLocaleString(locale, text) * 100
                     }
 
                     contentItem: TextInput {
                         z: 5
-                        text: control4W.textFromValue(control4W.value, control4W.locale)
+                        text: control4W.textFromValue(control4W.value,
+                                                      control4W.locale)
                         anchors.bottomMargin: 15
                         anchors.rightMargin: 280
                         anchors.topMargin: 15
@@ -2105,20 +2131,22 @@ Item {
 
                     validator: DoubleValidator {
                         bottom: Math.min(control5W.from, control5W.to)
-                        top:  Math.max(control5W.from, control5W.to)
+                        top: Math.max(control5W.from, control5W.to)
                     }
 
-                    textFromValue: function(value, locale) {
-                        return Number(value / 100).toLocaleString(locale, 'f', control5W.decimals) + qsTr("m")
+                    textFromValue: function (value, locale) {
+                        return Number(value / 100).toLocaleString(
+                                    locale, 'f', control5W.decimals) + qsTr("m")
                     }
 
-                    valueFromText: function(text, locale) {
+                    valueFromText: function (text, locale) {
                         return Number.fromLocaleString(locale, text) * 100
                     }
 
                     contentItem: TextInput {
                         z: 5
-                        text: control5W.textFromValue(control5W.value, control5W.locale)
+                        text: control5W.textFromValue(control5W.value,
+                                                      control5W.locale)
                         anchors.bottomMargin: 15
                         anchors.rightMargin: 280
                         anchors.topMargin: 15
@@ -2364,20 +2392,23 @@ Item {
 
                     validator: DoubleValidator {
                         bottom: Math.min(controlL.from, controlL.to)
-                        top:  Math.max(controlL.from, controlL.to)
+                        top: Math.max(controlL.from, controlL.to)
                     }
 
-                    textFromValue: function(value, locale) {
-                        return Number(value / 100).toLocaleString(locale, 'f', controlL.decimals) + qsTr("deg")
+                    textFromValue: function (value, locale) {
+                        return Number(value / 100).toLocaleString(
+                                    locale, 'f',
+                                    controlL.decimals) + qsTr("deg")
                     }
 
-                    valueFromText: function(text, locale) {
+                    valueFromText: function (text, locale) {
                         return Number.fromLocaleString(locale, text) * 100
                     }
 
                     contentItem: TextInput {
                         z: 5
-                        text: controlL.textFromValue(controlL.value, controlL.locale)
+                        text: controlL.textFromValue(controlL.value,
+                                                     controlL.locale)
                         anchors.bottomMargin: 15
                         anchors.rightMargin: 280
                         anchors.topMargin: 15
@@ -2508,20 +2539,23 @@ Item {
 
                     validator: DoubleValidator {
                         bottom: Math.min(control1L.from, control1L.to)
-                        top:  Math.max(control1L.from, control1L.to)
+                        top: Math.max(control1L.from, control1L.to)
                     }
 
-                    textFromValue: function(value, locale) {
-                        return Number(value / 100).toLocaleString(locale, 'f', control1L.decimals) + qsTr("deg")
+                    textFromValue: function (value, locale) {
+                        return Number(value / 100).toLocaleString(
+                                    locale, 'f',
+                                    control1L.decimals) + qsTr("deg")
                     }
 
-                    valueFromText: function(text, locale) {
+                    valueFromText: function (text, locale) {
                         return Number.fromLocaleString(locale, text) * 100
                     }
 
                     contentItem: TextInput {
                         z: 5
-                        text: control1L.textFromValue(control1L.value, control1L.locale)
+                        text: control1L.textFromValue(control1L.value,
+                                                      control1L.locale)
                         anchors.bottomMargin: 15
                         anchors.rightMargin: 280
                         anchors.topMargin: 15
@@ -2652,20 +2686,23 @@ Item {
 
                     validator: DoubleValidator {
                         bottom: Math.min(control2L.from, control2L.to)
-                        top:  Math.max(control2L.from, control2L.to)
+                        top: Math.max(control2L.from, control2L.to)
                     }
 
-                    textFromValue: function(value, locale) {
-                        return Number(value / 100).toLocaleString(locale, 'f', control2L.decimals) + qsTr("deg")
+                    textFromValue: function (value, locale) {
+                        return Number(value / 100).toLocaleString(
+                                    locale, 'f',
+                                    control2L.decimals) + qsTr("deg")
                     }
 
-                    valueFromText: function(text, locale) {
+                    valueFromText: function (text, locale) {
                         return Number.fromLocaleString(locale, text) * 100
                     }
 
                     contentItem: TextInput {
                         z: 5
-                        text: control2L.textFromValue(control2L.value, control2L.locale)
+                        text: control2L.textFromValue(control2L.value,
+                                                      control2L.locale)
                         anchors.bottomMargin: 15
                         anchors.rightMargin: 280
                         anchors.topMargin: 15
@@ -2796,20 +2833,22 @@ Item {
 
                     validator: DoubleValidator {
                         bottom: Math.min(control3L.from, control3L.to)
-                        top:  Math.max(control3L.from, control3L.to)
+                        top: Math.max(control3L.from, control3L.to)
                     }
 
-                    textFromValue: function(value, locale) {
-                        return Number(value / 100).toLocaleString(locale, 'f', control3L.decimals) + qsTr("m")
+                    textFromValue: function (value, locale) {
+                        return Number(value / 100).toLocaleString(
+                                    locale, 'f', control3L.decimals) + qsTr("m")
                     }
 
-                    valueFromText: function(text, locale) {
+                    valueFromText: function (text, locale) {
                         return Number.fromLocaleString(locale, text) * 100
                     }
 
                     contentItem: TextInput {
                         z: 5
-                        text: control3L.textFromValue(control3L.value, control3L.locale)
+                        text: control3L.textFromValue(control3L.value,
+                                                      control3L.locale)
                         anchors.bottomMargin: 15
                         anchors.rightMargin: 280
                         anchors.topMargin: 15
@@ -2940,20 +2979,22 @@ Item {
 
                     validator: DoubleValidator {
                         bottom: Math.min(control4L.from, control4L.to)
-                        top:  Math.max(control4L.from, control4L.to)
+                        top: Math.max(control4L.from, control4L.to)
                     }
 
-                    textFromValue: function(value, locale) {
-                        return Number(value / 100).toLocaleString(locale, 'f', control4L.decimals) + qsTr("m")
+                    textFromValue: function (value, locale) {
+                        return Number(value / 100).toLocaleString(
+                                    locale, 'f', control4L.decimals) + qsTr("m")
                     }
 
-                    valueFromText: function(text, locale) {
+                    valueFromText: function (text, locale) {
                         return Number.fromLocaleString(locale, text) * 100
                     }
 
                     contentItem: TextInput {
                         z: 5
-                        text: control4L.textFromValue(control4L.value, control4L.locale)
+                        text: control4L.textFromValue(control4L.value,
+                                                      control4L.locale)
                         anchors.bottomMargin: 15
                         anchors.rightMargin: 280
                         anchors.topMargin: 15
@@ -3084,20 +3125,22 @@ Item {
 
                     validator: DoubleValidator {
                         bottom: Math.min(control5L.from, control5L.to)
-                        top:  Math.max(control5L.from, control5L.to)
+                        top: Math.max(control5L.from, control5L.to)
                     }
 
-                    textFromValue: function(value, locale) {
-                        return Number(value / 100).toLocaleString(locale, 'f', control5L.decimals) + qsTr("m")
+                    textFromValue: function (value, locale) {
+                        return Number(value / 100).toLocaleString(
+                                    locale, 'f', control5L.decimals) + qsTr("m")
                     }
 
-                    valueFromText: function(text, locale) {
+                    valueFromText: function (text, locale) {
                         return Number.fromLocaleString(locale, text) * 100
                     }
 
                     contentItem: TextInput {
                         z: 5
-                        text: control5L.textFromValue(control5L.value, control5L.locale)
+                        text: control5L.textFromValue(control5L.value,
+                                                      control5L.locale)
                         anchors.bottomMargin: 15
                         anchors.rightMargin: 280
                         anchors.topMargin: 15
@@ -3341,23 +3384,25 @@ Item {
                     anchors.verticalCenterOffset: 1026
                     anchors.horizontalCenterOffset: 1439
 
-
                     validator: DoubleValidator {
                         bottom: Math.min(controlR.from, controlR.to)
-                        top:  Math.max(controlR.from, controlR.to)
+                        top: Math.max(controlR.from, controlR.to)
                     }
 
-                    textFromValue: function(value, locale) {
-                        return Number(value / 100).toLocaleString(locale, 'f', controlR.decimals) + qsTr("deg")
+                    textFromValue: function (value, locale) {
+                        return Number(value / 100).toLocaleString(
+                                    locale, 'f',
+                                    controlR.decimals) + qsTr("deg")
                     }
 
-                    valueFromText: function(text, locale) {
+                    valueFromText: function (text, locale) {
                         return Number.fromLocaleString(locale, text) * 100
                     }
 
                     contentItem: TextInput {
                         z: 5
-                        text: controlR.textFromValue(controlR.value, controlR.locale)
+                        text: controlR.textFromValue(controlR.value,
+                                                     controlR.locale)
                         anchors.bottomMargin: 15
                         anchors.rightMargin: 280
                         anchors.topMargin: 15
@@ -3486,23 +3531,25 @@ Item {
                     anchors.verticalCenterOffset: 1267
                     anchors.horizontalCenterOffset: 1439
 
-
                     validator: DoubleValidator {
                         bottom: Math.min(control1R.from, control1R.to)
-                        top:  Math.max(control1R.from, control1R.to)
+                        top: Math.max(control1R.from, control1R.to)
                     }
 
-                    textFromValue: function(value, locale) {
-                        return Number(value / 100).toLocaleString(locale, 'f', control1R.decimals) + qsTr("deg")
+                    textFromValue: function (value, locale) {
+                        return Number(value / 100).toLocaleString(
+                                    locale, 'f',
+                                    control1R.decimals) + qsTr("deg")
                     }
 
-                    valueFromText: function(text, locale) {
+                    valueFromText: function (text, locale) {
                         return Number.fromLocaleString(locale, text) * 100
                     }
 
                     contentItem: TextInput {
                         z: 5
-                        text: control1R.textFromValue(control1R.value, control1R.locale)
+                        text: control1R.textFromValue(control1R.value,
+                                                      control1R.locale)
                         anchors.bottomMargin: 15
                         anchors.rightMargin: 280
                         anchors.topMargin: 15
@@ -3631,23 +3678,25 @@ Item {
                     anchors.verticalCenterOffset: 1501
                     anchors.horizontalCenterOffset: 1439
 
-
                     validator: DoubleValidator {
                         bottom: Math.min(control2R.from, control2R.to)
-                        top:  Math.max(control2R.from, control2R.to)
+                        top: Math.max(control2R.from, control2R.to)
                     }
 
-                    textFromValue: function(value, locale) {
-                        return Number(value / 100).toLocaleString(locale, 'f', control2R.decimals) + qsTr("deg")
+                    textFromValue: function (value, locale) {
+                        return Number(value / 100).toLocaleString(
+                                    locale, 'f',
+                                    control2R.decimals) + qsTr("deg")
                     }
 
-                    valueFromText: function(text, locale) {
+                    valueFromText: function (text, locale) {
                         return Number.fromLocaleString(locale, text) * 100
                     }
 
                     contentItem: TextInput {
                         z: 5
-                        text: control2R.textFromValue(control2R.value, control2R.locale)
+                        text: control2R.textFromValue(control2R.value,
+                                                      control2R.locale)
                         anchors.bottomMargin: 15
                         anchors.rightMargin: 280
                         anchors.topMargin: 15
@@ -3776,23 +3825,24 @@ Item {
                     anchors.verticalCenterOffset: 1026
                     anchors.horizontalCenterOffset: 2661
 
-
                     validator: DoubleValidator {
                         bottom: Math.min(control3R.from, control3R.to)
-                        top:  Math.max(control3R.from, control3R.to)
+                        top: Math.max(control3R.from, control3R.to)
                     }
 
-                    textFromValue: function(value, locale) {
-                        return Number(value / 100).toLocaleString(locale, 'f', control3R.decimals) + qsTr("m")
+                    textFromValue: function (value, locale) {
+                        return Number(value / 100).toLocaleString(
+                                    locale, 'f', control3R.decimals) + qsTr("m")
                     }
 
-                    valueFromText: function(text, locale) {
+                    valueFromText: function (text, locale) {
                         return Number.fromLocaleString(locale, text) * 100
                     }
 
                     contentItem: TextInput {
                         z: 5
-                        text: control3R.textFromValue(control3R.value, control3R.locale)
+                        text: control3R.textFromValue(control3R.value,
+                                                      control3R.locale)
                         anchors.bottomMargin: 15
                         anchors.rightMargin: 280
                         anchors.topMargin: 15
@@ -3921,23 +3971,24 @@ Item {
                     anchors.verticalCenterOffset: 1267
                     anchors.horizontalCenterOffset: 2661
 
-
                     validator: DoubleValidator {
                         bottom: Math.min(control4R.from, control4R.to)
-                        top:  Math.max(control4R.from, control4R.to)
+                        top: Math.max(control4R.from, control4R.to)
                     }
 
-                    textFromValue: function(value, locale) {
-                        return Number(value / 100).toLocaleString(locale, 'f', control4R.decimals) + qsTr("m")
+                    textFromValue: function (value, locale) {
+                        return Number(value / 100).toLocaleString(
+                                    locale, 'f', control4R.decimals) + qsTr("m")
                     }
 
-                    valueFromText: function(text, locale) {
+                    valueFromText: function (text, locale) {
                         return Number.fromLocaleString(locale, text) * 100
                     }
 
                     contentItem: TextInput {
                         z: 5
-                        text: control4R.textFromValue(control4R.value, control4R.locale)
+                        text: control4R.textFromValue(control4R.value,
+                                                      control4R.locale)
                         anchors.bottomMargin: 15
                         anchors.rightMargin: 280
                         anchors.topMargin: 15
@@ -4068,20 +4119,22 @@ Item {
 
                     validator: DoubleValidator {
                         bottom: Math.min(control5R.from, control5R.to)
-                        top:  Math.max(control5R.from, control5R.to)
+                        top: Math.max(control5R.from, control5R.to)
                     }
 
-                    textFromValue: function(value, locale) {
-                        return Number(value / 100).toLocaleString(locale, 'f', control5R.decimals) + qsTr("m")
+                    textFromValue: function (value, locale) {
+                        return Number(value / 100).toLocaleString(
+                                    locale, 'f', control5R.decimals) + qsTr("m")
                     }
 
-                    valueFromText: function(text, locale) {
+                    valueFromText: function (text, locale) {
                         return Number.fromLocaleString(locale, text) * 100
                     }
 
                     contentItem: TextInput {
                         z: 5
-                        text: control5R.textFromValue(control5R.value, control5R.locale)
+                        text: control5R.textFromValue(control5R.value,
+                                                      control5R.locale)
                         anchors.bottomMargin: 15
                         anchors.rightMargin: 280
                         anchors.topMargin: 15
@@ -4327,9 +4380,7 @@ Item {
                 height: 193
                 hoverEnabled: true
                 onHoveredChanged: {
-                    owbg.color = waistOffsetButton.hovered ? 
-                                (offsetsControl.visibleOffsetsWindowIndex === 0 ? "#3EB828" : "#7081FF") : 
-                                (offsetsControl.visibleOffsetsWindowIndex === 0 ? "#20910B" : "#1630EE")
+                    owbg.color = waistOffsetButton.hovered ? (offsetsControl.visibleOffsetsWindowIndex === 0 ? "#3EB828" : "#7081FF") : (offsetsControl.visibleOffsetsWindowIndex === 0 ? "#20910B" : "#1630EE")
                 }
 
                 Text {
@@ -4384,9 +4435,7 @@ Item {
                 highlighted: false
                 flat: true
                 onHoveredChanged: {
-                    olfbg.color = leftFootOffsetButton.hovered ? 
-                                (offsetsControl.visibleOffsetsWindowIndex === 1 ? "#3EB828" : "#7081FF") : 
-                                (offsetsControl.visibleOffsetsWindowIndex === 1 ? "#20910B" : "#1630EE")
+                    olfbg.color = leftFootOffsetButton.hovered ? (offsetsControl.visibleOffsetsWindowIndex === 1 ? "#3EB828" : "#7081FF") : (offsetsControl.visibleOffsetsWindowIndex === 1 ? "#20910B" : "#1630EE")
                 }
                 background: Rectangle {
                     id: olfbg
@@ -4417,11 +4466,10 @@ Item {
                     offsetsControl.visibleOffsetsWindowIndex = 1
 
                     owbg.color = "#1630ee"
-                    if(connectOffsetsCheckBox.checked === true) {
+                    if (connectOffsetsCheckBox.checked === true) {
                         olfbg.color = "#20910B"
                         orfbg.color = "#20910B"
-                    }
-                    else {
+                    } else {
                         olfbg.color = "#20910B"
                         orfbg.color = "#1630ee"
                     }
@@ -4438,11 +4486,7 @@ Item {
                 highlighted: false
                 flat: true
                 onHoveredChanged: {
-                    orfbg.color = rightFootOffsetButton.hovered ? 
-                                (offsetsControl.visibleOffsetsWindowIndex === 2 ? "#3EB828" : 
-                                    (offsetsControl.visibleOffsetsWindowIndex === 1 && connectOffsetsCheckBox.checked ? "#3EB828" : "#7081FF")) : 
-                                (offsetsControl.visibleOffsetsWindowIndex === 2 ? "#20910B" : 
-                                    (offsetsControl.visibleOffsetsWindowIndex === 1 && connectOffsetsCheckBox.checked ? "#20910B" : "#1630EE"))
+                    orfbg.color = rightFootOffsetButton.hovered ? (offsetsControl.visibleOffsetsWindowIndex === 2 ? "#3EB828" : (offsetsControl.visibleOffsetsWindowIndex === 1 && connectOffsetsCheckBox.checked ? "#3EB828" : "#7081FF")) : (offsetsControl.visibleOffsetsWindowIndex === 2 ? "#20910B" : (offsetsControl.visibleOffsetsWindowIndex === 1 && connectOffsetsCheckBox.checked ? "#20910B" : "#1630EE"))
                 }
                 background: Rectangle {
                     id: orfbg
@@ -4474,16 +4518,15 @@ Item {
                 }
                 onClicked: {
                     waistOffsetControl.visible = false
-                    
+
                     owbg.color = "#1630ee"
-                    if(connectOffsetsCheckBox.checked === true) {
+                    if (connectOffsetsCheckBox.checked === true) {
                         olfbg.color = "#20910B"
                         orfbg.color = "#20910B"
                         leftFootOffsetControl.visible = true
                         rightFootOffsetControl.visible = false
                         offsetsControl.visibleOffsetsWindowIndex = 1
-                    }
-                    else {
+                    } else {
                         olfbg.color = "#1630ee"
                         orfbg.color = "#20910B"
                         leftFootOffsetControl.visible = false
@@ -4505,7 +4548,8 @@ Item {
                 checkState: Qt.Checked
                 checked: true
                 onCheckStateChanged: {
-                    if(offsetsControl.visibleOffsetsWindowIndex === 1 || offsetsControl.visibleOffsetsWindowIndex === 2){
+                    if (offsetsControl.visibleOffsetsWindowIndex === 1
+                            || offsetsControl.visibleOffsetsWindowIndex === 2) {
                         waistOffsetControl.visible = true
                         leftFootOffsetControl.visible = false
                         rightFootOffsetControl.visible = false
@@ -4515,9 +4559,10 @@ Item {
                         olfbg.color = "#1630ee"
                         orfbg.color = "#1630ee"
                     }
-                    _cppContext.multiCpp("CONNECTOFFSETSCHANGED", connectOffsetsCheckBox.checked)
+                    _cppContext.multiCpp("CONNECTOFFSETSCHANGED",
+                                         connectOffsetsCheckBox.checked)
                 }
-                
+
                 hoverEnabled: true
                 onHoveredChanged: {
                     cobg.color = connectOffsetsCheckBox.hovered ? "#7180EE" : "#1630EE"
@@ -4600,13 +4645,14 @@ Item {
                     anchors.rightMargin: 0
                 }
                 highlighted: false
-                onHoveredChanged:  {
+                onHoveredChanged: {
                     orfbg1.color = confirmOffsetButton.hovered ? "#7081FF" : "#1630ee"
                 }
 
                 onClicked: {
                     offsetsControl.visible = false
                     _cppContext.cppSlot("OFFSETSAPPROVED")
+                    generalControlTab.enabled = true
                 }
             }
 
@@ -4647,8 +4693,9 @@ Item {
                 onClicked: {
                     offsetsControl.visible = false
                     _cppContext.cppSlot("OFFSETSCANCELLED")
+                    generalControlTab.enabled = true
                 }
-                onHoveredChanged:  {
+                onHoveredChanged: {
                     orfbg2.color = cancelOffsetButton.hovered ? "#5D6BD4" : "#0d21b3"
                 }
             }
@@ -4760,7 +4807,6 @@ Item {
                         source: "Group-15.png"
                         anchors.centerIn: parent
                     }
-
                 }
 
                 Button {
@@ -4826,26 +4872,7 @@ Item {
                         anchors.verticalCenterOffset: -39
                     }
                 }
-
-
-                
-
-
-
-
             }
-
-
-
         }
     }
 }
-
-
-
-
-/*##^##
-Designer {
-    D{i:0;formeditorZoom:0.33000001311302185}
-}
-##^##*/

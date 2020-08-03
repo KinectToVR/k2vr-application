@@ -29,7 +29,8 @@ public:
 	bool initialised = false,
 		controllerTriggerPressed[2] = { false,false },
         controllerGripPressed[2] = { false,false },
-        isSkeletonTracked = false;
+        isSkeletonTracked = false,
+        isOverlayVisible = false;
 	float controllerTrackpadPose[2][2] = { {0.f,0.f}, {0.f,0.f} };
 	
 };
