@@ -4,7 +4,7 @@ const char* logConfigFileName = "logging.conf";
 
 const char* logConfigDefault =
 "* GLOBAL:\n"
-u8"	FORMAT = \"[%level] %datetime{%Y年%M月%d日 %H時%m分%s秒:}: %msg\"\n"
+u8"	FORMAT = \"[%level] %datetime{%Y年%M月%d日 %H時%m分%s}秒: %msg\"\n"
 "	FILENAME = \"KinectToVR_EX.log\"\n"
 "	ENABLED = true\n"
 "	TO_FILE = true\n"

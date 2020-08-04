@@ -54,6 +54,9 @@ int getVariable::get(const QString& msg, const int& arg, const int& arg1) const
 
     if(msg=="SKELETONSTATE")
         return process.isSkeletonTracked;
+    
+    if(msg=="VISIBLE")
+        return process.isOverlayVisible;
 
     return 0; //If message cound't be processed, return 0
 }

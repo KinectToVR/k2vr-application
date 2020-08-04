@@ -259,12 +259,12 @@ void OverlayController::Init(QQmlEngine* qmlEngine) {
 		throw std::runtime_error(std::string("No Overlay interface"));
 	}
 
-	LOG(INFO) << u8"QMLのコンテキストをOverlayのコントローラーのために登録…";
+	LOG(INFO) << u8"QMLのコンテキストをオーバーレイのコントローラーのために登録…";
 	// Set qml context
 	qmlEngine->rootContext()->setContextProperty("applicationVersion", getVersionString());
 	qmlEngine->rootContext()->setContextProperty("vrRuntimePath", getVRRuntimePathUrl());
 
-	LOG(INFO) << u8"シングルトンをOverlayのコントローラーのために登録…";
+	LOG(INFO) << u8"シングルトンをオーバーレイのコントローラーのために登録…";
 	// Register qml singletons
 	qmlRegisterSingletonType<OverlayController>(applicationKey, 1, 0, "OverlayController", [](QQmlEngine*, QJSEngine*) {
 		QObject* obj = getInstance();
@@ -296,7 +296,7 @@ void OverlayController::Shutdown() {
 
 
 void OverlayController::SetWidget(QQuickItem* quickItem, const std::string& name, const std::string& key) {
-	LOG(INFO) << u8"Overlayのセットアップを始めた…";
+	LOG(INFO) << u8"オーバーレイのセットアップを始めた…";
 	if (!desktopMode) {
 		vr::VROverlayError overlayError = vr::VROverlay()->CreateDashboardOverlay(key.c_str(), name.c_str(), &m_ulOverlayHandle, &m_ulOverlayThumbnailHandle);
 		if (overlayError != vr::VROverlayError_None) {
@@ -304,7 +304,7 @@ void OverlayController::SetWidget(QQuickItem* quickItem, const std::string& name
 				throw new std::exception("Overlay key in use");
 			}
 		}
-		LOG(INFO) << u8"Overlayのプロパティのセットアップを始めた…";
+		LOG(INFO) << u8"オーバーレイのプロパティのセットアップを始めた…";
 		vr::VROverlay()->SetOverlayWidthInMeters(m_ulOverlayHandle, 2.5f);
 		vr::VROverlay()->SetOverlayInputMethod(m_ulOverlayHandle, vr::VROverlayInputMethod_Mouse);
 		vr::VROverlay()->SetOverlayFlag(m_ulOverlayHandle, vr::VROverlayFlags::VROverlayFlags_SendVRSmoothScrollEvents, true);
@@ -363,6 +363,9 @@ void OverlayController::OnRenderRequest() {
 
 void OverlayController::renderOverlay() {
 	if (!desktopMode) {
+		// get overlay visibility
+		overlayVisible = vr::VROverlay()->IsOverlayVisible(m_ulOverlayHandle);
+
 		// skip rendering if the overlay isn't visible
 		if (!vr::VROverlay() || !vr::VROverlay()->IsOverlayVisible(m_ulOverlayHandle) && !vr::VROverlay()->IsOverlayVisible(m_ulOverlayThumbnailHandle))
 			return;

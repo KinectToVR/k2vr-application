@@ -403,6 +403,23 @@ Item {
                     radius: 20
                 }
                 onClicked: {
+                    /* Little hack to refresh offsets spinners */
+                    if(offsetsControl.visibleOffsetsWindowIndex == 0) {
+                        waistOffsetControl.visible = true
+                        leftFootOffsetControl.visible = false
+                        rightFootOffsetControl.visible = false
+                    }
+                    else if(offsetsControl.visibleOffsetsWindowIndex == 1) {
+                        waistOffsetControl.visible = false
+                        leftFootOffsetControl.visible = true
+                        rightFootOffsetControl.visible = false
+                    }
+                    else if(offsetsControl.visibleOffsetsWindowIndex == 2) {
+                        waistOffsetControl.visible = false
+                        leftFootOffsetControl.visible = false
+                        rightFootOffsetControl.visible = true
+                    }
+
                     _cppContext.cppSlot("SHOWOFFSETS")
                     offsetsControl.visible = true
                     generalControlTab.enabled = false
@@ -615,6 +632,7 @@ Item {
 
             ComboBox {
                 id: hipsComboBox
+                objectName: "hipsComboBox"
                 x: 380
                 y: 1101
                 width: 1130
@@ -753,6 +771,7 @@ Item {
 
             ComboBox {
                 id: feetComboBox
+                objectName: "feetComboBox"
                 x: 380
                 y: 1340
                 width: 1130
@@ -891,6 +910,7 @@ Item {
 
             ComboBox {
                 id: filterComboBox
+                objectName: "filterComboBox"
                 x: 380
                 y: 1580
                 width: 1130
@@ -961,7 +981,7 @@ Item {
                 contentItem: Text {
                     leftPadding: 25
                     color: "#ffffff"
-                    text: " Linear Interpolation"
+                    text: filterComboBox.displayText
                     width: filterComboBox.width - 110
                     font.weight: Font.Bold
                     font.bold: false
@@ -1143,7 +1163,7 @@ Item {
 
                     onPaint: {
                         painterCanvas.visible = _get.get(qsTr("SKELETONSTATE"))
-                                && skeletonButton.show
+                                && skeletonButton.show && _get.get(qsTr("VISIBLE"))
                         var cx = getContext("2d")
                         cx.reset()
 
@@ -1247,7 +1267,7 @@ Item {
                             if(painterCanvas.run) 
                                 painterCanvas.requestPaint()
 
-                            if(_get.get(qsTr("SKELETONSTATE")) && skeletonButton.show)
+                            if(_get.get(qsTr("SKELETONSTATE")) && skeletonButton.show && _get.get(qsTr("VISIBLE")))
                                 painterCanvas.run = true
                             else
                                 painterCanvas.run = false
@@ -1378,6 +1398,7 @@ Item {
 
                 SpinBox {
                     id: controlW
+                    objectName: "controlW"
                     from: -36000
                     value: 0
                     to: 36000
@@ -1385,8 +1406,7 @@ Item {
                     anchors.centerIn: parent
                     editable: true
 
-                    onValueChanged: _cppContext.multiCpp("WAISTPITCH",
-                                                         '' + value)
+                    onValueChanged: _cppContext.multiCpp("WAISTPITCH", '' + value)
 
                     property int decimals: 2
                     property real realValue: value / 100
@@ -1528,6 +1548,7 @@ Item {
 
                 SpinBox {
                     id: control1W
+                    objectName: "control1W"
                     from: -36000
                     value: 0
                     to: 36000
@@ -1675,6 +1696,7 @@ Item {
 
                 SpinBox {
                     id: control2W
+                    objectName: "control2W"
                     from: -36000
                     value: 0
                     to: 36000
@@ -1822,6 +1844,7 @@ Item {
 
                 SpinBox {
                     id: control3W
+                    objectName: "control3W"
                     from: -100000
                     value: 0
                     to: 100000
@@ -1968,6 +1991,7 @@ Item {
 
                 SpinBox {
                     id: control4W
+                    objectName: "control4W"
                     from: -100000
                     value: 0
                     to: 100000
@@ -2114,6 +2138,7 @@ Item {
 
                 SpinBox {
                     id: control5W
+                    objectName: "control5W"
                     from: -100000
                     value: 0
                     to: 100000
@@ -2375,6 +2400,7 @@ Item {
 
                 SpinBox {
                     id: controlL
+                    objectName: "controlL"
                     from: -36000
                     value: 0
                     to: 36000
@@ -2522,6 +2548,7 @@ Item {
 
                 SpinBox {
                     id: control1L
+                    objectName: "control1L"
                     from: -36000
                     value: 0
                     to: 36000
@@ -2669,6 +2696,7 @@ Item {
 
                 SpinBox {
                     id: control2L
+                    objectName: "control2L"
                     from: -36000
                     value: 0
                     to: 36000
@@ -2816,6 +2844,7 @@ Item {
 
                 SpinBox {
                     id: control3L
+                    objectName: "control3L"
                     from: -100000
                     value: 0
                     to: 100000
@@ -2962,6 +2991,7 @@ Item {
 
                 SpinBox {
                     id: control4L
+                    objectName: "control4L"
                     from: -100000
                     value: 0
                     to: 100000
@@ -3108,6 +3138,7 @@ Item {
 
                 SpinBox {
                     id: control5L
+                    objectName: "control5L"
                     from: -100000
                     value: 0
                     to: 100000
@@ -3369,6 +3400,7 @@ Item {
 
                 SpinBox {
                     id: controlR
+                    objectName: "controlR"
                     from: -36000
                     value: 0
                     to: 36000
@@ -3516,6 +3548,7 @@ Item {
 
                 SpinBox {
                     id: control1R
+                    objectName: "control1R"
                     from: -36000
                     value: 0
                     to: 36000
@@ -3663,6 +3696,7 @@ Item {
 
                 SpinBox {
                     id: control2R
+                    objectName: "control2R"
                     from: -36000
                     value: 0
                     to: 36000
@@ -3810,6 +3844,7 @@ Item {
 
                 SpinBox {
                     id: control3R
+                    objectName: "control3R"
                     from: -100000
                     value: 0
                     to: 100000
@@ -3956,6 +3991,7 @@ Item {
 
                 SpinBox {
                     id: control4R
+                    objectName: "control4R"
                     from: -100000
                     value: 0
                     to: 100000
@@ -4102,6 +4138,7 @@ Item {
 
                 SpinBox {
                     id: control5R
+                    objectName: "control5R"
                     from: -100000
                     value: 0
                     to: 100000
@@ -4691,6 +4728,23 @@ Item {
                 highlighted: false
                 hoverEnabled: true
                 onClicked: {
+                    /* Little hack to refresh offsets spinners */
+                    if(offsetsControl.visibleOffsetsWindowIndex == 0) {
+                        waistOffsetControl.visible = false
+                        leftFootOffsetControl.visible = true
+                        rightFootOffsetControl.visible = false
+                    }
+                    else if(offsetsControl.visibleOffsetsWindowIndex == 1) {
+                        waistOffsetControl.visible = true
+                        leftFootOffsetControl.visible = false
+                        rightFootOffsetControl.visible = false
+                    }
+                    else if(offsetsControl.visibleOffsetsWindowIndex == 2) {
+                        waistOffsetControl.visible = true
+                        leftFootOffsetControl.visible = false
+                        rightFootOffsetControl.visible = false
+                    }
+
                     offsetsControl.visible = false
                     _cppContext.cppSlot("OFFSETSCANCELLED")
                     generalControlTab.enabled = true

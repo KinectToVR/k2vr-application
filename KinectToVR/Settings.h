@@ -5,11 +5,14 @@
 #include <boost/serialization/nvp.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
+#include <boost_serialization_eigen.h>
 #include <glm/glm.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <glm/detail/type_quat.hpp>
 #include <Eigen/Dense>
+#include <array>
+#include <runtimeConfig.h>
 
 typedef int waistRotationOption,
 feetRotationOption, trackingFilterOption;
@@ -51,18 +54,17 @@ public:
 	feetRotationOption feetOrientationTrackingOption = feetRotationFilterOptions::k_EnableFeetOrientationFilter;
 	trackingFilterOption positionalTrackingFilterOption = trackingFilterOptions::k_EnableTrackingFilter_LERP;
 
-	glm::vec3 playspaceOrigin = glm::vec3{ 0,0,0 },
-		waistOffset = glm::vec3{ 0,0,0 },
-		footRightOffset = glm::vec3{ 0,0,0 },
-		footLeftOffset = glm::vec3{ 0,0,0 };
-	glm::quat waistRotOffset = glm::quat{ 1,0,0,0 },
-		footRightRotOffset = glm::quat{ 1,0,0,0 },
-		footLeftRotOffset = glm::quat{ 1,0,0,0 };
+	glm::vec3 playspaceOrigin = glm::vec3{ 0,0,0 };
+	std::array<glm::quat, 3> glOrientationOffsets{ {glm::quat(), glm::quat(), glm::quat()} };
+
+	std::array<Eigen::Vector3f, 3> positionalOffsets{ {Eigen::Vector3f(), Eigen::Vector3f(), Eigen::Vector3f()} };
+	std::array<Eigen::Quaternionf, 3> orientationOffsets{ {Eigen::Quaternionf(), Eigen::Quaternionf(), Eigen::Quaternionf()} };
 
 	Eigen::Matrix<float, 3, 3> rotationMatrix = Eigen::Matrix3f::Zero();
 	Eigen::Matrix<float, 3, 1> translationVector = Eigen::Vector3f::Zero();
 
 	double radPlayspaceOffset = 0.f;
+	bool flipSkeleton = true;
 
 };
 

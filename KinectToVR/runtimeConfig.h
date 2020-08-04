@@ -7,6 +7,7 @@
 #include <glm/detail/type_quat.hpp>
 #include <KinectHandlerBase.h>
 #include <any>
+#include <array>
 
 class runtimeConfig
 {
@@ -23,14 +24,17 @@ public:
 	glm::quat boneOrientations[25];
 	JointTrackingState trackingStates[25];
 
+	std::array<Eigen::Vector3f, 3> positionalOffsetsBackup{ {Eigen::Vector3f(), Eigen::Vector3f(), Eigen::Vector3f()} };
+	std::array<Eigen::Quaternionf, 3> orientationOffsetsBackup{ {Eigen::Quaternionf(), Eigen::Quaternionf(), Eigen::Quaternionf()} };
+
 	/* Other variables that are necessary to run program successfully */
 	int kinectVersion, controllerID[2], vrFrameRate;
 	std::string kinectState;
-	bool initialised = false,
+	bool initialised = false, started = false,
 		controllerTriggerPressed[2] = { false,false },
         controllerGripPressed[2] = { false,false },
         isSkeletonTracked = false,
-        isOverlayVisible = false;
+        isOverlayVisible = false, settingOffsets = false;
 	float controllerTrackpadPose[2][2] = { {0.f,0.f}, {0.f,0.f} };
 	
 };

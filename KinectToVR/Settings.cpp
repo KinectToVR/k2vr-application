@@ -1,5 +1,4 @@
 #include "Settings.h"
-#include <boost_serialization_eigen.h>
 
 Settings kinectSettings = Settings();
 
@@ -22,18 +21,19 @@ void Settings::serialize(Archive& archive, const unsigned int version) {
 		& feetOrientationTrackingOption
 		& positionalTrackingFilterOption
 		& playspaceOrigin
-		& rotationMatrix
-		& translationVector
-		& footRightOffset& footRightRotOffset
-		& footLeftOffset& footLeftRotOffset
-		& waistOffset& waistRotOffset
-		& radPlayspaceOffset;
+		& rotationMatrix & translationVector
+		& positionalOffsets & glOrientationOffsets
+		& radPlayspaceOffset & flipSkeleton;
 }
 
 /* Save settings with boost and output file stream */
 void Settings::saveSettings() {
 	std::ofstream output("settings.cfg");
-	
+
+	/* lil hack since i doesn't have full serialization for eigen */
+	for (int i = 0; i < 3; i++)
+		glOrientationOffsets[i] = pExchangeQG(orientationOffsets[i]);
+
 	boost::archive::text_oarchive archive(output);
 	archive << kinectSettings;
 }
@@ -44,4 +44,8 @@ void Settings::readSettings() {
 
 	boost::archive::text_iarchive archive(input);
 	archive >> kinectSettings;
+
+	/* lil hack since i doesn't have full serialization for eigen */
+	for (int i = 0; i < 3; i++)
+		orientationOffsets[i] = pExchangeQE(glOrientationOffsets[i]);
 }

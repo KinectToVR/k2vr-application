@@ -13,9 +13,9 @@ KinectToVR/KinectToVR.pro.user
 *.user
 /KinectToVR/.vs/KinectToVR/v16
 /KinectToVR/debug
+/KinectToVR/release
 /KinectToVR/release/KinectToVR.tlog
 /KinectToVR-360/debug
-/KinectToVR-360/release/KinectToVR-360.tlog
 /KinectToVR-360/release
 /KinectToVR/release/qmake
 /KinectToVR-One/debug
@@ -23,3 +23,5 @@ KinectToVR/KinectToVR.pro.user
 /KinectToVR-360/.qmake.stash
 /KinectToVR-One/.qmake.stash
 /.vs/KinectToVR/v16
+/KinectToVR-360/KinectToVR_EX.log
+/KinectToVR-360/settings.cfg

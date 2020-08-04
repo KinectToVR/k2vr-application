@@ -45,6 +45,7 @@ private:
 	std::unique_ptr<QTimer> m_pPumpEventsTimer;
 	std::unique_ptr<QTimer> m_pRenderTimer;
 	bool dashboardVisible = false;
+	bool overlayVisible = false;
 
 	QPoint m_ptLastMouse;
 	Qt::MouseButtons m_lastMouseButtons = 0;
@@ -70,6 +71,10 @@ public:
 
 	bool isDashboardVisible() {
 		return dashboardVisible;
+	}
+
+	bool isOverlayVisible() {
+		return overlayVisible;
 	}
 
 	void SetWidget(QQuickItem* quickItem, const std::string& name, const std::string& key = "");
