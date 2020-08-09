@@ -36,7 +36,7 @@ void signalHandler::cppSlot(const QString& msg)
             /* Update spinboxes to their previous state, cause offsets SET was cancelled */
             updateQSpinboxes(kinectSettings.positionalOffsets, kinectSettings.orientationOffsets);
         }
-
+        
         if (msg == "OFFSETSAPPROVED") {
             process.settingOffsets = false;
 

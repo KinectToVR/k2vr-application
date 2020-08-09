@@ -363,6 +363,8 @@ Item {
                     _cppContext.cppSlot("BEGINCALIBRATION")
                     calibrationWindow.visible = true
                     generalControlTab.enabled = false
+                    autoCalibTab.visible = false
+                    manualCalibTab.visible = false
                 }
             }
 
@@ -1264,7 +1266,7 @@ Item {
                         running: true
                         repeat: true
                         onTriggered: {
-                            if(painterCanvas.run) 
+                            if(painterCanvas.run)
                                 painterCanvas.requestPaint()
 
                             if(_get.get(qsTr("SKELETONSTATE")) && skeletonButton.show && _get.get(qsTr("VISIBLE")))
@@ -4783,6 +4785,7 @@ Item {
                 color: "#0d21b3"
                 radius: 40
                 id: chooseCalibTab
+                visible: true
 
                 Label {
                     x: 22
@@ -4821,6 +4824,11 @@ Item {
                     objectName: "autoCalibButton"
                     onClicked: {
                         _cppContext.cppSlot("START_AUTOCALIB")
+                        cancelAutoCalibButton.visible = true
+                        startAutoCalibButton.txt = "Start"
+                        calibSeconds.color = "#1630EE"
+                        chooseCalibTab.visible = false
+                        autoCalibTab.visible = true;
                     }
 
                     Label {
@@ -4880,6 +4888,8 @@ Item {
 
                     onClicked: {
                         _cppContext.cppSlot("START_MANUALCALIB")
+                        chooseCalibTab.visible = false
+                        manualCalibTab.visible = true;
                     }
                     onHoveredChanged: {
                         bgmc.color = manualCalibButton.hovered ? "#7180EE" : "#1630ee"
@@ -4927,6 +4937,398 @@ Item {
                     }
                 }
             }
+
+            Rectangle {
+                x: 652
+                y: 358
+                width: 2618
+                height: 1578
+                anchors.centerIn: parent
+                color: "#0d21b3"
+                radius: 40
+                id: manualCalibTab
+                visible: false
+
+                Image {
+                    source: "Group-25.png"
+                    anchors.centerIn: parent
+                }
+
+                Label {
+                    x: 22
+                    y: 42
+                    width: 1649
+                    height: 181
+                    color: "#ffffff"
+                    text: "Manual Calibration"
+                    anchors.verticalCenterOffset: -573
+                    anchors.horizontalCenterOffset: 0
+                    anchors.centerIn: parent
+                    font.pointSize: 94
+                    font.family: "JostSemi"
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                Button {
+                    id: confirmManualCalibButton
+                    x: 1917
+                    y: 1323
+                    width: 643
+                    height: 193
+                    background: Rectangle {
+                        id: cmbg
+                        color: "#1630ee"
+                        radius: 30
+                        border.width: 0
+                    }
+                    flat: true
+                    hoverEnabled: true
+                    Text {
+                        color: "#ffffff"
+                        text: qsTr("Confirm")
+                        anchors.leftMargin: 0
+                        anchors.bottomMargin: 0
+                        font.pointSize: 48
+                        anchors.centerIn: parent
+                        topPadding: 0
+                        leftPadding: 0
+                        font.bold: true
+                        bottomPadding: 0
+                        font.family: "JostSemi"
+                        rightPadding: 0
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.topMargin: 0
+                        anchors.rightMargin: 0
+                    }
+                    highlighted: false
+                    onHoveredChanged: {
+                        cmbg.color = confirmManualCalibButton.hovered ? "#7081FF" : "#1630ee"
+                    }
+                    onClicked: {
+                        _cppContext.cppSlot("MANUALCALIBRATION_APPROVED")
+                        chooseCalibTab.visible = true
+                        calibrationWindow.visible = false
+                        generalControlTab.enabled = true
+                    }
+                }
+
+                Button {
+                    id: cancelManualCalibButton
+                    x: 1304
+                    y: 1323
+                    width: 568
+                    height: 193
+                    visible: true
+                    background: Rectangle {
+                        id: cmbg1
+                        color: "#0d21b3"
+                        radius: 30
+                        border.color: "#1630ee"
+                        border.width: 15
+                    }
+                    flat: true
+                    Text {
+                        color: "#1630ee"
+                        text: qsTr("Cancel")
+                        anchors.bottomMargin: 0
+                        anchors.leftMargin: 0
+                        font.pointSize: 48
+                        anchors.centerIn: parent
+                        leftPadding: 0
+                        topPadding: 0
+                        font.bold: true
+                        bottomPadding: 0
+                        font.family: "JostSemi"
+                        horizontalAlignment: Text.AlignHCenter
+                        rightPadding: 0
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.rightMargin: 0
+                        anchors.topMargin: 0
+                    }
+                    highlighted: false
+                    hoverEnabled: true
+                    onClicked: {
+                        _cppContext.cppSlot("MANUALCALIBRATION_CANCELLED")
+                        chooseCalibTab.visible = true
+                        calibrationWindow.visible = false
+                        generalControlTab.enabled = true
+                    }
+                    onHoveredChanged: {
+                        cmbg1.color = cancelManualCalibButton.hovered ? "#5D6BD4" : "#0d21b3"
+                    }
+                }
+
+            }
+
+            Rectangle {
+                x: 652
+                y: 358
+                width: 2618
+                height: 1578
+                anchors.centerIn: parent
+                color: "#0d21b3"
+                radius: 40
+                id: autoCalibTab
+                visible: false
+
+                Label {
+                    x: 22
+                    y: 42
+                    width: 1649
+                    height: 181
+                    color: "#ffffff"
+                    text: "Automatic Calibration"
+                    anchors.verticalCenterOffset: -573
+                    anchors.horizontalCenterOffset: 0
+                    anchors.centerIn: parent
+                    font.pointSize: 94
+                    font.family: "JostSemi"
+                    font.bold: true
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                Label {
+                    y: 388
+                    color: "#ffffff"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: "Follow the directions"
+                        anchors.horizontalCenterOffset: 1
+                        font.bold: true
+                        font.pointSize: 52
+                        font.family: "JostSemi"
+                    }
+
+                Rectangle {
+                    width: 500
+                    height: 500
+                    anchors.centerIn: parent
+                    radius: 300
+                    color: "#1630EE"
+                    id: calibSeconds
+
+                    Label {
+                        color: "#ffffff"
+                        objectName: "Autocalib_seconds"
+                        anchors.centerIn: parent
+                        text: "5"
+                        font.bold: true
+                        font.pointSize: 180
+                        font.family: "JostSemi"
+                        styleColor: "#000000"
+                    }
+                    Label {
+                        y: 571
+                        color: "#ffffff"
+                        objectName: "Autocalib_move"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: "Move somewhere else"
+                        anchors.horizontalCenterOffset: 1
+                        font.bold: true
+                        font.pointSize: 60
+                        font.family: "JostSemi"
+                    }
+                }
+
+                Button {
+                    id: startAutoCalibButton
+                    objectName: "startAutoCalibButton"
+                    property string txt: "Start"
+                    x: 1917
+                    y: 1323
+                    width: 643
+                    height: 193
+                    background: Rectangle {
+                        id: cabg
+                        color: "#20910B"
+                        radius: 30
+                    }
+                    flat: true
+                    hoverEnabled: true
+                    Text {
+                        color: "#ffffff"
+                        text: txt
+                        anchors.leftMargin: 0
+                        anchors.bottomMargin: 0
+                        font.pointSize: 48
+                        anchors.centerIn: parent
+                        topPadding: 0
+                        leftPadding: 0
+                        font.bold: true
+                        bottomPadding: 0
+                        font.family: "JostSemi"
+                        rightPadding: 0
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.topMargin: 0
+                        anchors.rightMargin: 0
+                    }
+                    highlighted: false
+                    onHoveredChanged: {
+                        cabg.color = startAutoCalibButton.hovered ? "#42C929" : "#20910B"
+                    }
+                    onClicked: {
+                        _cppContext.cppSlot("AUTOCALIBRATION_STARTED")
+                        calibSeconds.color = "#20910B"
+                        cancelAutoCalibButton.visible = false
+                        startAutoCalibButton.visible = false
+                    }
+                }
+
+                Button {
+                    id: cancelAutoCalibButton
+                    objectName: "cancelAutoCalibButton"
+                    x: 1304
+                    y: 1323
+                    width: 568
+                    height: 193
+                    visible: true
+                    background: Rectangle {
+                        id: cabg1
+                        color: "#0d21b3"
+                        radius: 30
+                        border.color: "#1630ee"
+                        border.width: 15
+                    }
+                    flat: true
+                    Text {
+                        color: "#1630ee"
+                        text: qsTr("Cancel")
+                        anchors.bottomMargin: 0
+                        anchors.leftMargin: 0
+                        font.pointSize: 48
+                        anchors.centerIn: parent
+                        leftPadding: 0
+                        topPadding: 0
+                        font.bold: true
+                        bottomPadding: 0
+                        font.family: "JostSemi"
+                        horizontalAlignment: Text.AlignHCenter
+                        rightPadding: 0
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.rightMargin: 0
+                        anchors.topMargin: 0
+                    }
+                    highlighted: false
+                    hoverEnabled: true
+                    onClicked: {
+                        _cppContext.cppSlot("AUTOCALIBRATION_CANCELLED")
+                        chooseCalibTab.visible = true
+                        calibrationWindow.visible = false
+                        generalControlTab.enabled = true
+                    }
+                    onHoveredChanged: {
+                        cabg1.color = cancelAutoCalibButton.hovered ? "#5D6BD4" : "#0d21b3"
+                    }
+                }
+
+            }
+
+
         }
     }
 }
+
+/* FORMAT
+Rectangle {
+                x: 652
+                y: 358
+                width: 2618
+                height: 1578
+                anchors.centerIn: parent
+                color: "#0d21b3"
+                radius: 40
+                id: manualCalibTab
+
+                Button {
+                    id: confirmManualCalibButton
+                    x: 1917
+                    y: 1323
+                    width: 643
+                    height: 193
+                    background: Rectangle {
+                        id: cmbg
+                        color: "#1630ee"
+                        radius: 30
+                    }
+                    flat: true
+                    hoverEnabled: true
+                    Text {
+                        color: "#ffffff"
+                        text: qsTr("Confirm")
+                        anchors.leftMargin: 0
+                        anchors.bottomMargin: 0
+                        font.pointSize: 48
+                        anchors.centerIn: parent
+                        topPadding: 0
+                        leftPadding: 0
+                        font.bold: true
+                        bottomPadding: 0
+                        font.family: "JostSemi"
+                        rightPadding: 0
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.topMargin: 0
+                        anchors.rightMargin: 0
+                    }
+                    highlighted: false
+                    onHoveredChanged: {
+                        cmbg.color = confirmManualCalibButton.hovered ? "#7081FF" : "#1630ee"
+                    }
+                    onClicked: {
+                        _cppContext.cppSlot("MANUALCALIBRATION_APPROVED")
+                    }
+                }
+
+                Button {
+                    id: cancelManualCalibButton
+                    x: 1304
+                    y: 1323
+                    width: 568
+                    height: 193
+                    visible: true
+                    background: Rectangle {
+                        id: cmbg1
+                        color: "#0d21b3"
+                        radius: 30
+                        border.color: "#1630ee"
+                        border.width: 15
+                    }
+                    flat: true
+                    Text {
+                        color: "#1630ee"
+                        text: qsTr("Cancel")
+                        anchors.bottomMargin: 0
+                        anchors.leftMargin: 0
+                        font.pointSize: 48
+                        anchors.centerIn: parent
+                        leftPadding: 0
+                        topPadding: 0
+                        font.bold: true
+                        bottomPadding: 0
+                        font.family: "JostSemi"
+                        horizontalAlignment: Text.AlignHCenter
+                        rightPadding: 0
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.rightMargin: 0
+                        anchors.topMargin: 0
+                    }
+                    highlighted: false
+                    hoverEnabled: true
+                    onClicked: {
+                        _cppContext.cppSlot("MANUALCALIBRATION_CANCELLED")
+                    }
+                    onHoveredChanged: {
+                        cmbg1.color = cancelManualCalibButton.hovered ? "#5D6BD4" : "#0d21b3"
+                    }
+                }
+
+            }
+*/
+
+/*##^##
+Designer {
+    D{i:0;formeditorZoom:0.33000001311302185}
+}
+##^##*/
