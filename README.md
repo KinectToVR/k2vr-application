@@ -57,3 +57,4 @@ Boost __1.72__ とOpenCV __3.4.0__、OpenVR 1.12.5(又は新しい)、
 次にその他のプラグインを追加しないで、    
 そうでなければwindeployqtのコマンドを実行します！    
 (リンク：[windeployqt](https://doc.qt.io/qt-5/windows-deployment.html))    
+**とにかく、deploy.7zからのresourcesフォルダを追加する必要があります**
