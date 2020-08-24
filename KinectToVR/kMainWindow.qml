@@ -5148,7 +5148,7 @@ Item {
                     hoverEnabled: true
                     Text {
                         color: "#ffffff"
-                        text: txt
+                        text: startAutoCalibButton.txt
                         anchors.leftMargin: 0
                         anchors.bottomMargin: 0
                         font.pointSize: 48

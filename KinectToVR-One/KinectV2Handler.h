@@ -34,6 +34,7 @@ public:
     virtual void terminateSkeleton() override;
     virtual void initOpenGL() override;
     virtual void update() override;
+    virtual void shutdown() override;
 
 
     bool convertColorToDepthResolution = false;

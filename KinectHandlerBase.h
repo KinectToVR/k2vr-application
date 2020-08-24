@@ -16,6 +16,7 @@ public:
 	}
 
 	virtual void initialise() {};
+	virtual void shutdown() {};
 	virtual void initOpenGL() {};
 
 	virtual void initialiseSkeleton() {};

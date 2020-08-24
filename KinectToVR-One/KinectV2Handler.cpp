@@ -187,3 +187,10 @@ bool KinectV2Handler::initKinect() {
     }
     return false;
 }
+
+void KinectV2Handler::shutdown() {
+    try {
+        kinectSensor->Release();
+    }
+    catch (std::exception& e) {}
+}

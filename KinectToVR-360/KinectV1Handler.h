@@ -28,6 +28,7 @@ public:
     virtual void initialise() override;
     virtual void initOpenGL() override;
     virtual void update() override;
+    virtual void shutdown() override;
 
     virtual ~KinectV1Handler() {}
 

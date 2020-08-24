@@ -29,7 +29,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	qmlEngine.rootContext()->setContextProperty(QStringLiteral("_get"), &getData);
 
 	/* Create and initialise overlay controller */
-	OverlayController* controller = OverlayController::createInstance(desktopMode, noSound);
+	OverlayController* controller = OverlayController::createInstance(desktopMode, noSound, Kinect);
 	controller->Init(&qmlEngine);
 
 	/* Create QML component for handling basic gui */
@@ -126,7 +126,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 
 
 
-
+			
 
 
 
@@ -331,10 +331,15 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 
 
 
+		
+		int app_return = main.exec();
+		//Shutdown (total) code goes here
+		//Mostly, in case when overlay was 
+		//not loaded but app continues to run
 
-
-
-		return main.exec(); //Return qt app exectution as result
+		LOG(INFO) << u8"シャットダウンを呼ばれる。（アプリ）";
+		Kinect.shutdown(); //turn off kinect
+		return app_return; //Return qt app exectution as result
 }
 
 /* Push given value to offsets page */

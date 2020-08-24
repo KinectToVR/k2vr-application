@@ -274,7 +274,7 @@ void OverlayController::Init(QQmlEngine* qmlEngine) {
 }
 
 void OverlayController::Shutdown() {
-	LOG(INFO) << u8"シャットダウンを呼ばれる。";
+	LOG(INFO) << u8"シャットダウンを呼ばれる。（オーバーレイ）";
 	if (m_pPumpEventsTimer) {
 		disconnect(m_pPumpEventsTimer.get(), SIGNAL(timeout()), this, SLOT(OnTimeoutPumpEvents()));
 		m_pPumpEventsTimer->stop();
@@ -292,6 +292,8 @@ void OverlayController::Shutdown() {
 	m_pFbo.reset();
 	m_pOpenGLContext.reset();
 	m_pOffscreenSurface.reset();
+
+	m_Kinect.shutdown(); //turn off kinect
 }
 
 

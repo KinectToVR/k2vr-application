@@ -3,6 +3,7 @@
 
 #endif // KINECTTOVR_H
 
+#pragma once
 #include <QApplication>
 #include <openvroverlaycontroller.h>
 #include <KinectHandlerBase.h>

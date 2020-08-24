@@ -32,7 +32,14 @@ void KinectV1Handler::initialise() {
         if (!initialised) throw FailedKinectInitialisation;
     }
     catch (std::exception& e) {
-    }
+	}
+}
+
+void KinectV1Handler::shutdown() {
+	try {
+		kinectSensor->NuiShutdown();
+	}
+	catch (std::exception& e) {}
 }
 
 void KinectV1Handler::update() {

@@ -21,6 +21,7 @@
 #include <atomic>
 #include <glm/glm.hpp>
 #include <glm/vec4.hpp>
+#include <KinectHandlerBase.h>
 
 class OverlayController : public QObject {
 	Q_OBJECT
@@ -49,6 +50,7 @@ private:
 
 	QPoint m_ptLastMouse;
 	Qt::MouseButtons m_lastMouseButtons = 0;
+	KinectHandlerBase& m_Kinect;
 
 	bool desktopMode;
 	bool noSound;
@@ -61,7 +63,7 @@ private:
 	static std::vector<WORD> _keyboardVaryingVirtualCodes;
 
 private:
-	OverlayController(bool desktopMode, bool noSound) : QObject(), desktopMode(desktopMode), noSound(noSound) {}
+	OverlayController(bool desktopMode, bool noSound, KinectHandlerBase& m_Kinect) : QObject(), desktopMode(desktopMode), noSound(noSound), m_Kinect(m_Kinect) {}
 
 public:
 	virtual ~OverlayController();
@@ -122,8 +124,8 @@ public:
 		return singleton.get();
 	}
 
-	static OverlayController* createInstance(bool desktopMode, bool noSound) {
-		singleton.reset(new OverlayController(desktopMode, noSound));
+	static OverlayController* createInstance(bool desktopMode, bool noSound, KinectHandlerBase& m_Kinect) {
+		singleton.reset(new OverlayController(desktopMode, noSound, m_Kinect));
 		return singleton.get();
 	}
 
