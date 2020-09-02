@@ -33,10 +33,10 @@ namespace application_strings
 {
 	constexpr auto applicationOrganizationName = "KimihikoAkayasaki";
 	constexpr auto applicationName = "KinectToVR";
-	constexpr const char* applicationKey = "akaya.kinecttovr";
+	constexpr const char* applicationKey = "KimihikoAkayasaki.KinectToVR"; //temporary!
 	constexpr const char* applicationDisplayName = "KinectToVR";
 	constexpr const char* versionCheckUrl
-		= "https://raw.githubusercontent.com/OpenVR-Advanced-Settings/"
+		= "https://raw.githubusercontent.com/OpenVR-Advanced-Settings/" //temporary!
 		"OpenVR-AdvancedSettings/master/ver/versioncheck.json";
 
 	constexpr const char* applicationVersionString = "1.0.0";

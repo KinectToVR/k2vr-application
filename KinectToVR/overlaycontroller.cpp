@@ -148,8 +148,8 @@ int verifyCustomTickRate(const int tickRate)
 
 OverlayController::OverlayController(bool desktopMode,
 	bool noSound,
-	QQmlEngine& qmlEngine, KinectHandlerBase &Kinect)
-	: QObject(), m_desktopMode(desktopMode), 
+	QQmlEngine& qmlEngine, KinectHandlerBase& Kinect)
+	: QObject(), m_desktopMode(desktopMode),
 	m_noSound(noSound), m_actions(), Kinect(Kinect)
 {
 	// Arbitrarily chosen Max Length of Directory path, should be sufficient for
@@ -164,14 +164,14 @@ OverlayController::OverlayController(bool desktopMode,
 	// Throw Error If over 16k characters in path string
 	if (!pathIsGood)
 	{
-		LOG(ERROR) << "Error Finding VR Runtime Path, Attempting Recovery: ";
+		LOG(ERROR) << u8"VRランタイムパスの検索中にエラーが発生！";
 		uint32_t maxLengthRe = requiredLength;
-		LOG(INFO) << "Open VR reporting Required path length of: "
+		LOG(INFO) << u8"希望するパスの長さ："
 			<< maxLengthRe;
 	}
 
 	m_runtimePathUrl = QUrl::fromLocalFile(tempRuntimePath);
-	LOG(INFO) << "VR Runtime Path: " << m_runtimePathUrl.toLocalFile().toStdString();
+	LOG(INFO) << u8"VRランタイムパス：" << m_runtimePathUrl.toLocalFile().toStdString();
 
 	constexpr auto clickSoundURL = "click.wav";
 	const auto activationSoundFile
@@ -185,7 +185,7 @@ OverlayController::OverlayController(bool desktopMode,
 	}
 	else
 	{
-		LOG(ERROR) << "Could not find activation sound file "
+		LOG(ERROR) << u8"活性化音ファイルが見つかりなかった　"
 			<< clickSoundURL;
 	}
 	constexpr auto focusChangedSoundURL = "focus.wav";
@@ -200,7 +200,7 @@ OverlayController::OverlayController(bool desktopMode,
 	}
 	else
 	{
-		LOG(ERROR) << "Could not find focus Changed sound file "
+		LOG(ERROR) << u8"焦点変更化音ファイルが見つかりなかった　"
 			<< focusChangedSoundURL;
 	}
 
@@ -216,7 +216,7 @@ OverlayController::OverlayController(bool desktopMode,
 	}
 	else
 	{
-		LOG(ERROR) << "Could not find alarm01 sound file " << alarmFileName;
+		LOG(ERROR) << u8"アラーム化音ファイルが見つかりなかった　" << alarmFileName;
 	}
 
 	QSurfaceFormat format;
@@ -254,25 +254,6 @@ OverlayController::OverlayController(bool desktopMode,
 	qmlEngine.rootContext()->setContextProperty("vrRuntimePath",
 		getVRRuntimePathUrl());
 
-	// Pretty disgusting trick to allow qmlRegisterSingletonType to continue
-	// working with the lambdas that were already there. The callback function
-	// in qmlRegisterSingletonType won't work with any lambdas that capture the
-	// environment. The alternative to making a static pointer to this was
-	// rewriting all QML to not be singletons, which should probably be done
-	// whenever possible.
-	static OverlayController* const objectAddress = this;
-	constexpr auto qmlSingletonImportName = "ovras.advsettings";
-	qmlRegisterSingletonType<OverlayController>(
-		qmlSingletonImportName,
-		1,
-		0,
-		"OverlayController",
-		[](QQmlEngine*, QJSEngine*) {
-			QObject* obj = objectAddress;
-			QQmlEngine::setObjectOwnership(obj, QQmlEngine::CppOwnership);
-			return obj;
-		});
-
 	// Grab local version number
 	QStringList verNumericalString
 		= QString(application_strings::applicationVersionString).split("-");
@@ -291,14 +272,14 @@ OverlayController::~OverlayController()
 void OverlayController::exitApp()
 {
 	kinectSettings.saveSettings();
-	LOG(INFO) << u8"SHUTDOWN";
+	LOG(INFO) << u8"シャットダウンが呼ばれている。";
 
 	Kinect.shutdown(); //turn off kinect
 
 	Shutdown();
 	QApplication::exit();
 
-	LOG(INFO) << "All systems exited.";
+	LOG(INFO) << u8"全システムが終了される！";
 	exit(EXIT_SUCCESS);
 }
 
@@ -373,7 +354,7 @@ void OverlayController::SetWidget(QQuickItem* quickItem,
 		}
 		else
 		{
-			LOG(ERROR) << "Could not find thumbnail icon \""
+			LOG(ERROR) << u8"サムネファイルが見つかりなかった　\""
 				<< thumbiconFilename << "\"";
 		}
 
@@ -420,10 +401,10 @@ void OverlayController::SetWidget(QQuickItem* quickItem,
 			this,
 			SLOT(OnRenderRequest()));
 
-		LOG(INFO) << u8"OverlayのQQuickWindowのフラグのセットアップを始めた…";
+		LOG(INFO) << u8"オーバーレイのQQuickWindowフラグセットアップを始めた…";
 		m_window.setFlags(Qt::FramelessWindowHint);
 		m_window.setColor(QColorConstants::Transparent);
-		LOG(INFO) << u8"Overlayのウィジェットのセットアップの設定が正常に完了";
+		LOG(INFO) << u8"オーバーレイウィジェットセットアップ設定が正常に完了！";
 	}
 
 	connect(&m_pumpEventsTimer,
@@ -491,7 +472,7 @@ bool OverlayController::pollNextEvent(vr::VROverlayHandle_t ulOverlayHandle,
 	{
 		return vr::VROverlay()->PollNextOverlayEvent(
 			ulOverlayHandle, pEvent, sizeof(vr::VREvent_t));
-	}
+}
 }
 
 QPoint OverlayController::getMousePositionForEvent(vr::VREvent_Mouse_t mouse)
@@ -635,7 +616,7 @@ void OverlayController::mainEventLoop()
 
 		case vr::VREvent_Quit:
 		{
-			LOG(INFO) << "Received quit request.";
+			LOG(INFO) << u8"処理済み出口要求。";
 			vr::VRSystem()->AcknowledgeQuit_Exiting(); // Let us buy some
 													   // time just in case
 
@@ -647,14 +628,14 @@ void OverlayController::mainEventLoop()
 
 		case vr::VREvent_DashboardActivated:
 		{
-			LOG(DEBUG) << "Dashboard activated";
+			LOG(DEBUG) << u8"ダッシュボードが作動した！";
 			m_dashboardVisible = true;
 		}
 		break;
 
 		case vr::VREvent_DashboardDeactivated:
 		{
-			LOG(DEBUG) << "Dashboard deactivated";
+			LOG(DEBUG) << u8"ダッシュボードが不活性化！";
 			m_dashboardVisible = false;
 		}
 		break;
@@ -671,54 +652,7 @@ void OverlayController::mainEventLoop()
 
 		case vr::VREvent_SeatedZeroPoseReset:
 		{
-			LOG(INFO) << "Game Triggered Seated Zero-Position Reset";
-		}
-		break;
-
-		// Multiple ChaperoneUniverseHasChanged are often emitted at the
-		// same time (some with a little bit of delay) There is no sure way
-		// to recognize redundant events, we can only exclude redundant
-		// events during the same call of OnTimeoutPumpEvents() INFO Removed
-		// logging on play space mover for possible crashing issues.
-		case vr::VREvent_ChaperoneUniverseHasChanged:
-		{
-			uint64_t previousUniverseId
-				= vrEvent.data.chaperone.m_nPreviousUniverse;
-			uint64_t currentUniverseId
-				= vrEvent.data.chaperone.m_nCurrentUniverse;
-			LOG(INFO) << "(VREvent) ChaperoneUniverseHasChanged... Previous:"
-				<< previousUniverseId
-				<< " Current:" << currentUniverseId;
-
-			if (!chaperoneDataAlreadyUpdated)
-			{
-				// LOG(INFO) << "Re-loading chaperone data ...";
-				// LOG(INFO) << "Found " << m_chaperoneUtils.quadsCount() <<
-				// " chaperone quads."; if
-				// (m_chaperoneUtils.isChaperoneWellFormed()) { LOG(INFO) <<
-				// "Chaperone data seems to be well-formed.";
-				//} else {
-				// LOG(INFO) << "Chaperone data is NOT well-formed.";
-				//}
-				chaperoneDataAlreadyUpdated = true;
-			}
-		}
-		break;
-
-		case vr::VREvent_ChaperoneDataHasChanged:
-		{
-			if (!chaperoneDataAlreadyUpdated)
-			{
-				// LOG(INFO) << "Re-loading chaperone data ...";
-				// LOG(INFO) << "Found " << m_chaperoneUtils.quadsCount() <<
-				// " chaperone quads."; if
-				// (m_chaperoneUtils.isChaperoneWellFormed()) { LOG(INFO) <<
-				// "Chaperone data seems to be well-formed.";
-				//} else {
-				// LOG(INFO) << "Chaperone data is NOT well-formed.";
-				//}
-				chaperoneDataAlreadyUpdated = true;
-			}
+			LOG(INFO) << u8"ポジションリセットを発動した！";
 		}
 		break;
 		}

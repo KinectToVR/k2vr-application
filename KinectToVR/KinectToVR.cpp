@@ -33,11 +33,11 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	signalHandler cppHandler;
 	getVariable getData;
 	QQmlEngine qmlEngine;
-	LOG(INFO) << u8"QMLのコンテキストをオーバーレイのコントローラーのために登録…";
+	LOG(INFO) << u8"QMLコンテキストをオーバーレイコントローラーのために登録ています…";
 	qmlEngine.rootContext()->setContextProperty(QStringLiteral("_cppContext"), &cppHandler);
 
 	/* register types for qml - getting variables from program */
-	LOG(INFO) << u8"QMLのタイプをオーバーレイのコントローラーのために登録…";
+	LOG(INFO) << u8"QMLタイプをオーバーレイコントローラーのために登録ています…";
 	qmlEngine.rootContext()->setContextProperty(QStringLiteral("_get"), &getData);
 
 	/* Create and initialise overlay controller */
@@ -47,11 +47,11 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	QQmlComponent component(&qmlEngine, QUrl("qrc:/kMainWindow.qml"));
 	auto errors = component.errors();
 	for (auto& e : errors)
-		LOG(ERROR) << "QML Error: " << e.toString().toStdString();
+		LOG(ERROR) << "QMLエラー：" << e.toString().toStdString();
 	quickObj = component.create();
 
 	/* Finally, set overlay widget object */
-	LOG(INFO) << u8"オーバーレイのウィジェットのセットアップ…";
+	LOG(INFO) << u8"オーバーレイウィジェットをセットアップ…";
 	controller.SetWidget(qobject_cast<QQuickItem*>(quickObj), 
 		application_strings::applicationDisplayName,
 		application_strings::applicationKey);
@@ -349,7 +349,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 		//Mostly, in case when overlay was 
 		//not loaded but app continues to run
 
-		LOG(INFO) << u8"シャットダウンを呼ばれる。（アプリ）";
+		LOG(INFO) << u8"シャットダウンが呼ばれている。";
 		Kinect.shutdown(); //turn off kinect
 		return app_return; //Return qt app exectution as result
 }
