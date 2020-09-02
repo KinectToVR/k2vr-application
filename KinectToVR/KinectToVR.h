@@ -5,7 +5,7 @@
 
 #pragma once
 #include <QApplication>
-#include <openvroverlaycontroller.h>
+#include <overlaycontroller.h>
 #include <KinectHandlerBase.h>
 #include <QApplication>
 #include <QVBoxLayout>
@@ -23,7 +23,6 @@
 #include <Windows.h>
 #include <iostream>
 #include <sstream>
-#include <openvroverlaycontroller.h>
 #include <getVariable.h>
 #include <Logging.h>
 #include <Settings.h>

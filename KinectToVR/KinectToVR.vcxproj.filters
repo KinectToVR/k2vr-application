@@ -35,6 +35,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Overlay Files">
+      <UniqueIdentifier>{d826b16c-c704-423c-98ae-e0ae377332d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -52,14 +55,26 @@
     <ClCompile Include="getVariable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="openvroverlaycontroller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="runtimeConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="KinectToVR.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ivrinput.cpp">
+      <Filter>Overlay Files</Filter>
+    </ClCompile>
+    <ClCompile Include="openvr_init.cpp">
+      <Filter>Overlay Files</Filter>
+    </ClCompile>
+    <ClCompile Include="overlaycontroller.cpp">
+      <Filter>Overlay Files</Filter>
+    </ClCompile>
+    <ClCompile Include="update_rate.cpp">
+      <Filter>Overlay Files</Filter>
+    </ClCompile>
+    <ClCompile Include="paths.cpp">
+      <Filter>Overlay Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -84,11 +99,32 @@
     <QtMoc Include="getVariable.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="openvroverlaycontroller.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <ClInclude Include="runtimeConfig.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ivrinput.h">
+      <Filter>Overlay Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ivrinput_action.h">
+      <Filter>Overlay Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ivrinput_action_set.h">
+      <Filter>Overlay Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ivrinput_input_source.h">
+      <Filter>Overlay Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ivrinput_manifest.h">
+      <Filter>Overlay Files</Filter>
+    </ClInclude>
+    <ClInclude Include="openvr_init.h">
+      <Filter>Overlay Files</Filter>
+    </ClInclude>
+    <ClInclude Include="update_rate.h">
+      <Filter>Overlay Files</Filter>
+    </ClInclude>
+    <ClInclude Include="paths.h">
+      <Filter>Overlay Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -130,5 +166,10 @@
     <QtRcc Include="resources.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="overlaycontroller.h">
+      <Filter>Overlay Files</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>

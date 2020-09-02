@@ -67,11 +67,11 @@
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <QtInstall>Qt</QtInstall>
-    <QtModules>core;opengl;network;gui;widgets;qml;quickwidgets;quick;quickcontrols2</QtModules>
+    <QtModules>core;opengl;network;gui;widgets;qml;quickwidgets;quick;quickcontrols2;multimedia</QtModules>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <QtInstall>Qt</QtInstall>
-    <QtModules>core;opengl;network;gui;widgets;qml;quickwidgets;quick;quickcontrols2</QtModules>
+    <QtModules>core;opengl;network;gui;widgets;qml;quickwidgets;quick;quickcontrols2;multimedia</QtModules>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
     <Import Project="$(QtMsBuild)\qt.props" />

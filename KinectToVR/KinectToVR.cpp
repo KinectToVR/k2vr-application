@@ -17,6 +17,18 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 	QGuiApplication main(argc, argv);
 
+	main.setOrganizationName(
+		application_strings::applicationOrganizationName);
+	main.setApplicationName(application_strings::applicationName);
+	main.setApplicationDisplayName(
+		application_strings::applicationDisplayName);
+	main.setApplicationVersion(
+		application_strings::applicationVersionString);
+
+	/* Initialize OpenVR */
+	openvr_init::initializeOpenVR(
+		openvr_init::OpenVrInitializationType::Overlay);
+
 	/* register signal handler for qml - for buttons and other stuff */
 	signalHandler cppHandler;
 	getVariable getData;
@@ -29,17 +41,20 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	qmlEngine.rootContext()->setContextProperty(QStringLiteral("_get"), &getData);
 
 	/* Create and initialise overlay controller */
-	OverlayController* controller = OverlayController::createInstance(desktopMode, noSound, Kinect);
-	controller->Init(&qmlEngine);
+	OverlayController controller(desktopMode, noSound, qmlEngine, Kinect);
 
 	/* Create QML component for handling basic gui */
 	QQmlComponent component(&qmlEngine, QUrl("qrc:/kMainWindow.qml"));
+	auto errors = component.errors();
+	for (auto& e : errors)
+		LOG(ERROR) << "QML Error: " << e.toString().toStdString();
 	quickObj = component.create();
 
 	/* Finally, set overlay widget object */
 	LOG(INFO) << u8"オーバーレイのウィジェットのセットアップ…";
-	controller->SetWidget(qobject_cast<QQuickItem*>(quickObj),
-		OverlayController::applicationName, OverlayController::applicationKey);
+	controller.SetWidget(qobject_cast<QQuickItem*>(quickObj), 
+		application_strings::applicationDisplayName,
+		application_strings::applicationKey);
 
 	/* read saved settings from file */
 	try {
@@ -153,9 +168,6 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 			/* Push headset position to runtime variables, will be used then */
 			process.headsetPosition = pExchangeE(vrDevicesPose[0].mDeviceToAbsoluteTracking);
 			process.headsetOrientation = pExchangeQE(vrDevicesPose[0].mDeviceToAbsoluteTracking);
-
-			/* Get information if overlay is currently active and displayed */
-			process.isOverlayVisible = controller->isOverlayVisible();
 
 			/* Process controllers input and position (if they are connected) */
 			for (int id = 0; id < 2; id++) {

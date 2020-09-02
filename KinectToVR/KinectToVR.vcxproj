@@ -67,11 +67,11 @@
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <QtInstall>Qt</QtInstall>
-    <QtModules>core;opengl;network;gui;widgets;qml;quickwidgets;quick;quickcontrols2</QtModules>
+    <QtModules>core;gui;multimedia;network;opengl;qml;quick;quickcontrols2;quickwidgets;widgets</QtModules>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <QtInstall>Qt</QtInstall>
-    <QtModules>core;opengl;network;gui;widgets;qml;quickwidgets;quick;quickcontrols2</QtModules>
+    <QtModules>core;gui;multimedia;network;opengl;qml;quick;quickcontrols2;quickwidgets;widgets</QtModules>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
     <Import Project="$(QtMsBuild)\qt.props" />
@@ -197,26 +197,38 @@ xcopy /y /d "$(OutDir)$(TargetName)$(TargetExt)" "$(SolutionDir)KinectToVR-One\$
     </QtRcc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ivrinput.cpp" />
     <ClCompile Include="KinectToVR.cpp" />
     <ClCompile Include="Logging.cpp" />
+    <ClCompile Include="openvr_init.cpp" />
+    <ClCompile Include="paths.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="buttonHandlers.cpp" />
     <ClCompile Include="easylogging++.cc" />
     <ClCompile Include="getVariable.cpp" />
-    <ClCompile Include="openvroverlaycontroller.cpp" />
+    <ClCompile Include="overlaycontroller.cpp" />
     <ClCompile Include="runtimeConfig.cpp" />
+    <ClCompile Include="update_rate.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ivrinput.h" />
+    <ClInclude Include="ivrinput_action.h" />
+    <ClInclude Include="ivrinput_action_set.h" />
+    <ClInclude Include="ivrinput_input_source.h" />
+    <ClInclude Include="ivrinput_manifest.h" />
     <ClInclude Include="KinectToVR.h" />
     <ClInclude Include="Logging.h" />
+    <ClInclude Include="openvr_init.h" />
+    <ClInclude Include="paths.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="boost_serialization_eigen.h" />
+    <ClInclude Include="update_rate.h" />
     <QtMoc Include="buttonHandlers.h">
     </QtMoc>
     <ClInclude Include="easylogging++.h" />
     <QtMoc Include="getVariable.h">
     </QtMoc>
-    <QtMoc Include="openvroverlaycontroller.h">
+    <QtMoc Include="overlaycontroller.h">
     </QtMoc>
     <ClInclude Include="runtimeConfig.h" />
   </ItemGroup>
