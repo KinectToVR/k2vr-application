@@ -1,6 +1,7 @@
 #pragma once
 #include <QObject>
 #include <QQuickItem>
+#include <Settings.h>
 
 class getVariable : public QObject
 {

@@ -1,4 +1,4 @@
-#include "ivrinput.h"
+﻿#include "ivrinput.h"
 #include "ivrinput_action.h"
 #include <openvr.h>
 #include <iostream>
@@ -30,8 +30,8 @@ vr::InputDigitalActionData_t getDigitalActionData( DigitalAction& action )
 
     if ( error != vr::EVRInputError::VRInputError_None )
     {
-        LOG( ERROR ) << "Error getting IVRInput Digital Action Data for handle "
-                     << action.name() << ". SteamVR Error: " << error;
+        LOG( ERROR ) << u8"IVRInputデジタルアクションデータの取得中にエラーが発生した　"
+                     << action.name() << u8"。SteamVRエラー：" << error;
     }
 
     return handleData;
@@ -60,8 +60,8 @@ vr::InputAnalogActionData_t getAnalogActionData( AnalogAction& action )
 
     if ( error != vr::EVRInputError::VRInputError_None )
     {
-        LOG( ERROR ) << "Error getting IVRInput Digital Action Data for handle "
-                     << action.name() << ". SteamVR Error: " << error;
+        LOG( ERROR ) << u8"IVRInputデジタルアクションデータの取得中にエラーが発生した　"
+                     << action.name() << u8"。SteamVRエラー：" << error;
     }
 
     return handleData;

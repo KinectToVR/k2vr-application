@@ -1,11 +1,11 @@
 #pragma once
 #include <fstream>
 #include <iostream>
+#include <boost_serialization_eigen.h>
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/nvp.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
-#include <boost_serialization_eigen.h>
 #include <glm/glm.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>

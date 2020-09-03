@@ -58,5 +58,8 @@ int getVariable::get(const QString& msg, const int& arg, const int& arg1) const
     if(msg=="VISIBLE")
         return process.isOverlayVisible;
 
+    if (msg == "FLIPSKELETON")
+        return kinectSettings.flipSkeleton;
+
     return 0; //If message cound't be processed, return 0
 }

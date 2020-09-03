@@ -185,7 +185,7 @@ OverlayController::OverlayController(bool desktopMode,
 	}
 	else
 	{
-		LOG(ERROR) << u8"活性化音ファイルが見つかりなかった　"
+		LOG(ERROR) << u8"活性化音ファイルが見つかりませんでした　"
 			<< clickSoundURL;
 	}
 	constexpr auto focusChangedSoundURL = "focus.wav";
@@ -200,7 +200,7 @@ OverlayController::OverlayController(bool desktopMode,
 	}
 	else
 	{
-		LOG(ERROR) << u8"焦点変更化音ファイルが見つかりなかった　"
+		LOG(ERROR) << u8"焦点変更化音ファイルが見つかりませんでした　"
 			<< focusChangedSoundURL;
 	}
 
@@ -216,7 +216,7 @@ OverlayController::OverlayController(bool desktopMode,
 	}
 	else
 	{
-		LOG(ERROR) << u8"アラーム化音ファイルが見つかりなかった　" << alarmFileName;
+		LOG(ERROR) << u8"アラーム化音ファイルが見つかりませんでした　" << alarmFileName;
 	}
 
 	QSurfaceFormat format;
@@ -354,7 +354,7 @@ void OverlayController::SetWidget(QQuickItem* quickItem,
 		}
 		else
 		{
-			LOG(ERROR) << u8"サムネファイルが見つかりなかった　\""
+			LOG(ERROR) << u8"サムネファイルが見つかりませんでした　\""
 				<< thumbiconFilename << "\"";
 		}
 

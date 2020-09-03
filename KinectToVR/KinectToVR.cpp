@@ -25,6 +25,14 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	main.setApplicationVersion(
 		application_strings::applicationVersionString);
 
+	/* read saved settings from file */
+	try {
+		kinectSettings.readSettings();
+	}
+	catch (boost::archive::archive_exception const& e) {
+		LOG(ERROR) << u8"アーカイブシリアライズエラー：" << e.what();
+	}
+
 	/* Initialize OpenVR */
 	openvr_init::initializeOpenVR(
 		openvr_init::OpenVrInitializationType::Overlay);
@@ -55,16 +63,6 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	controller.SetWidget(qobject_cast<QQuickItem*>(quickObj), 
 		application_strings::applicationDisplayName,
 		application_strings::applicationKey);
-
-	/* read saved settings from file */
-	try {
-		kinectSettings.readSettings();
-
-	}
-	catch (boost::archive::archive_exception const& e) {
-		VSDebug(e.what());
-	}
-
 
 
 	/* Setup ui with saved defines */

@@ -552,13 +552,15 @@ Item {
                 height: 186
                 text: qsTr("")
                 visible: true
-                checkState: Qt.Checked
+                //checkState: Qt.Checked
                 checked: true
                 onCheckStateChanged: _cppContext.cppSlot("FLIPCHANGED")
                 hoverEnabled: true
                 onHoveredChanged: {
                     checkBox.hovered ? bg01.color = "#7180EE" : bg01.color = "#0D21B3"
                 }
+
+                Component.onCompleted: checked = _get.get(qsTr("FLIPSKELETON"))
 
                 indicator: Rectangle {
                     implicitWidth: parent.width

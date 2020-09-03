@@ -20,7 +20,7 @@ void signalHandler::cppSlot(const QString& msg)
             process.initialised = !process.initialised;
 
         if (msg == "FLIPCHANGED")
-            kinectSettings.flipSkeleton = kinectSettings.flipSkeleton;
+            kinectSettings.flipSkeleton = !kinectSettings.flipSkeleton;
 
         if (msg == "SHOWOFFSETS") {
             process.positionalOffsetsBackup = kinectSettings.positionalOffsets;

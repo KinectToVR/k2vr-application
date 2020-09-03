@@ -1,4 +1,4 @@
-#include "paths.h"
+﻿#include "paths.h"
 #include <QStandardPaths>
 #include <QCoreApplication>
 #include <QString>
@@ -8,64 +8,64 @@
 
 namespace paths
 {
-optional<string> binaryDirectory()
-{
-    const auto path = QCoreApplication::applicationDirPath();
+	optional<string> binaryDirectory()
+	{
+		const auto path = QCoreApplication::applicationDirPath();
 
-    if ( path == "" )
-    {
-        LOG( ERROR ) << "Could not find binary directory.";
-        return std::nullopt;
-    }
+		if (path == "")
+		{
+			LOG(ERROR) << u8"バイナリディレクトリが見つかりませんでした！";
+			return std::nullopt;
+		}
 
-    return path.toStdString();
-}
+		return path.toStdString();
+	}
 
-optional<string> binaryDirectoryFindFile( const string fileName )
-{
-    const auto path = binaryDirectory();
+	optional<string> binaryDirectoryFindFile(const string fileName)
+	{
+		const auto path = binaryDirectory();
 
-    if ( !path )
-    {
-        return std::nullopt;
-    }
+		if (!path)
+		{
+			return std::nullopt;
+		}
 
-    const auto filePath = QDir( QString::fromStdString( *path ) + '/'
-                                + QString::fromStdString( fileName ) );
-    QFileInfo file( filePath.path() );
+		const auto filePath = QDir(QString::fromStdString(*path) + '/'
+			+ QString::fromStdString(fileName));
+		QFileInfo file(filePath.path());
 
-    if ( !file.exists() )
-    {
-        LOG( ERROR ) << "Could not find file '" << fileName.c_str()
-                     << "' in binary directory.";
-        return std::nullopt;
-    }
+		if (!file.exists())
+		{
+			LOG(ERROR) << u8"ファイルが見つかりませんでした：「" << fileName.c_str()
+				<< u8"」、バイナリディレクトリで！";
+			return std::nullopt;
+		}
 
-    return QDir::toNativeSeparators( file.filePath() ).toStdString();
-}
+		return QDir::toNativeSeparators(file.filePath()).toStdString();
+	}
 
-optional<string> settingsDirectory()
-{
-    const auto path
-        = QStandardPaths::writableLocation( QStandardPaths::AppDataLocation );
-    if ( path == "" )
-    {
-        LOG( ERROR ) << "Could not find settings directory.";
-        return std::nullopt;
-    }
+	optional<string> settingsDirectory()
+	{
+		const auto path
+			= QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+		if (path == "")
+		{
+			LOG(ERROR) << u8"セッティングディレクトリが見つかりませんでした！";
+			return std::nullopt;
+		}
 
-    return path.toStdString();
-}
+		return path.toStdString();
+	}
 
-std::optional<std::string> verifyIconFilePath( std::string filename )
-{
-    const auto notifIconPath = paths::binaryDirectoryFindFile( filename );
-    if ( !notifIconPath.has_value() )
-    {
-        LOG( ERROR ) << "Could not find icon \"" << filename << "\"";
-    }
+	std::optional<std::string> verifyIconFilePath(std::string filename)
+	{
+		const auto notifIconPath = paths::binaryDirectoryFindFile(filename);
+		if (!notifIconPath.has_value())
+		{
+			LOG(ERROR) << u8"アイコンが見つかりませんでした：「" << filename << "」";
+		}
 
-    return notifIconPath;
-}
+		return notifIconPath;
+	}
 
 } // namespace paths
