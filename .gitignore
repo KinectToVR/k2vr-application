@@ -25,3 +25,5 @@ KinectToVR/KinectToVR.pro.user
 /.vs/KinectToVR/v16
 /KinectToVR-360/KinectToVR_EX.log
 /KinectToVR-360/settings.cfg
+/KinectToVR_API/x64/Release
+/x64/Release

@@ -121,10 +121,10 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 
 		while (true) {
 
-			/* Check if we have vr framerate, not to divide by 0,
+			/* Check if we have vr framerate, not to divide by 0 and,
 				if there is no vr running on hmd, run at 30 fps*/
 			next_frame += std::chrono::milliseconds(1000 /
-				(process.vrFrameRate != 0.f ? process.vrFrameRate : 30));
+				(process.vrFrameRate >= 30 && process.vrFrameRate <= 140 ? process.vrFrameRate : 30));
 
 
 

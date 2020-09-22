@@ -9,24 +9,42 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KinectToVR-360", "KinectToV
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KinectToVR-One", "KinectToVR-One\KinectToVR-One.vcxproj", "{7C77E4C5-75FA-3B1A-A190-0C20C2184149}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KinectToVR_API", "KinectToVR_API\KinectToVR_API.vcxproj", "{3FB99A4E-D168-4EFC-B909-CE2951543CF8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6AAE9D3B-FDFB-3AF6-AA19-54B42CD72D2D}.Debug|x64.ActiveCfg = Debug|x64
 		{6AAE9D3B-FDFB-3AF6-AA19-54B42CD72D2D}.Debug|x64.Build.0 = Debug|x64
+		{6AAE9D3B-FDFB-3AF6-AA19-54B42CD72D2D}.Debug|x86.ActiveCfg = Debug|x64
 		{6AAE9D3B-FDFB-3AF6-AA19-54B42CD72D2D}.Release|x64.ActiveCfg = Release|x64
 		{6AAE9D3B-FDFB-3AF6-AA19-54B42CD72D2D}.Release|x64.Build.0 = Release|x64
+		{6AAE9D3B-FDFB-3AF6-AA19-54B42CD72D2D}.Release|x86.ActiveCfg = Release|x64
 		{AF0885B5-B809-3924-A3C6-09CA16E4EF15}.Debug|x64.ActiveCfg = Debug|x64
 		{AF0885B5-B809-3924-A3C6-09CA16E4EF15}.Debug|x64.Build.0 = Debug|x64
+		{AF0885B5-B809-3924-A3C6-09CA16E4EF15}.Debug|x86.ActiveCfg = Debug|x64
 		{AF0885B5-B809-3924-A3C6-09CA16E4EF15}.Release|x64.ActiveCfg = Release|x64
 		{AF0885B5-B809-3924-A3C6-09CA16E4EF15}.Release|x64.Build.0 = Release|x64
+		{AF0885B5-B809-3924-A3C6-09CA16E4EF15}.Release|x86.ActiveCfg = Release|x64
 		{7C77E4C5-75FA-3B1A-A190-0C20C2184149}.Debug|x64.ActiveCfg = Debug|x64
 		{7C77E4C5-75FA-3B1A-A190-0C20C2184149}.Debug|x64.Build.0 = Debug|x64
+		{7C77E4C5-75FA-3B1A-A190-0C20C2184149}.Debug|x86.ActiveCfg = Debug|x64
 		{7C77E4C5-75FA-3B1A-A190-0C20C2184149}.Release|x64.ActiveCfg = Release|x64
 		{7C77E4C5-75FA-3B1A-A190-0C20C2184149}.Release|x64.Build.0 = Release|x64
+		{7C77E4C5-75FA-3B1A-A190-0C20C2184149}.Release|x86.ActiveCfg = Release|x64
+		{3FB99A4E-D168-4EFC-B909-CE2951543CF8}.Debug|x64.ActiveCfg = Debug|x64
+		{3FB99A4E-D168-4EFC-B909-CE2951543CF8}.Debug|x64.Build.0 = Debug|x64
+		{3FB99A4E-D168-4EFC-B909-CE2951543CF8}.Debug|x86.ActiveCfg = Debug|Win32
+		{3FB99A4E-D168-4EFC-B909-CE2951543CF8}.Debug|x86.Build.0 = Debug|Win32
+		{3FB99A4E-D168-4EFC-B909-CE2951543CF8}.Release|x64.ActiveCfg = Release|x64
+		{3FB99A4E-D168-4EFC-B909-CE2951543CF8}.Release|x64.Build.0 = Release|x64
+		{3FB99A4E-D168-4EFC-B909-CE2951543CF8}.Release|x86.ActiveCfg = Release|Win32
+		{3FB99A4E-D168-4EFC-B909-CE2951543CF8}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
