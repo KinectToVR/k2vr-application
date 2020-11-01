@@ -70,7 +70,7 @@
     <QtModules>core;gui;multimedia;network;opengl;qml;quick;quickcontrols2;quickwidgets;widgets</QtModules>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <QtInstall>Qt</QtInstall>
+    <QtInstall>Qt-5.15.1</QtInstall>
     <QtModules>core;gui;multimedia;network;opengl;qml;quick;quickcontrols2;quickwidgets;widgets</QtModules>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
@@ -78,7 +78,7 @@
   </ImportGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;..\openvr;..\opencv\build\include;..;release;/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external;$(SolutionDir)external\opencv\build\include;$(SolutionDir)external\Kinect;$(SolutionDir)external\boost;$(SolutionDir)external\openvr\headers;$(SolutionDir)external\ZMQ;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>release\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -99,15 +99,15 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>..\openvr\lib\openvr_api.lib;..\opencv\build\x64\vc15\lib\opencv_world340.lib;$(QTDIR)\lib\Qt5QmlModels.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\openvr\lib;..\opencv\build\x64\vc15\lib;..\lib64-msvc-14.2;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>openvr_api.lib;opencv_world340.lib;libzmq-v142-mt-s-4_3_3.lib;$(QTDIR)\lib\Qt5QmlModels.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)external\openvr\lib\win64;$(SolutionDir)external\opencv\build\x64\vc15\lib;$(SolutionDir)external\boost\lib64-msvc-14.2;$(SolutionDir)external\ZMQ\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreImportLibrary>true</IgnoreImportLibrary>
       <LinkDLL>true</LinkDLL>
       <LinkIncremental>false</LinkIncremental>
       <OptimizeReferences>true</OptimizeReferences>
-      <OutputFile>$(OutDir)\KinectToVR.dll</OutputFile>
+      <OutputFile>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</OutputFile>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <SubSystem>Windows</SubSystem>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -136,8 +136,8 @@
       <QtRccFileName>qrc_%(Filename).cpp</QtRccFileName>
     </QtRcc>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(OutDir)$(TargetName)$(TargetExt)" "$(SolutionDir)KinectToVR-360\$(Configuration.toLower())"
-xcopy /y /d "$(OutDir)$(TargetName)$(TargetExt)" "$(SolutionDir)KinectToVR-One\$(Configuration.toLower())"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -162,12 +162,12 @@ xcopy /y /d "$(OutDir)$(TargetName)$(TargetExt)" "$(SolutionDir)KinectToVR-One\$
     </ClCompile>
     <Link>
       <AdditionalDependencies>..\openvr\lib\openvr_api.lib;..\opencv\build\x64\vc15\lib\opencv_world340.lib;$(QTDIR)\lib\Qt5QmlModelsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\openvr\lib;..\opencv\build\x64\vc15\lib;..\lib64-msvc-14.2;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)external\openvr\lib\win64;$(SolutionDir)external\opencv\build\x64\vc15\lib;$(SolutionDir)external\boost\lib64-msvc-14.2;$(SolutionDir)external\ZMQ\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreImportLibrary>true</IgnoreImportLibrary>
       <LinkDLL>true</LinkDLL>
-      <OutputFile>$(OutDir)\KinectToVR.dll</OutputFile>
+      <OutputFile>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</OutputFile>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <SubSystem>Windows</SubSystem>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -195,6 +195,10 @@ xcopy /y /d "$(OutDir)$(TargetName)$(TargetExt)" "$(SolutionDir)KinectToVR-One\$
       <QtRccDir>$(Configuration)</QtRccDir>
       <QtRccFileName>qrc_%(Filename).cpp</QtRccFileName>
     </QtRcc>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ivrinput.cpp" />
