@@ -128,6 +128,9 @@
       <QtRccDir>$(Configuration)</QtRccDir>
       <QtRccFileName>qrc_%(Filename).cpp</QtRccFileName>
     </QtRcc>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(SolutionDir)external\resources\" "$(SolutionDir)$(Platform)\$(Configuration)\resources\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -176,6 +179,9 @@
       <QtRccDir>$(Configuration)</QtRccDir>
       <QtRccFileName>qrc_%(Filename).cpp</QtRccFileName>
     </QtRcc>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(SolutionDir)external\resources\" "$(SolutionDir)$(Platform)\$(Configuration)\resources\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="KinectV1Handler.cpp" />

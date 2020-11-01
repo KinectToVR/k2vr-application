@@ -344,7 +344,7 @@ void OverlayController::SetWidget(QQuickItem* quickItem,
 			vr::VROverlayFlags_SendVRSmoothScrollEvents,
 			true);
 
-		constexpr auto thumbiconFilename = "thumbicon.png";
+		constexpr auto thumbiconFilename = "resources\\thumbicon.png";
 		const auto thumbIconPath
 			= paths::binaryDirectoryFindFile(thumbiconFilename);
 		if (thumbIconPath.has_value())
