@@ -4,48 +4,52 @@
 #include <Kinect.h>
 #include <Windows.h>
 
-class KinectV2Handler : public KinectHandlerBase {
+class KinectV2Handler : public KinectHandlerBase
+{
 public:
-    KinectV2Handler() {
-        KinectV2Handler::initialise();
-        KinectV2Handler::initOpenGL();
-        KinectHandlerBase::kinectVersion = 2;
-    }
-    virtual ~KinectV2Handler() {}
+	KinectV2Handler()
+	{
+		KinectV2Handler::initialise();
+		KinectV2Handler::initOpenGL();
+		kinectVersion = 2;
+	}
 
-    IKinectSensor* kinectSensor = nullptr;
-    IBodyFrameReader* bodyFrameReader = nullptr;
-    IColorFrameReader* colorFrameReader = nullptr;
-    IDepthFrameReader* depthFrameReader = nullptr;
-    IMultiSourceFrame* multiFrame = nullptr;
-    ICoordinateMapper* coordMapper = nullptr;
-    BOOLEAN isTracking = false;
+	virtual ~KinectV2Handler()
+	{
+	}
 
-    Joint joints[JointType_Count];
-    JointOrientation jointOrientations[JointType_Count];
-    IBody* kinectBodies[BODY_COUNT];
+	IKinectSensor* kinectSensor = nullptr;
+	IBodyFrameReader* bodyFrameReader = nullptr;
+	IColorFrameReader* colorFrameReader = nullptr;
+	IDepthFrameReader* depthFrameReader = nullptr;
+	IMultiSourceFrame* multiFrame = nullptr;
+	ICoordinateMapper* coordMapper = nullptr;
+	BOOLEAN isTracking = false;
 
-    virtual HRESULT getStatusResult() override;
-    virtual std::string statusResultString(HRESULT stat) override;
+	Joint joints[JointType_Count];
+	JointOrientation jointOrientations[JointType_Count];
+	IBody* kinectBodies[BODY_COUNT];
 
-    virtual void initialise() override;
+	HRESULT getStatusResult() override;
+	std::string statusResultString(HRESULT stat) override;
 
-    virtual void initialiseSkeleton() override;
-    virtual void terminateSkeleton() override;
-    virtual void initOpenGL() override;
-    virtual void update() override;
-    virtual void shutdown() override;
+	void initialise() override;
+
+	void initialiseSkeleton() override;
+	void terminateSkeleton() override;
+	void initOpenGL() override;
+	void update() override;
+	void shutdown() override;
 
 
-    bool convertColorToDepthResolution = false;
-    void onBodyFrameArrived(IBodyFrameReader& sender, IBodyFrameArrivedEventArgs& eventArgs);
-    virtual void updateSkeletalData();
+	bool convertColorToDepthResolution = false;
+	void onBodyFrameArrived(IBodyFrameReader& sender, IBodyFrameArrivedEventArgs& eventArgs);
+	virtual void updateSkeletalData();
 
 private:
-    bool initKinect();
-    void updateSkeletalFilters();
+	bool initKinect();
+	void updateSkeletalFilters();
 
-    WAITABLE_HANDLE h_bodyFrameEvent;
-    bool newBodyFrameArrived = false;
-
+	WAITABLE_HANDLE h_bodyFrameEvent;
+	bool newBodyFrameArrived = false;
 };

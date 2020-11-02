@@ -29,14 +29,17 @@ namespace input
 			if (error != vr::EVRInputError::VRInputError_None)
 			{
 				LOG(ERROR) << u8"アクションマニフェストパスの構成中にエラーが発生した！「"
-					<< validManifestPath << "」OpenVRエラー：" << error;
+					<< validManifestPath << u8"」OpenVRエラー：" << error;
 			}
 		}
 
 		// Explicitly deleted because this object should do nothing but run the
 		// constructor during initialization.
 		// Destructor left blank on purpose since there are no terminating calls.
-		~Manifest() {}
+		~Manifest()
+		{
+		}
+
 		// Copy constructor
 		Manifest(const Manifest&) = delete;
 		// Copy assignment
@@ -46,5 +49,4 @@ namespace input
 		// Move assignment
 		Manifest& operator=(const Manifest&&) = delete;
 	};
-
 } // namespace input

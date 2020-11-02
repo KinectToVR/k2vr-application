@@ -34,6 +34,7 @@ namespace input
 					<< u8"」。OpenVRエラー：" << error;
 			}
 		}
+
 		/*!
 		An API internal handle that identifies an action.
 		*/
@@ -41,6 +42,7 @@ namespace input
 		{
 			return m_handle;
 		}
+
 		/*!
 		The actions manfiest name of the action. Used for error reporting.
 		*/
@@ -57,13 +59,16 @@ namespace input
 	class DigitalAction : public Action
 	{
 	public:
-		DigitalAction(const char* const actionName) : Action(actionName) {}
+		DigitalAction(const char* const actionName) : Action(actionName)
+		{
+		}
 	};
 
 	class AnalogAction : public Action
 	{
 	public:
-		AnalogAction(const char* const actionName) : Action(actionName) {}
+		AnalogAction(const char* const actionName) : Action(actionName)
+		{
+		}
 	};
-
 } // namespace input

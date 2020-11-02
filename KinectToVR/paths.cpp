@@ -59,7 +59,7 @@ namespace paths
 
 	std::optional<std::string> verifyIconFilePath(std::string filename)
 	{
-		const auto notifIconPath = paths::binaryDirectoryFindFile(filename);
+		const auto notifIconPath = binaryDirectoryFindFile(filename);
 		if (!notifIconPath.has_value())
 		{
 			LOG(ERROR) << u8"アイコンが見つかりませんでした：「" << filename << "」";
@@ -67,5 +67,4 @@ namespace paths
 
 		return notifIconPath;
 	}
-
 } // namespace paths

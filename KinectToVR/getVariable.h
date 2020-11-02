@@ -5,13 +5,11 @@
 
 class getVariable : public QObject
 {
-    Q_OBJECT
+Q_OBJECT
 
 public:
-    explicit getVariable(QObject* parent = 0);
+	explicit getVariable(QObject* parent = nullptr);
 
 public:
-    Q_INVOKABLE int get(const QString& what, const int& arg = 0, const int& arg1 = 0) const;
-
+	Q_INVOKABLE int get(const QString& what, const int& arg = 0, const int& arg1 = 0) const;
 };
-

@@ -4,14 +4,13 @@
 
 namespace paths
 {
-using std::optional;
-using std::string;
+	using std::optional;
+	using std::string;
 
-optional<string> binaryDirectory();
-optional<string> binaryDirectoryFindFile( string fileName );
+	optional<string> binaryDirectory();
+	optional<string> binaryDirectoryFindFile(string fileName);
 
-optional<string> settingsDirectory();
+	optional<string> settingsDirectory();
 
-std::optional<std::string> verifyIconFilePath( std::string filename );
-
+	std::optional<std::string> verifyIconFilePath(std::string filename);
 } // namespace paths

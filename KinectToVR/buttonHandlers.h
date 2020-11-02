@@ -18,9 +18,9 @@
 /* Class for handling and processing signals from QML */
 class signalHandler : public QObject
 {
-	Q_OBJECT
+Q_OBJECT
 public:
-	explicit signalHandler(QObject* parent = 0);
+	explicit signalHandler(QObject* parent = nullptr);
 
 signals:
 

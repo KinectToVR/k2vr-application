@@ -40,7 +40,6 @@ namespace application_strings
 		"OpenVR-AdvancedSettings/master/ver/versioncheck.json";
 
 	constexpr const char* applicationVersionString = "1.0.0";
-
 }
 
 // k_nonVsyncTickRate determines number of ms we wait to force the next event
@@ -51,8 +50,8 @@ constexpr int k_hmdRotationCounterUpdateRate = 7;
 
 class OverlayController : public QObject
 {
-	Q_OBJECT
-		Q_PROPERTY(bool m_desktopMode READ isDesktopMode)
+Q_OBJECT
+	Q_PROPERTY(bool m_desktopMode READ isDesktopMode)
 
 private:
 	vr::VROverlayHandle_t m_ulOverlayHandle = vr::k_ulOverlayHandleInvalid;
@@ -60,7 +59,7 @@ private:
 		= vr::k_ulOverlayHandleInvalid;
 
 	QQuickRenderControl m_renderControl;
-	QQuickWindow m_window{ &m_renderControl };
+	QQuickWindow m_window{&m_renderControl};
 	std::unique_ptr<QOpenGLFramebufferObject> m_pFbo;
 	QOpenGLContext m_openGLContext;
 	QOffscreenSurface m_offscreenSurface;
@@ -108,7 +107,7 @@ private:
 	bool m_keyPressTwoState = false;
 
 public:
-	OverlayController(bool desktopMode, bool noSound, QQmlEngine& qmlEngine, KinectHandlerBase &Kinect);
+	OverlayController(bool desktopMode, bool noSound, QQmlEngine& qmlEngine, KinectHandlerBase& Kinect);
 	virtual ~OverlayController();
 
 	void Shutdown();
@@ -120,8 +119,8 @@ public:
 	}
 
 	void SetWidget(QQuickItem* quickItem,
-		const std::string& name,
-		const std::string& key = "");
+	               const std::string& name,
+	               const std::string& key = "");
 
 	bool isDesktopMode()
 	{
@@ -137,7 +136,7 @@ public:
 	KinectHandlerBase& Kinect;
 
 	bool pollNextEvent(vr::VROverlayHandle_t ulOverlayHandle,
-		vr::VREvent_t* pEvent);
+	                   vr::VREvent_t* pEvent);
 	void mainEventLoop();
 
 public slots:

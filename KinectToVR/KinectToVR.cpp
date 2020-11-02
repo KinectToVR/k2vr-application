@@ -26,15 +26,17 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 		application_strings::applicationVersionString);
 
 	/* read saved settings from file */
-	try {
+	try
+	{
 		kinectSettings.readSettings();
 	}
-	catch (boost::archive::archive_exception const& e) {
+	catch (boost::archive::archive_exception const& e)
+	{
 		LOG(ERROR) << u8"アーカイブシリアライズエラー：" << e.what();
 	}
 
 	/* Initialize OpenVR */
-	openvr_init::initializeOpenVR(
+	initializeOpenVR(
 		openvr_init::OpenVrInitializationType::Overlay);
 
 	/* register signal handler for qml - for buttons and other stuff */
@@ -60,27 +62,25 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 
 	/* Finally, set overlay widget object */
 	LOG(INFO) << u8"オーバーレイウィジェットをセットアップ…";
-	controller.SetWidget(qobject_cast<QQuickItem*>(quickObj), 
-		application_strings::applicationDisplayName,
-		application_strings::applicationKey);
+	controller.SetWidget(qobject_cast<QQuickItem*>(quickObj),
+	                     application_strings::applicationDisplayName,
+	                     application_strings::applicationKey);
 
 
 	/* Setup ui with saved defines */
-	quickObj->findChild<QObject*>("flipCheckBox")->setProperty("checkState", kinectSettings.flipSkeleton ? Qt::Checked : Qt::Unchecked);
+	quickObj->findChild<QObject*>("flipCheckBox")->setProperty("checkState",
+	                                                           kinectSettings.flipSkeleton
+		                                                           ? Qt::Checked
+		                                                           : Qt::Unchecked);
 	updateQSpinboxes(kinectSettings.positionalOffsets, kinectSettings.orientationOffsets);
 
 	/* combo boxes */
 	quickObj->findChild<QObject*>("hipsComboBox")->
-		setProperty("currentIndex", kinectSettings.waistOrientationTrackingOption);
+	          setProperty("currentIndex", kinectSettings.waistOrientationTrackingOption);
 	quickObj->findChild<QObject*>("feetComboBox")->
-		setProperty("currentIndex", kinectSettings.feetOrientationTrackingOption);
+	          setProperty("currentIndex", kinectSettings.feetOrientationTrackingOption);
 	quickObj->findChild<QObject*>("filterComboBox")->
-		setProperty("currentIndex", kinectSettings.positionalTrackingFilterOption);
-
-
-
-
-
+	          setProperty("currentIndex", kinectSettings.positionalTrackingFilterOption);
 
 
 	/* Set information about whick kinect version are we using */
@@ -88,10 +88,11 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 
 	/* Create error handler and connect with openvr system */
 	vr::EVRInitError vrError = vr::VRInitError_None;
-	vr::IVRSystem* p_VRSystem = vr::VR_Init(&vrError, vr::VRApplication_Background);
+	vr::IVRSystem* p_VRSystem = VR_Init(&vrError, vr::VRApplication_Background);
 
 	/* Exit if initerror is not NONE, we don't want to get a crash */
-	if (vrError != vr::VRInitError_None) {
+	if (vrError != vr::VRInitError_None)
+	{
 		LOG(ERROR) << u8"クリティカル・エラー！VRSystemにコネクトできませんでした、エラーコード：" + boost::lexical_cast<std::string>(vrError);
 		return -1;
 	}
@@ -99,19 +100,21 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	/* Scan for playspace origin that is not 0,0,0,0RAD for more see openvr docs */
 	kinectSettings.playspaceOrigin = pExchangeG(p_VRSystem->GetRawZeroPoseToStandingAbsoluteTrackingPose());
 	double yaw = std::atan2(p_VRSystem->GetRawZeroPoseToStandingAbsoluteTrackingPose().m[0][2],
-		p_VRSystem->GetRawZeroPoseToStandingAbsoluteTrackingPose().m[2][2]);
+	                        p_VRSystem->GetRawZeroPoseToStandingAbsoluteTrackingPose().m[2][2]);
 	if (yaw < 0.0) yaw = 2 * M_PI + yaw;
 
 	kinectSettings.radPlayspaceOffset = yaw;
 
 	/* Scan for controllers and get they're ids, get vr framerate for handling main loop */
-	process.controllerID[0] = p_VRSystem->GetTrackedDeviceIndexForControllerRole(vr::ETrackedControllerRole::TrackedControllerRole_RightHand);
-	process.controllerID[1] = p_VRSystem->GetTrackedDeviceIndexForControllerRole(vr::ETrackedControllerRole::TrackedControllerRole_LeftHand);
+	process.controllerID[0] = p_VRSystem->GetTrackedDeviceIndexForControllerRole(
+		vr::ETrackedControllerRole::TrackedControllerRole_RightHand);
+	process.controllerID[1] = p_VRSystem->GetTrackedDeviceIndexForControllerRole(
+		vr::ETrackedControllerRole::TrackedControllerRole_LeftHand);
 	process.vrFrameRate = p_VRSystem->GetFloatTrackedDeviceProperty(0, vr::Prop_DisplayFrequency_Float);
 
 	/* Main application thread: read kinect and process events */
-	std::thread([&] {
-
+	std::thread([&]
+	{
 		/* For limiting loop 'fps' */
 		using clock = std::chrono::steady_clock;
 		auto next_frame = clock::now();
@@ -119,33 +122,19 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 		/* We have finished setup */
 		process.started = true;
 
-		while (true) {
-
+		while (true)
+		{
 			/* Check if we have vr framerate, not to divide by 0 and,
 				if there is no vr running on hmd, run at 30 fps*/
 			next_frame += std::chrono::milliseconds(1000 /
 				(process.vrFrameRate >= 30 && process.vrFrameRate <= 140 ? process.vrFrameRate : 30));
 
 
-
-
-
 			/* If we are currently working on offsets, then update
 				process variables with QSpinboxes' values */
-			if (process.settingOffsets)updateQSpinboxes(
-				std::ref(kinectSettings.positionalOffsets), std::ref(kinectSettings.orientationOffsets), true);
-
-
-
-
-
-			
-
-
-
-
-
-
+			if (process.settingOffsets)
+				updateQSpinboxes(
+					std::ref(kinectSettings.positionalOffsets), std::ref(kinectSettings.orientationOffsets), true);
 
 
 			/* Grab controller ids in every loop, then we can remove reconnect function,
@@ -155,21 +144,23 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 			process.controllerID[1] = p_VRSystem->GetTrackedDeviceIndexForControllerRole(
 				vr::ETrackedControllerRole::TrackedControllerRole_LeftHand);
 			process.vrFrameRate = p_VRSystem->GetFloatTrackedDeviceProperty(0,
-				vr::Prop_DisplayFrequency_Float);
+			                                                                vr::Prop_DisplayFrequency_Float);
 
 
 			/* Get all devices pose in big array, instead of checking for one at time */
 			vr::TrackedDevicePose_t vrDevicesPose[vr::k_unMaxTrackedDeviceCount];
 			p_VRSystem->GetDeviceToAbsoluteTrackingPose(vr::ETrackingUniverseOrigin::TrackingUniverseStanding, 0,
-				vrDevicesPose, vr::k_unMaxTrackedDeviceCount);
+			                                            vrDevicesPose, vr::k_unMaxTrackedDeviceCount);
 
 			/* Push headset position to runtime variables, will be used then */
 			process.headsetPosition = pExchangeE(vrDevicesPose[0].mDeviceToAbsoluteTracking);
 			process.headsetOrientation = pExchangeQE(vrDevicesPose[0].mDeviceToAbsoluteTracking);
 
 			/* Process controllers input and position (if they are connected) */
-			for (int id = 0; id < 2; id++) {
-				if ((unsigned int)process.controllerID[id] != vr::k_unTrackedDeviceIndexInvalid) {
+			for (int id = 0; id < 2; id++)
+			{
+				if (static_cast<unsigned>(process.controllerID[id]) != vr::k_unTrackedDeviceIndexInvalid)
+				{
 					process.controllerPose[id] = vrDevicesPose[process.controllerID[id]];
 
 					/* Get vr controller state and process buttons for each
@@ -179,7 +170,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 
 					process.controllerTriggerPressed[id] = controllerState.rAxis[1].x;
 					process.controllerGripPressed[id] =
-						controllerState.ulButtonPressed & vr::ButtonMaskFromId(vr::EVRButtonId::k_EButton_Grip);
+						controllerState.ulButtonPressed & ButtonMaskFromId(vr::EVRButtonId::k_EButton_Grip);
 
 					process.controllerTrackpadPose[id][0] = controllerState.rAxis[0].x;
 					process.controllerTrackpadPose[id][1] = controllerState.rAxis[0].y;
@@ -187,174 +178,51 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 			}
 
 
-
-
 			/* Get kinect joint poses, rots and state and push it to runtime variables */
 			Kinect.update();
 			process.isSkeletonTracked = Kinect.isSkeletonTracked;
 
-			switch (Kinect.kinectVersion) {
+			switch (Kinect.kinectVersion)
+			{
 			case 1:
-				std::copy(std::begin(Kinect.jointPositions), std::end(Kinect.jointPositions), std::begin(process.jointPositions));
-				std::copy(std::begin(Kinect.boneOrientations), std::end(Kinect.boneOrientations), std::begin(process.boneOrientations));
-				std::copy(std::begin(Kinect.trackingStates), std::end(Kinect.trackingStates), std::begin(process.trackingStates));
+				std::copy(std::begin(Kinect.jointPositions), std::end(Kinect.jointPositions),
+				          std::begin(process.jointPositions));
+				std::copy(std::begin(Kinect.boneOrientations), std::end(Kinect.boneOrientations),
+				          std::begin(process.boneOrientations));
+				std::copy(std::begin(Kinect.trackingStates), std::end(Kinect.trackingStates),
+				          std::begin(process.trackingStates));
 				break;
 			case 2:
-				std::copy(std::begin(Kinect.jointPositions), std::end(Kinect.jointPositions), std::begin(process.jointPositions));
-				std::copy(std::begin(Kinect.boneOrientations), std::end(Kinect.boneOrientations), std::begin(process.boneOrientations));
-				std::copy(std::begin(Kinect.trackingStates), std::end(Kinect.trackingStates), std::begin(process.trackingStates));
+				std::copy(std::begin(Kinect.jointPositions), std::end(Kinect.jointPositions),
+				          std::begin(process.jointPositions));
+				std::copy(std::begin(Kinect.boneOrientations), std::end(Kinect.boneOrientations),
+				          std::begin(process.boneOrientations));
+				std::copy(std::begin(Kinect.trackingStates), std::end(Kinect.trackingStates),
+				          std::begin(process.trackingStates));
 				break;
 			}
-
-			
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 			std::this_thread::sleep_until(next_frame); //Sleep until next frame, if time didn't pass yet
 		}
-
-		}).detach();
-
+	}).detach();
 
 
+	int app_return = main.exec();
+	//Shutdown (total) code goes here
+	//Mostly, in case when overlay was 
+	//not loaded but app continues to run
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		
-		int app_return = main.exec();
-		//Shutdown (total) code goes here
-		//Mostly, in case when overlay was 
-		//not loaded but app continues to run
-
-		LOG(INFO) << u8"シャットダウンが呼ばれている。";
-		Kinect.shutdown(); //turn off kinect
-		return app_return; //Return qt app exectution as result
+	LOG(INFO) << u8"シャットダウンが呼ばれている。";
+	Kinect.shutdown(); //turn off kinect
+	return app_return; //Return qt app exectution as result
 }
 
 /* Push given value to offsets page */
-void updateQSpinboxes(std::array<Eigen::Vector3f, 3> &pos, std::array<Eigen::Quaternionf, 3> &qrot, bool set) {
-	if (!set) {
+void updateQSpinboxes(std::array<Eigen::Vector3f, 3>& pos, std::array<Eigen::Quaternionf, 3>& qrot, bool set)
+{
+	if (!set)
+	{
 		const Eigen::Vector3f rot[3] = {
 			qrot[0].toRotationMatrix().eulerAngles(0, 1, 2),
 			qrot[1].toRotationMatrix().eulerAngles(0, 1, 2),
@@ -387,7 +255,8 @@ void updateQSpinboxes(std::array<Eigen::Vector3f, 3> &pos, std::array<Eigen::Qua
 		quickObj->findChild<QObject*>("control4R")->setProperty("value", 100 * pos[2].z());
 		quickObj->findChild<QObject*>("control5R")->setProperty("value", 100 * pos[2].y());
 	}
-	else {
+	else
+	{
 		/* Get variables and compute quaternions from them */
 		Eigen::Vector3f rot[3] = {
 			Eigen::Vector3f(),
@@ -396,35 +265,35 @@ void updateQSpinboxes(std::array<Eigen::Vector3f, 3> &pos, std::array<Eigen::Qua
 		};
 
 		/* Read offsets from qml, remember that they are XZY */
-		rot[0].x() = float(quickObj->findChild<QObject*>("controlW")->property("value").toInt()) / 100.f;
-		rot[0].z() = float(quickObj->findChild<QObject*>("control1W")->property("value").toInt()) / 100.f;
-		rot[0].y() = float(quickObj->findChild<QObject*>("control2W")->property("value").toInt()) / 100.f;
+		rot[0].x() = static_cast<float>(quickObj->findChild<QObject*>("controlW")->property("value").toInt()) / 100.f;
+		rot[0].z() = static_cast<float>(quickObj->findChild<QObject*>("control1W")->property("value").toInt()) / 100.f;
+		rot[0].y() = static_cast<float>(quickObj->findChild<QObject*>("control2W")->property("value").toInt()) / 100.f;
 
-		rot[1].x() = float(quickObj->findChild<QObject*>("controlL")->property("value").toInt()) / 100.f;
-		rot[1].z() = float(quickObj->findChild<QObject*>("control1L")->property("value").toInt()) / 100.f;
-		rot[1].y() = float(quickObj->findChild<QObject*>("control2L")->property("value").toInt()) / 100.f;
+		rot[1].x() = static_cast<float>(quickObj->findChild<QObject*>("controlL")->property("value").toInt()) / 100.f;
+		rot[1].z() = static_cast<float>(quickObj->findChild<QObject*>("control1L")->property("value").toInt()) / 100.f;
+		rot[1].y() = static_cast<float>(quickObj->findChild<QObject*>("control2L")->property("value").toInt()) / 100.f;
 
-		rot[2].x() = float(quickObj->findChild<QObject*>("controlR")->property("value").toInt()) / 100.f;
-		rot[2].z() = float(quickObj->findChild<QObject*>("control1R")->property("value").toInt()) / 100.f;
-		rot[2].y() = float(quickObj->findChild<QObject*>("control2R")->property("value").toInt()) / 100.f;
+		rot[2].x() = static_cast<float>(quickObj->findChild<QObject*>("controlR")->property("value").toInt()) / 100.f;
+		rot[2].z() = static_cast<float>(quickObj->findChild<QObject*>("control1R")->property("value").toInt()) / 100.f;
+		rot[2].y() = static_cast<float>(quickObj->findChild<QObject*>("control2R")->property("value").toInt()) / 100.f;
 
 		/* Construct eigen quaternions from given euler angles */
 		for (int i = 0; i < 3; i++)
 			qrot[i] = Eigen::AngleAxisf(rot[i].x(), Eigen::Vector3f::UnitX())
-			* Eigen::AngleAxisf(rot[i].y(), Eigen::Vector3f::UnitY())
-			* Eigen::AngleAxisf(rot[i].z(), Eigen::Vector3f::UnitZ());
+				* Eigen::AngleAxisf(rot[i].y(), Eigen::Vector3f::UnitY())
+				* Eigen::AngleAxisf(rot[i].z(), Eigen::Vector3f::UnitZ());
 
 		/* Get positional offsets onto given arrays */
-		pos[0].x() = float(quickObj->findChild<QObject*>("control3W")->property("value").toInt()) / 100.f;
-		pos[0].y() = float(quickObj->findChild<QObject*>("control4W")->property("value").toInt()) / 100.f;
-		pos[0].z() = float(quickObj->findChild<QObject*>("control5W")->property("value").toInt()) / 100.f;
+		pos[0].x() = static_cast<float>(quickObj->findChild<QObject*>("control3W")->property("value").toInt()) / 100.f;
+		pos[0].y() = static_cast<float>(quickObj->findChild<QObject*>("control4W")->property("value").toInt()) / 100.f;
+		pos[0].z() = static_cast<float>(quickObj->findChild<QObject*>("control5W")->property("value").toInt()) / 100.f;
 
-		pos[1].x() = float(quickObj->findChild<QObject*>("control3L")->property("value").toInt()) / 100.f;
-		pos[1].y() = float(quickObj->findChild<QObject*>("control4L")->property("value").toInt()) / 100.f;
-		pos[1].z() = float(quickObj->findChild<QObject*>("control5L")->property("value").toInt()) / 100.f;
+		pos[1].x() = static_cast<float>(quickObj->findChild<QObject*>("control3L")->property("value").toInt()) / 100.f;
+		pos[1].y() = static_cast<float>(quickObj->findChild<QObject*>("control4L")->property("value").toInt()) / 100.f;
+		pos[1].z() = static_cast<float>(quickObj->findChild<QObject*>("control5L")->property("value").toInt()) / 100.f;
 
-		pos[2].x() = float(quickObj->findChild<QObject*>("control3R")->property("value").toInt()) / 100.f;
-		pos[2].y() = float(quickObj->findChild<QObject*>("control4R")->property("value").toInt()) / 100.f;
-		pos[2].z() = float(quickObj->findChild<QObject*>("control5R")->property("value").toInt()) / 100.f;
+		pos[2].x() = static_cast<float>(quickObj->findChild<QObject*>("control3R")->property("value").toInt()) / 100.f;
+		pos[2].y() = static_cast<float>(quickObj->findChild<QObject*>("control4R")->property("value").toInt()) / 100.f;
+		pos[2].z() = static_cast<float>(quickObj->findChild<QObject*>("control5R")->property("value").toInt()) / 100.f;
 	}
 }

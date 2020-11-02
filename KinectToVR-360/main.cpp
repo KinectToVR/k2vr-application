@@ -2,13 +2,13 @@
 #include <KinectV1Handler.h>
 #include <KinectToVR.h>
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-    initLogging();
+	initLogging();
 
-    KinectV1Handler Kinect;
-    Kinect.initialiseSkeleton();
+	KinectV1Handler Kinect;
+	Kinect.initialiseSkeleton();
 
 
-    return run(argc, argv, Kinect);
+	return run(argc, argv, Kinect);
 }

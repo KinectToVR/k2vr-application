@@ -10,23 +10,26 @@
 #define KINECTTOVR_API __declspec(dllimport)
 #endif
 
-namespace K2API {
+namespace k2_api
+{
+	inline zmq::context_t context{1};
+	inline zmq::socket_t socket{context, zmq::socket_type::req};
+	KINECTTOVR_API int init_socket(std::string const& port) noexcept;
 
-	zmq::context_t context{ 1 };
-	zmq::socket_t socket{ context, zmq::socket_type::req };
-	KINECTTOVR_API int initSocket(std::string port);
-	
-	KINECTTOVR_API int addTracker(K2Objects::K2TrackerBase tracker);
-	KINECTTOVR_API int addTracker(std::vector<K2Objects::K2TrackerBase> trackerVector);
+	KINECTTOVR_API int add_tracker(K2Objects::K2TrackerBase const& tracker) noexcept;
+	KINECTTOVR_API int add_tracker(std::vector<K2Objects::K2TrackerBase> const& tracker_vector) noexcept;
 
-	KINECTTOVR_API int addAndConnectTracker(K2Objects::K2TrackerBase tracker);
-	KINECTTOVR_API int addAndConnectTracker(std::vector<K2Objects::K2TrackerBase> trackerVector);
+	KINECTTOVR_API int add_and_connect_tracker(K2Objects::K2TrackerBase const& tracker) noexcept;
+	KINECTTOVR_API int add_and_connect_tracker(std::vector<K2Objects::K2TrackerBase> const& tracker_vector) noexcept;
 
-	KINECTTOVR_API int connectTracker(int id) noexcept(false);
-	KINECTTOVR_API bool connectAllTrackers() noexcept(false);
-	KINECTTOVR_API int disconnectTracker(int id) noexcept(false);
-	KINECTTOVR_API bool disconnectAllTrackers() noexcept(false);
+	KINECTTOVR_API int connect_tracker(int id) noexcept;
+	KINECTTOVR_API bool connect_all_trackers() noexcept;
+	KINECTTOVR_API int disconnect_tracker(int id) noexcept;
+	KINECTTOVR_API bool disconnect_all_trackers() noexcept;
 
-	KINECTTOVR_API void updateTrackerPose(int id, K2Objects::K2PosePacket trackerPose);
-	KINECTTOVR_API void updateTrackerData(int id, K2Objects::K2DataPacket trackerData);
+	KINECTTOVR_API void update_tracker_pose(int id, K2Objects::K2PosePacket const& tracker_pose) noexcept;
+	KINECTTOVR_API void update_tracker_data(int id, K2Objects::K2DataPacket const& tracker_data) noexcept;
+
+	std::string send_message_r(std::string const& data) noexcept(false);
+	void send_message_nr(std::string const& data) noexcept(false);
 }

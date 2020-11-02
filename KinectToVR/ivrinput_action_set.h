@@ -25,6 +25,7 @@ namespace input
 				= vr::k_ulInvalidInputValueHandle;
 			m_activeActionSet.nPriority = 0;
 		}
+
 		void setPriority(int32_t priority)
 		{
 			m_activeActionSet.nPriority = priority;
@@ -38,5 +39,4 @@ namespace input
 	private:
 		vr::VRActiveActionSet_t m_activeActionSet = {};
 	};
-
 } // namespace input

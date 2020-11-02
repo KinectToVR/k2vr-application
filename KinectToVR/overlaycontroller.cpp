@@ -24,13 +24,17 @@
 namespace utils
 {
 	constexpr vr::HmdMatrix34_t k_forwardUpMatrix
-		= { { { 1.0f, 0.0f, 0.0f, 0.0f },
-			  { 0.0f, 0.0f, 1.0f, 0.0f },
-			  { 0.0f, -1.0f, 0.0f, 0.0f } } };
+		= {
+			{
+				{1.0f, 0.0f, 0.0f, 0.0f},
+				{0.0f, 0.0f, 1.0f, 0.0f},
+				{0.0f, -1.0f, 0.0f, 0.0f}
+			}
+		};
 
 	inline vr::HmdMatrix34_t& initRotationMatrix(vr::HmdMatrix34_t& matrix,
-		unsigned axisId,
-		float angle)
+	                                             unsigned axisId,
+	                                             float angle)
 	{
 		switch (axisId)
 		{
@@ -83,8 +87,8 @@ namespace utils
 	}
 
 	inline vr::HmdMatrix34_t& matMul33(vr::HmdMatrix34_t& result,
-		const vr::HmdMatrix34_t& a,
-		const vr::HmdMatrix34_t& b)
+	                                   const vr::HmdMatrix34_t& a,
+	                                   const vr::HmdMatrix34_t& b)
 	{
 		for (unsigned i = 0; i < 3; i++)
 		{
@@ -101,8 +105,8 @@ namespace utils
 	}
 
 	inline vr::HmdVector3_t& matMul33(vr::HmdVector3_t& result,
-		const vr::HmdMatrix34_t& a,
-		const vr::HmdVector3_t& b)
+	                                  const vr::HmdMatrix34_t& a,
+	                                  const vr::HmdVector3_t& b)
 	{
 		for (unsigned i = 0; i < 3; i++)
 		{
@@ -110,14 +114,14 @@ namespace utils
 			for (unsigned k = 0; k < 3; k++)
 			{
 				result.v[i] += a.m[i][k] * b.v[k];
-			};
+			}
 		}
 		return result;
 	}
 
 	inline vr::HmdVector3_t& matMul33(vr::HmdVector3_t& result,
-		const vr::HmdVector3_t& a,
-		const vr::HmdMatrix34_t& b)
+	                                  const vr::HmdVector3_t& a,
+	                                  const vr::HmdMatrix34_t& b)
 	{
 		for (unsigned i = 0; i < 3; i++)
 		{
@@ -125,11 +129,10 @@ namespace utils
 			for (unsigned k = 0; k < 3; k++)
 			{
 				result.v[i] += a.v[k] * b.m[k][i];
-			};
+			}
 		}
 		return result;
 	}
-
 }
 
 int verifyCustomTickRate(const int tickRate)
@@ -138,7 +141,7 @@ int verifyCustomTickRate(const int tickRate)
 	{
 		return 1;
 	}
-	else if (tickRate > k_maxCustomTickRate)
+	if (tickRate > k_maxCustomTickRate)
 	{
 		return k_maxCustomTickRate;
 	}
@@ -147,10 +150,10 @@ int verifyCustomTickRate(const int tickRate)
 }
 
 OverlayController::OverlayController(bool desktopMode,
-	bool noSound,
-	QQmlEngine& qmlEngine, KinectHandlerBase& Kinect)
+                                     bool noSound,
+                                     QQmlEngine& qmlEngine, KinectHandlerBase& Kinect)
 	: QObject(), m_desktopMode(desktopMode),
-	m_noSound(noSound), m_actions(), Kinect(Kinect)
+	  m_noSound(noSound), m_actions(), Kinect(Kinect)
 {
 	// Arbitrarily chosen Max Length of Directory path, should be sufficient for
 	// Any set-up
@@ -250,9 +253,9 @@ OverlayController::OverlayController(bool desktopMode,
 
 	// Set qml context
 	qmlEngine.rootContext()->setContextProperty("applicationVersion",
-		getVersionString());
+	                                            getVersionString());
 	qmlEngine.rootContext()->setContextProperty("vrRuntimePath",
-		getVRRuntimePathUrl());
+	                                            getVRRuntimePathUrl());
 
 	// Grab local version number
 	QStringList verNumericalString
@@ -261,7 +264,6 @@ OverlayController::OverlayController(bool desktopMode,
 	m_localVersionMajor = verMajorMinorPatchString[0].toInt();
 	m_localVersionMinor = verMajorMinorPatchString[1].toInt();
 	m_localVersionPatch = verMajorMinorPatchString[2].toInt();
-
 }
 
 OverlayController::~OverlayController()
@@ -286,25 +288,25 @@ void OverlayController::exitApp()
 void OverlayController::Shutdown()
 {
 	disconnect(&m_pumpEventsTimer,
-		SIGNAL(timeout()),
-		this,
-		SLOT(OnTimeoutPumpEvents()));
+	           SIGNAL(timeout()),
+	           this,
+	           SLOT(OnTimeoutPumpEvents()));
 	m_pumpEventsTimer.stop();
 
 	if (m_pRenderTimer)
 	{
 		disconnect(&m_renderControl,
-			SIGNAL(renderRequested()),
-			this,
-			SLOT(OnRenderRequest()));
+		           SIGNAL(renderRequested()),
+		           this,
+		           SLOT(OnRenderRequest()));
 		disconnect(&m_renderControl,
-			SIGNAL(sceneChanged()),
-			this,
-			SLOT(OnRenderRequest()));
+		           SIGNAL(sceneChanged()),
+		           this,
+		           SLOT(OnRenderRequest()));
 		disconnect(m_pRenderTimer.get(),
-			SIGNAL(timeout()),
-			this,
-			SLOT(renderOverlay()));
+		           SIGNAL(timeout()),
+		           this,
+		           SLOT(renderOverlay()));
 		m_pRenderTimer->stop();
 		m_pRenderTimer.reset();
 	}
@@ -312,8 +314,8 @@ void OverlayController::Shutdown()
 }
 
 void OverlayController::SetWidget(QQuickItem* quickItem,
-	const std::string& name,
-	const std::string& key)
+                                  const std::string& name,
+                                  const std::string& key)
 {
 	if (!m_desktopMode)
 	{
@@ -328,8 +330,8 @@ void OverlayController::SetWidget(QQuickItem* quickItem,
 			if (overlayError == vr::VROverlayError_KeyInUse)
 			{
 				QMessageBox::critical(nullptr,
-					"OpenVR Advanced Settings Overlay",
-					"Another instance is already running.");
+				                      "OpenVR Advanced Settings Overlay",
+				                      "Another instance is already running.");
 			}
 			throw std::runtime_error(std::string(
 				"Failed to create Overlay: "
@@ -350,7 +352,7 @@ void OverlayController::SetWidget(QQuickItem* quickItem,
 		if (thumbIconPath.has_value())
 		{
 			vr::VROverlay()->SetOverlayFromFile(m_ulOverlayThumbnailHandle,
-				thumbIconPath->c_str());
+			                                    thumbIconPath->c_str());
 		}
 		else
 		{
@@ -365,9 +367,9 @@ void OverlayController::SetWidget(QQuickItem* quickItem,
 		m_pRenderTimer->setSingleShot(true);
 		m_pRenderTimer->setInterval(5);
 		connect(m_pRenderTimer.get(),
-			SIGNAL(timeout()),
-			this,
-			SLOT(renderOverlay()));
+		        SIGNAL(timeout()),
+		        this,
+		        SLOT(renderOverlay()));
 
 		QOpenGLFramebufferObjectFormat fboFormat;
 		fboFormat.setAttachment(
@@ -381,25 +383,27 @@ void OverlayController::SetWidget(QQuickItem* quickItem,
 		m_window.setRenderTarget(m_pFbo.get());
 		quickItem->setParentItem(m_window.contentItem());
 		m_window.setGeometry(0,
-			0,
-			static_cast<int>(quickItem->width()),
-			static_cast<int>(quickItem->height()));
+		                     0,
+		                     static_cast<int>(quickItem->width()),
+		                     static_cast<int>(quickItem->height()));
 		m_renderControl.initialize(&m_openGLContext);
 
 		vr::HmdVector2_t vecWindowSize
-			= { static_cast<float>(quickItem->width()),
-				static_cast<float>(quickItem->height()) };
+			= {
+				static_cast<float>(quickItem->width()),
+				static_cast<float>(quickItem->height())
+			};
 		vr::VROverlay()->SetOverlayMouseScale(m_ulOverlayHandle,
-			&vecWindowSize);
+		                                      &vecWindowSize);
 
 		connect(&m_renderControl,
-			SIGNAL(renderRequested()),
-			this,
-			SLOT(OnRenderRequest()));
+		        SIGNAL(renderRequested()),
+		        this,
+		        SLOT(OnRenderRequest()));
 		connect(&m_renderControl,
-			SIGNAL(sceneChanged()),
-			this,
-			SLOT(OnRenderRequest()));
+		        SIGNAL(sceneChanged()),
+		        this,
+		        SLOT(OnRenderRequest()));
 
 		LOG(INFO) << u8"オーバーレイのQQuickWindowフラグセットアップを始めた…";
 		m_window.setFlags(Qt::FramelessWindowHint);
@@ -408,9 +412,9 @@ void OverlayController::SetWidget(QQuickItem* quickItem,
 	}
 
 	connect(&m_pumpEventsTimer,
-		SIGNAL(timeout()),
-		this,
-		SLOT(OnTimeoutPumpEvents()));
+	        SIGNAL(timeout()),
+	        this,
+	        SLOT(OnTimeoutPumpEvents()));
 
 	// Every 1ms we check if the current frame has advanced (for vsync)
 	m_pumpEventsTimer.setInterval(1);
@@ -445,10 +449,12 @@ void OverlayController::renderOverlay()
 #if defined _WIN64 || defined _LP64
 			// To avoid any compiler warning because of cast to a larger
 			// pointer type (warning C4312 on VC)
-			vr::Texture_t texture = { reinterpret_cast<void*>(
-										  static_cast<uint64_t>(unTexture)),
-									  vr::TextureType_OpenGL,
-									  vr::ColorSpace_Auto };
+			vr::Texture_t texture = {
+				reinterpret_cast<void*>(
+					static_cast<uint64_t>(unTexture)),
+				vr::TextureType_OpenGL,
+				vr::ColorSpace_Auto
+			};
 #else
 			vr::Texture_t texture = { reinterpret_cast<void*>(unTexture),
 									  vr::TextureType_OpenGL,
@@ -457,22 +463,19 @@ void OverlayController::renderOverlay()
 			vr::VROverlay()->SetOverlayTexture(m_ulOverlayHandle, &texture);
 		}
 		m_openGLContext.functions()->glFlush(); // We need to flush otherwise
-												// the texture may be empty.*/
+		// the texture may be empty.*/
 	}
 }
 
 bool OverlayController::pollNextEvent(vr::VROverlayHandle_t ulOverlayHandle,
-	vr::VREvent_t* pEvent)
+                                      vr::VREvent_t* pEvent)
 {
 	if (isDesktopMode())
 	{
 		return vr::VRSystem()->PollNextEvent(pEvent, sizeof(vr::VREvent_t));
 	}
-	else
-	{
-		return vr::VROverlay()->PollNextOverlayEvent(
-			ulOverlayHandle, pEvent, sizeof(vr::VREvent_t));
-}
+	return vr::VROverlay()->PollNextOverlayEvent(
+		ulOverlayHandle, pEvent, sizeof(vr::VREvent_t));
 }
 
 QPoint OverlayController::getMousePositionForEvent(vr::VREvent_Mouse_t mouse)
@@ -536,125 +539,125 @@ void OverlayController::mainEventLoop()
 		switch (vrEvent.eventType)
 		{
 		case vr::VREvent_MouseMove:
-		{
-			QPoint ptNewMouse = getMousePositionForEvent(vrEvent.data.mouse);
-			if (ptNewMouse != m_ptLastMouse)
 			{
-				QMouseEvent mouseEvent(QEvent::MouseMove,
-					ptNewMouse,
-					m_window.mapToGlobal(ptNewMouse),
-					Qt::NoButton,
-					m_lastMouseButtons,
-					nullptr);
-				m_ptLastMouse = ptNewMouse;
-				QCoreApplication::sendEvent(&m_window, &mouseEvent);
-				OnRenderRequest();
+				QPoint ptNewMouse = getMousePositionForEvent(vrEvent.data.mouse);
+				if (ptNewMouse != m_ptLastMouse)
+				{
+					QMouseEvent mouseEvent(QEvent::MouseMove,
+					                       ptNewMouse,
+					                       m_window.mapToGlobal(ptNewMouse),
+					                       Qt::NoButton,
+					                       m_lastMouseButtons,
+					                       nullptr);
+					m_ptLastMouse = ptNewMouse;
+					QCoreApplication::sendEvent(&m_window, &mouseEvent);
+					OnRenderRequest();
+				}
 			}
-		}
-		break;
+			break;
 
 		case vr::VREvent_MouseButtonDown:
-		{
-			QPoint ptNewMouse = getMousePositionForEvent(vrEvent.data.mouse);
-			Qt::MouseButton button
-				= vrEvent.data.mouse.button == vr::VRMouseButton_Right
-				? Qt::RightButton
-				: Qt::LeftButton;
-			m_lastMouseButtons |= button;
-			QMouseEvent mouseEvent(QEvent::MouseButtonPress,
-				ptNewMouse,
-				m_window.mapToGlobal(ptNewMouse),
-				button,
-				m_lastMouseButtons,
-				nullptr);
-			QCoreApplication::sendEvent(&m_window, &mouseEvent);
-		}
-		break;
+			{
+				QPoint ptNewMouse = getMousePositionForEvent(vrEvent.data.mouse);
+				Qt::MouseButton button
+					= vrEvent.data.mouse.button == vr::VRMouseButton_Right
+						  ? Qt::RightButton
+						  : Qt::LeftButton;
+				m_lastMouseButtons |= button;
+				QMouseEvent mouseEvent(QEvent::MouseButtonPress,
+				                       ptNewMouse,
+				                       m_window.mapToGlobal(ptNewMouse),
+				                       button,
+				                       m_lastMouseButtons,
+				                       nullptr);
+				QCoreApplication::sendEvent(&m_window, &mouseEvent);
+			}
+			break;
 
 		case vr::VREvent_MouseButtonUp:
-		{
-			QPoint ptNewMouse = getMousePositionForEvent(vrEvent.data.mouse);
-			Qt::MouseButton button
-				= vrEvent.data.mouse.button == vr::VRMouseButton_Right
-				? Qt::RightButton
-				: Qt::LeftButton;
-			m_lastMouseButtons &= ~button;
-			QMouseEvent mouseEvent(QEvent::MouseButtonRelease,
-				ptNewMouse,
-				m_window.mapToGlobal(ptNewMouse),
-				button,
-				m_lastMouseButtons,
-				nullptr);
-			QCoreApplication::sendEvent(&m_window, &mouseEvent);
-		}
-		break;
+			{
+				QPoint ptNewMouse = getMousePositionForEvent(vrEvent.data.mouse);
+				Qt::MouseButton button
+					= vrEvent.data.mouse.button == vr::VRMouseButton_Right
+						  ? Qt::RightButton
+						  : Qt::LeftButton;
+				m_lastMouseButtons &= ~button;
+				QMouseEvent mouseEvent(QEvent::MouseButtonRelease,
+				                       ptNewMouse,
+				                       m_window.mapToGlobal(ptNewMouse),
+				                       button,
+				                       m_lastMouseButtons,
+				                       nullptr);
+				QCoreApplication::sendEvent(&m_window, &mouseEvent);
+			}
+			break;
 
 		case vr::VREvent_ScrollSmooth:
-		{
-			// Wheel speed is defined as 1/8 of a degree
-			QWheelEvent wheelEvent(
-				m_ptLastMouse,
-				m_window.mapToGlobal(m_ptLastMouse),
-				QPoint(),
-				QPoint(static_cast<int>(vrEvent.data.scroll.xdelta
-					* (360.0f * 8.0f)),
-					static_cast<int>(vrEvent.data.scroll.ydelta
-						* (360.0f * 8.0f))),
-				0,
-				Qt::Vertical,
-				m_lastMouseButtons,
-				nullptr);
-			QCoreApplication::sendEvent(&m_window, &wheelEvent);
-		}
-		break;
+			{
+				// Wheel speed is defined as 1/8 of a degree
+				QWheelEvent wheelEvent(
+					m_ptLastMouse,
+					m_window.mapToGlobal(m_ptLastMouse),
+					QPoint(),
+					QPoint(static_cast<int>(vrEvent.data.scroll.xdelta
+						       * (360.0f * 8.0f)),
+					       static_cast<int>(vrEvent.data.scroll.ydelta
+						       * (360.0f * 8.0f))),
+					0,
+					Qt::Vertical,
+					m_lastMouseButtons,
+					nullptr);
+				QCoreApplication::sendEvent(&m_window, &wheelEvent);
+			}
+			break;
 
 		case vr::VREvent_OverlayShown:
-		{
-			m_window.update();
-		}
-		break;
+			{
+				m_window.update();
+			}
+			break;
 
 		case vr::VREvent_Quit:
-		{
-			LOG(INFO) << u8"処理済み出口要求。";
-			vr::VRSystem()->AcknowledgeQuit_Exiting(); // Let us buy some
-													   // time just in case
+			{
+				LOG(INFO) << u8"処理済み出口要求。";
+				vr::VRSystem()->AcknowledgeQuit_Exiting(); // Let us buy some
+				// time just in case
 
-			exitApp();
-			// Won't fallthrough, but also exitApp() wont, but QT won't
-			// acknowledge
-			exit(EXIT_SUCCESS);
-		}
+				exitApp();
+				// Won't fallthrough, but also exitApp() wont, but QT won't
+				// acknowledge
+				exit(EXIT_SUCCESS);
+			}
 
 		case vr::VREvent_DashboardActivated:
-		{
-			LOG(DEBUG) << u8"ダッシュボードが作動した！";
-			m_dashboardVisible = true;
-		}
-		break;
+			{
+				LOG(DEBUG) << u8"ダッシュボードが作動した！";
+				m_dashboardVisible = true;
+			}
+			break;
 
 		case vr::VREvent_DashboardDeactivated:
-		{
-			LOG(DEBUG) << u8"ダッシュボードが不活性化！";
-			m_dashboardVisible = false;
-		}
-		break;
+			{
+				LOG(DEBUG) << u8"ダッシュボードが不活性化！";
+				m_dashboardVisible = false;
+			}
+			break;
 
 		case vr::VREvent_KeyboardDone:
-		{
-			char keyboardBuffer[1024];
-			vr::VROverlay()->GetKeyboardText(keyboardBuffer, 1024);
-			emit keyBoardInputSignal(QString(keyboardBuffer),
-				static_cast<unsigned long>(
-					vrEvent.data.keyboard.uUserValue));
-		}
-		break;
+			{
+				char keyboardBuffer[1024];
+				vr::VROverlay()->GetKeyboardText(keyboardBuffer, 1024);
+				emit keyBoardInputSignal(QString(keyboardBuffer),
+				                         static_cast<unsigned long>(
+					                         vrEvent.data.keyboard.uUserValue));
+			}
+			break;
 
 		case vr::VREvent_SeatedZeroPoseReset:
-		{
-			LOG(INFO) << u8"ポジションリセットを発動した！";
-		}
-		break;
+			{
+				LOG(INFO) << u8"ポジションリセットを発動した！";
+			}
+			break;
 		}
 	}
 
@@ -702,10 +705,10 @@ void OverlayController::mainEventLoop()
 			switch (vrEvent.eventType)
 			{
 			case vr::VREvent_OverlayShown:
-			{
-				m_window.update();
-			}
-			break;
+				{
+					m_window.update();
+				}
+				break;
 			}
 		}
 	}
@@ -737,7 +740,7 @@ const vr::VROverlayHandle_t& OverlayController::overlayThumbnailHandle()
 }
 
 void OverlayController::showKeyboard(QString existingText,
-	unsigned long userValue)
+                                     unsigned long userValue)
 {
 	vr::VROverlay()->ShowKeyboardForOverlay(
 		m_ulOverlayHandle,

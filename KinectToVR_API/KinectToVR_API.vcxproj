@@ -120,18 +120,18 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>BOOST_USE_WINDOWS_H;_DEBUG;KINECTTOVRAPI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>KINECTTOVR_API_EXPORTS;BOOST_USE_WINDOWS_H;_DEBUG;KINECTTOVRAPI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)external;$(SolutionDir)external\opencv\build\include;$(SolutionDir)external\Kinect;$(SolutionDir)external\boost;$(SolutionDir)external\openvr\headers;$(SolutionDir)external\ZMQ;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external;$(SolutionDir)external\opencv\build\include;$(SolutionDir)external\Kinect;$(SolutionDir)external\boost;$(SolutionDir)external\openvr\headers;$(SolutionDir)external\ZMQ;$(ProjectDir);$(SolutionDir)KinectToVR;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)external\openvr\lib\win64;$(SolutionDir)external\opencv\build\x64\vc15\lib;$(SolutionDir)external\boost\lib64-msvc-14.2;$(SolutionDir)external\ZMQ\lib;$(SolutionDir)$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>openvr_api.lib;libzmq-v142-mt-4_3_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
@@ -145,11 +145,11 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>BOOST_USE_WINDOWS_H;NDEBUG;KINECTTOVRAPI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>KINECTTOVR_API_EXPORTS;BOOST_USE_WINDOWS_H;NDEBUG;KINECTTOVRAPI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)external;$(SolutionDir)external\opencv\build\include;$(SolutionDir)external\Kinect;$(SolutionDir)external\boost;$(SolutionDir)external\openvr\headers;$(SolutionDir)external\ZMQ;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external;$(SolutionDir)external\opencv\build\include;$(SolutionDir)external\Kinect;$(SolutionDir)external\boost;$(SolutionDir)external\openvr\headers;$(SolutionDir)external\ZMQ;$(ProjectDir);$(SolutionDir)KinectToVR;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -159,7 +159,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)external\openvr\lib\win64;$(SolutionDir)external\opencv\build\x64\vc15\lib;$(SolutionDir)external\boost\lib64-msvc-14.2;$(SolutionDir)external\ZMQ\lib;$(SolutionDir)$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>openvr_api.lib;libzmq-v142-mt-4_3_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
@@ -175,7 +175,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="K2Objects.cpp" />
     <ClCompile Include="KinectToVR_API.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>

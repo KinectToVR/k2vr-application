@@ -44,8 +44,5 @@
     <ClCompile Include="KinectToVR_API.cpp">
       <Filter>API Files</Filter>
     </ClCompile>
-    <ClCompile Include="K2Objects.cpp">
-      <Filter>Object Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

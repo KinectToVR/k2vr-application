@@ -22,6 +22,7 @@ namespace input
 					<< u8"」。OpenVRインプットエラー：" << error;
 			}
 		}
+
 		/*!
 		An API internal handle that identifies an input handle.
 		*/
@@ -29,6 +30,7 @@ namespace input
 		{
 			return m_handle;
 		}
+
 		/*!
 		The actions manfiest name of the action. Used for error reporting.
 		*/
@@ -41,5 +43,4 @@ namespace input
 		vr::VRInputValueHandle_t m_handle = 0;
 		const std::string m_name;
 	};
-
 } // namespace input

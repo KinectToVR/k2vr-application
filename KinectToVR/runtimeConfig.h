@@ -16,7 +16,7 @@ public:
 	/* controller 0 is right and 1 is left, general indexing: R->L */
 	Eigen::Quaternionf headsetOrientation = Eigen::Quaternionf(1, 0, 0, 0);
 	Eigen::Vector3f headsetPosition = Eigen::Vector3f(0, 0, 0);
-	vr::TrackedDevicePose_t controllerPose[2] = { vr::TrackedDevicePose_t(), vr::TrackedDevicePose_t() };
+	vr::TrackedDevicePose_t controllerPose[2] = {vr::TrackedDevicePose_t(), vr::TrackedDevicePose_t()};
 
 	/* We store data in arrays of kinectOne size, we're getting only 20 if we are using x360
 		and use full array if xOne. Not so memory-saving but rally simplifies works */
@@ -24,19 +24,20 @@ public:
 	glm::quat boneOrientations[25];
 	JointTrackingState trackingStates[25];
 
-	std::array<Eigen::Vector3f, 3> positionalOffsetsBackup{ {Eigen::Vector3f(), Eigen::Vector3f(), Eigen::Vector3f()} };
-	std::array<Eigen::Quaternionf, 3> orientationOffsetsBackup{ {Eigen::Quaternionf(), Eigen::Quaternionf(), Eigen::Quaternionf()} };
+	std::array<Eigen::Vector3f, 3> positionalOffsetsBackup{{Eigen::Vector3f(), Eigen::Vector3f(), Eigen::Vector3f()}};
+	std::array<Eigen::Quaternionf, 3> orientationOffsetsBackup{
+		{Eigen::Quaternionf(), Eigen::Quaternionf(), Eigen::Quaternionf()}
+	};
 
 	/* Other variables that are necessary to run program successfully */
 	int kinectVersion, controllerID[2], vrFrameRate;
 	std::string kinectState;
 	bool initialised = false, started = false,
-		controllerTriggerPressed[2] = { false,false },
-        controllerGripPressed[2] = { false,false },
-        isSkeletonTracked = false,
-        isOverlayVisible = false, settingOffsets = false;
-	float controllerTrackpadPose[2][2] = { {0.f,0.f}, {0.f,0.f} };
-	
+	     controllerTriggerPressed[2] = {false, false},
+	     controllerGripPressed[2] = {false, false},
+	     isSkeletonTracked = false,
+	     isOverlayVisible = false, settingOffsets = false;
+	float controllerTrackpadPose[2][2] = {{0.f, 0.f}, {0.f, 0.f}};
 };
 
 /* Create instance in header, to get it shared */

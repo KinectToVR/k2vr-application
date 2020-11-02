@@ -99,8 +99,8 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>openvr_api.lib;opencv_world340.lib;libzmq-v142-mt-s-4_3_3.lib;$(QTDIR)\lib\Qt5QmlModels.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)external\openvr\lib\win64;$(SolutionDir)external\opencv\build\x64\vc15\lib;$(SolutionDir)external\boost\lib64-msvc-14.2;$(SolutionDir)external\ZMQ\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>KinectToVR_API.lib;openvr_api.lib;opencv_world340.lib;libzmq-v142-mt-4_3_3.lib;$(QTDIR)\lib\Qt5QmlModels.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)external\openvr\lib\win64;$(SolutionDir)external\opencv\build\x64\vc15\lib;$(SolutionDir)external\boost\lib64-msvc-14.2;$(SolutionDir)external\ZMQ\lib;$(SolutionDir)$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreImportLibrary>true</IgnoreImportLibrary>
@@ -136,8 +136,7 @@
       <QtRccFileName>qrc_%(Filename).cpp</QtRccFileName>
     </QtRcc>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>xcopy /y /d "$(SolutionDir)external\ZMQ\bin\*" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -161,8 +160,8 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>openvr_api.lib;opencv_world340.lib;libzmq-v142-mt-s-4_3_3.lib;$(QTDIR)\lib\Qt5QmlModelsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)external\openvr\lib\win64;$(SolutionDir)external\opencv\build\x64\vc15\lib;$(SolutionDir)external\boost\lib64-msvc-14.2;$(SolutionDir)external\ZMQ\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>KinectToVR_API.lib;openvr_api.lib;opencv_world340.lib;libzmq-v142-mt-4_3_3.lib;$(QTDIR)\lib\Qt5QmlModelsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)external\openvr\lib\win64;$(SolutionDir)external\opencv\build\x64\vc15\lib;$(SolutionDir)external\boost\lib64-msvc-14.2;$(SolutionDir)external\ZMQ\lib;$(SolutionDir)$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreImportLibrary>true</IgnoreImportLibrary>
@@ -196,8 +195,7 @@
       <QtRccFileName>qrc_%(Filename).cpp</QtRccFileName>
     </QtRcc>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>xcopy /y /d "$(SolutionDir)external\ZMQ\bin\*" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

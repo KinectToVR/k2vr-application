@@ -8,38 +8,42 @@
 
 #include "KinectHandlerBase.h"
 
-class KinectV1Handler : public KinectHandlerBase {
-    // A representation of the Kinect elements for the v1 api
+class KinectV1Handler : public KinectHandlerBase
+{
+	// A representation of the Kinect elements for the v1 api
 public:
-    KinectV1Handler()
-    {
-        KinectV1Handler::initialise();
-        KinectHandlerBase::kinectVersion = 1;
-    }
-    HANDLE kinectRGBStream = nullptr;
-    HANDLE kinectDepthStream = nullptr;
-    INuiSensor* kinectSensor = nullptr;
-    NUI_SKELETON_FRAME skeletonFrame = { 0 };
+	KinectV1Handler()
+	{
+		KinectV1Handler::initialise();
+		kinectVersion = 1;
+	}
 
-    Vector4 jointPositions[NUI_SKELETON_POSITION_COUNT];
-    NUI_SKELETON_BONE_ORIENTATION boneOrientations[NUI_SKELETON_POSITION_COUNT];
-    NUI_SKELETON_POSITION_TRACKING_STATE jointStates[NUI_SKELETON_POSITION_COUNT];
+	HANDLE kinectRGBStream = nullptr;
+	HANDLE kinectDepthStream = nullptr;
+	INuiSensor* kinectSensor = nullptr;
+	NUI_SKELETON_FRAME skeletonFrame = {0};
 
-    virtual void initialise() override;
-    virtual void initOpenGL() override;
-    virtual void update() override;
-    virtual void shutdown() override;
+	Vector4 jointPositions[NUI_SKELETON_POSITION_COUNT];
+	NUI_SKELETON_BONE_ORIENTATION boneOrientations[NUI_SKELETON_POSITION_COUNT];
+	NUI_SKELETON_POSITION_TRACKING_STATE jointStates[NUI_SKELETON_POSITION_COUNT];
 
-    virtual ~KinectV1Handler() {}
+	void initialise() override;
+	void initOpenGL() override;
+	void update() override;
+	void shutdown() override;
 
-    virtual HRESULT getStatusResult() override;
-    virtual std::string statusResultString(HRESULT stat) override;
+	virtual ~KinectV1Handler()
+	{
+	}
+
+	HRESULT getStatusResult() override;
+	std::string statusResultString(HRESULT stat) override;
 
 private:
-    bool initKinect();
-    bool acquireKinectFrame(NUI_IMAGE_FRAME& imageFrame, HANDLE& rgbStream, INuiSensor*& sensor);
-    void releaseKinectFrame(NUI_IMAGE_FRAME& imageFrame, HANDLE& rgbStream, INuiSensor*& sensor);
+	bool initKinect();
+	bool acquireKinectFrame(NUI_IMAGE_FRAME& imageFrame, HANDLE& rgbStream, INuiSensor*& sensor);
+	void releaseKinectFrame(NUI_IMAGE_FRAME& imageFrame, HANDLE& rgbStream, INuiSensor*& sensor);
 
-    void updateSkeletalData();
-    Vector4 zeroKinectPosition(int trackedSkeletonIndex);
+	void updateSkeletalData();
+	Vector4 zeroKinectPosition(int trackedSkeletonIndex);
 };

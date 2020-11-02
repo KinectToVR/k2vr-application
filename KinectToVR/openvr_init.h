@@ -2,12 +2,11 @@
 
 namespace openvr_init
 {
-enum class OpenVrInitializationType
-{
-    Overlay,
-    Utility,
-};
+	enum class OpenVrInitializationType
+	{
+		Overlay,
+		Utility,
+	};
 
-void initializeOpenVR( const OpenVrInitializationType initType );
-
+	void initializeOpenVR(OpenVrInitializationType initType);
 } // namespace openvr_init
