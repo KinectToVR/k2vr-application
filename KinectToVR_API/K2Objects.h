@@ -1,5 +1,23 @@
 #pragma once
-#include <boost_serialization_eigen.h>
+#include <boost/serialization/array.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+
+// GLM serialization
+namespace boost::serialization
+{
+	template <typename Ar>
+	void serialize(Ar& ar, glm::vec3& v, unsigned)
+	{
+		ar& make_nvp("x", v.x)& make_nvp("y", v.y)& make_nvp("z", v.z);
+	}
+
+	template <typename Ar>
+	void serialize(Ar& ar, glm::quat& q, unsigned)
+	{
+		ar& make_nvp("w", q.w)& make_nvp("x", q.x)& make_nvp("y", q.y)& make_nvp("z", q.z);
+	}
+}
 
 namespace K2Objects
 {
@@ -7,8 +25,8 @@ namespace K2Objects
 	{
 	public:
 
-		Eigen::Matrix3f orientation;
-		Eigen::Vector3f position;
+		glm::quat orientation;
+		glm::vec3 position;
 
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
@@ -19,8 +37,8 @@ namespace K2Objects
 		K2TrackerPose() = default;
 		~K2TrackerPose() = default;
 
-		K2TrackerPose(Eigen::Matrix3f m_orientation, Eigen::Vector3f m_position) :
-			orientation(std::move(m_orientation)), position(std::move(m_position))
+		K2TrackerPose(glm::quat m_orientation, glm::vec3 m_position) :
+			orientation(m_orientation), position(m_position)
 		{
 		}
 	};

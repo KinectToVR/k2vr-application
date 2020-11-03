@@ -14,7 +14,7 @@
     <ProjectGuid>{6AAE9D3B-FDFB-3AF6-AA19-54B42CD72D2D}</ProjectGuid>
     <RootNamespace>KinectToVR</RootNamespace>
     <Keyword>QtVS_v303</Keyword>
-    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.19041.0</WindowsTargetPlatformMinVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' or !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
   </PropertyGroup>
@@ -99,7 +99,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>KinectToVR_API.lib;openvr_api.lib;opencv_world340.lib;libzmq-v142-mt-4_3_3.lib;$(QTDIR)\lib\Qt5QmlModels.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>KinectToVR_API.lib;openvr_api.lib;opencv_world340.lib;libzmq-v142-mt-4_3_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)external\openvr\lib\win64;$(SolutionDir)external\opencv\build\x64\vc15\lib;$(SolutionDir)external\boost\lib64-msvc-14.2;$(SolutionDir)external\ZMQ\lib;$(SolutionDir)$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -160,7 +160,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>KinectToVR_API.lib;openvr_api.lib;opencv_world340.lib;libzmq-v142-mt-4_3_3.lib;$(QTDIR)\lib\Qt5QmlModelsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>KinectToVR_API.lib;openvr_api.lib;opencv_world340.lib;libzmq-v142-mt-4_3_3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)external\openvr\lib\win64;$(SolutionDir)external\opencv\build\x64\vc15\lib;$(SolutionDir)external\boost\lib64-msvc-14.2;$(SolutionDir)external\ZMQ\lib;$(SolutionDir)$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
