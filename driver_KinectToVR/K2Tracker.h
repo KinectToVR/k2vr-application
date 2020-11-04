@@ -1,7 +1,5 @@
 #pragma once
 #include <string>
-#include <chrono>
-
 #include <openvr_driver.h>
 #include <KinectToVR_API.h>
 
@@ -20,7 +18,7 @@ public:
 	 * \brief Get tracker serial number
 	 * \return Returns tracker's serial in std::string
 	 */
-	std::string get_serial() const;
+	[[nodiscard]] std::string get_serial() const;
 
 	/**
 	 * \brief Virtual update void for server driver
@@ -67,19 +65,21 @@ public:
 	void set_pose(K2Objects::K2TrackerPose pose);
 	void set_state(bool state);
 
+	//Get to know if tracker is activated (added)
+	[[nodiscard]] bool is_added() const { return _added; }
+	//Get to know if tracker is active (connected)
+	[[nodiscard]] bool is_active() const { return _active; }
+
 private:
+
+	// Is tracker added/active
+	bool _added = false, _active = false;
 
 	// Stores the openvr supplied device index.
 	vr::TrackedDeviceIndex_t _index;
 
-	static vr::DriverPose_t dlpose;
-	static std::chrono::milliseconds dlpose_timestamp;
-
 	// Stores the devices current pose.
 	vr::DriverPose_t _pose;
-
-	// Stores the timestamp of the pose.
-	std::chrono::milliseconds _pose_timestamp;
 
 	// An identifier for OpenVR for when we want to make property changes to this device.
 	vr::PropertyContainerHandle_t _props;

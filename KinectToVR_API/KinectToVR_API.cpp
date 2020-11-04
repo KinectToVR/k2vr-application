@@ -121,7 +121,7 @@ namespace k2_api
 		try
 		{
 			// generate data for server with arguments /C for command and /P for parameters
-			const std::string data = "/C" "SET_STATE" "/P" + std::to_string(id) + ";1/T";
+			const std::string data = "/C" "SET_STATE" "/P" + std::to_string(id) + "/P1" "1/T";
 
 			// return what we got - assuming last tracker's id
 			return boost::lexical_cast<int>(send_message_r(data));
@@ -142,7 +142,7 @@ namespace k2_api
 		try
 		{
 			// generate data for server with arguments /C for command and /P for parameters
-			const std::string data = "/C" "SET_STATE" "/P" + std::to_string(id) + ";0/T";
+			const std::string data = "/C" "SET_STATE" "/P" + std::to_string(id) + "/P1" "0/T";
 
 			// return what we got - assuming last tracker's id
 			return boost::lexical_cast<int>(send_message_r(data));
@@ -208,7 +208,7 @@ namespace k2_api
 			out << tracker_pose;
 
 			// generate data for server with arguments /C for command and /P for parameters
-			const std::string data = "/C" "UPDATE_POSE" "/P" + std::to_string(id) + ";" + ofs.str() + "/T";
+			const std::string data = "/C" "UPDATE_POSE" "/P" + std::to_string(id) + "/P1" + ofs.str() + "/T";
 
 			send_message_nr(data);
 			// don't check or return - we need to go fast
@@ -233,7 +233,7 @@ namespace k2_api
 			out << tracker_data;
 
 			// generate data for server with arguments /C for command and /P for parameters
-			const std::string data = "/C" "UPDATE_DATA" "/P" + std::to_string(id) + ";" + ofs.str() + "/T";
+			const std::string data = "/C" "UPDATE_DATA" "/P" + std::to_string(id) + "/P1" + ofs.str() + "/T";
 
 			send_message_nr(data);
 			// don't check or return - we need to go fast

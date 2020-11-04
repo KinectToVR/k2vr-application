@@ -46,7 +46,7 @@ namespace k2_driver
 
 		void RunFrame() override
 		{
-			//Update poses here
+			
 		}
 
 		bool ShouldBlockStandbyMode() override

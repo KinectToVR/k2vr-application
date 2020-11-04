@@ -6,6 +6,7 @@ K2Tracker::K2Tracker(K2Objects::K2TrackerBase const& tracker_base)
 {
 	_serial = tracker_base.data.serial;
 	_role = tracker_base.data.role;
+	_active = tracker_base.data.isActive;
 
 	_pose = {0};
 	_pose.poseIsValid = true;
@@ -33,6 +34,8 @@ std::string K2Tracker::get_serial() const
 
 void K2Tracker::update()
 {
+	_pose.poseIsValid = _active;
+	_pose.deviceIsConnected = _active;
 	vr::VRServerDriverHost()->TrackedDevicePoseUpdated(_index, _pose, sizeof _pose);
 }
 
@@ -50,8 +53,7 @@ void K2Tracker::set_pose(K2Objects::K2TrackerPose pose)
 
 void K2Tracker::set_state(bool state)
 {
-	_pose.poseIsValid = state;
-	_pose.deviceIsConnected = state;
+	_active = state;
 }
 
 vr::TrackedDeviceIndex_t K2Tracker::get_index() const
