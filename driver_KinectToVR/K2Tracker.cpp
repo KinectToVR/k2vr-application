@@ -1,6 +1,7 @@
 #include "K2Tracker.h"
 #include <openvr_driver.h>
 #include <string>
+#include <thread>
 
 K2Tracker::K2Tracker(K2Objects::K2TrackerBase const& tracker_base)
 {
@@ -39,7 +40,7 @@ void K2Tracker::update()
 	vr::VRServerDriverHost()->TrackedDevicePoseUpdated(_index, _pose, sizeof _pose);
 }
 
-void K2Tracker::set_pose(K2Objects::K2TrackerPose pose)
+void K2Tracker::set_pose(K2Objects::K2TrackerPose const& pose)
 {
 	_pose.vecPosition[0] = pose.position.x;
 	_pose.vecPosition[1] = pose.position.y;
@@ -51,9 +52,52 @@ void K2Tracker::set_pose(K2Objects::K2TrackerPose pose)
 	_pose.qRotation.z = pose.orientation.z;
 }
 
+void K2Tracker::set_pose(K2Objects::K2TrackerPose const& pose, const double _millisFromNow)
+{
+	std::thread([&]()
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(_millisFromNow)));
+		set_pose(pose);
+	}).detach();
+}
+
+void K2Tracker::set_data(K2Objects::K2TrackerData const& data)
+{
+	if (!_added)
+	{
+		_serial = data.serial;
+		_role = data.role;
+
+		// Not spawning, just pose validity
+		_active = data.isActive;
+	}
+}
+
+void K2Tracker::set_data(K2Objects::K2TrackerData const& data, const double _millisFromNow)
+{
+	std::thread([&]()
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(_millisFromNow)));
+		set_data(data);
+	}).detach();
+}
+
 void K2Tracker::set_state(bool state)
 {
 	_active = state;
+}
+
+bool K2Tracker::spawn()
+{
+	try {
+		if (!_added && !_serial.empty())
+		{
+			vr::VRServerDriverHost()->TrackedDeviceAdded(_serial.c_str(), vr::TrackedDeviceClass_GenericTracker, this);
+			return true;
+		}
+	}
+	catch (...) {}
+	return false;
 }
 
 vr::TrackedDeviceIndex_t K2Tracker::get_index() const
@@ -175,4 +219,14 @@ void K2Tracker::DebugRequest(const char* request, char* response_buffer, uint32_
 	// No custom debug requests defined
 	if (response_buffer_size >= 1)
 		response_buffer[0] = 0;
+}
+
+void K2Tracker::EnterStandby()
+{
+	// Enter standby mode
+}
+
+vr::DriverPose_t K2Tracker::GetPose()
+{
+	return _pose;
 }

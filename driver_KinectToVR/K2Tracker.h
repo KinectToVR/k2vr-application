@@ -7,12 +7,13 @@ class K2Tracker : public vr::ITrackedDeviceServerDriver
 {
 public:
 
+	//K2Tracker() = default;
 	virtual ~K2Tracker() = default;
 
-	K2Tracker(K2Tracker&&) = delete;
+	/*K2Tracker(K2Tracker&&) = delete;
 	K2Tracker& operator=(K2Tracker&&) = delete;
 	K2Tracker(const K2Tracker&) = delete;
-	K2Tracker& operator=(const K2Tracker&) = delete;
+	K2Tracker& operator=(const K2Tracker&) = delete;*/
 
 	/**
 	 * \brief Get tracker serial number
@@ -58,16 +59,34 @@ public:
 	void DebugRequest(const char* request, char* response_buffer, uint32_t response_buffer_size) override;
 
 	/**
+	 * \brief Enter Standby mode
+	 */
+	void EnterStandby() override;
+
+	/**
+	 * \brief Return device's actual pose
+	 */
+	vr::DriverPose_t GetPose() override;
+
+	/**
 	 * \brief Construct new tracker from given tracker base
 	 */
 	K2Tracker(K2Objects::K2TrackerBase const& tracker_base);
 
-	void set_pose(K2Objects::K2TrackerPose pose);
-	void set_state(bool state);
+	// Update pose
+	void set_pose(K2Objects::K2TrackerPose const& pose);
+	void set_pose(K2Objects::K2TrackerPose const& pose, double _millisFromNow);
 
-	//Get to know if tracker is activated (added)
+	// Update data (only if uninitialized)
+	void set_data(K2Objects::K2TrackerData const& data);
+	void set_data(K2Objects::K2TrackerData const& data, double _millisFromNow);
+
+	void set_state(bool state);
+	bool spawn(); // TrackedDeviceAdded
+
+	// Get to know if tracker is activated (added)
 	[[nodiscard]] bool is_added() const { return _added; }
-	//Get to know if tracker is active (connected)
+	// Get to know if tracker is active (connected)
 	[[nodiscard]] bool is_active() const { return _active; }
 
 private:

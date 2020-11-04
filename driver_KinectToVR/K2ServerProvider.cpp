@@ -46,7 +46,6 @@ namespace k2_driver
 
 		void RunFrame() override
 		{
-			
 		}
 
 		bool ShouldBlockStandbyMode() override
@@ -54,8 +53,13 @@ namespace k2_driver
 			return false;
 		}
 
-		void EnterStandby() override {}
-		void LeaveStandby() override {}
+		void EnterStandby() override
+		{
+		}
+
+		void LeaveStandby() override
+		{
+		}
 	};
 }
 
