@@ -5,7 +5,6 @@
 #include <K2Tracker.h>
 #include <K2ServerDriver.h>
 
-#include "easylogging++.h"
 INITIALIZE_EASYLOGGINGPP
 
 namespace k2_driver
@@ -27,9 +26,10 @@ namespace k2_driver
 			VR_INIT_SERVER_DRIVER_CONTEXT(pDriverContext);
 			LOG(INFO) << "Driver context init success";
 
-			m_ServerDriver.init_ServerDriver("tcp://localhost:" + std::to_string(port));
-			LOG(INFO) << "ServerDriver init success";
-
+			LOG(INFO) << "Driver networking server init code: " + 
+				std::to_string(m_ServerDriver.init_ServerDriver("tcp://127.0.0.1:" + std::to_string(port)));
+			
+			LOG(INFO) << "OpenVR ServerDriver init success";
 			return vr::VRInitError_None;
 		}
 
@@ -118,6 +118,7 @@ void K2WatchdogDriver::Cleanup()
 
 extern "C" __declspec(dllexport) void* HmdDriverFactory(const char* pInterfaceName, int* pReturnCode)
 {
+	LOG(INFO) << u8"～～～KinectToVR EX OpenVR Driver new logging session begins here!～～～";
 	LOG(INFO) << "Interface name: " << pInterfaceName;
 
 	static k2_driver::K2ServerProvider k2_server_provider;

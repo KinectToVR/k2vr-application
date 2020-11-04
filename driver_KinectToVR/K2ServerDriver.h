@@ -2,6 +2,7 @@
 #include <iostream>
 #include <zmq.hpp>
 #include "K2Tracker.h"
+#include "easylogging++.h"
 
 class K2ServerDriver
 {

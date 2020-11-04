@@ -14,7 +14,7 @@ namespace k2_api
 {
 	inline zmq::context_t context{1};
 	inline zmq::socket_t socket{context, zmq::socket_type::req};
-	KINECTTOVR_API int init_socket(std::string const& port) noexcept;
+	KINECTTOVR_API int init_socket(int port) noexcept;
 
 	KINECTTOVR_API int add_tracker(K2Objects::K2TrackerBase const& tracker) noexcept;
 	KINECTTOVR_API int add_tracker(std::vector<K2Objects::K2TrackerBase> const& tracker_vector) noexcept;

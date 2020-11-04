@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "KinectToVR_API.h"
-
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/lexical_cast.hpp>
@@ -13,11 +12,11 @@ namespace k2_api
 	 * \param port TCP port on which should be all calls created
 	 * \return Returns 0 for success and -1 for failure
 	 */
-	int init_socket(std::string const& port) noexcept
+	int init_socket(const int port) noexcept
 	{
 		try
 		{
-			socket.connect("tcp://localhost:" + port);
+			socket.connect("tcp://localhost:" + std::to_string(port));
 		}
 		catch (std::exception const& e)
 		{
