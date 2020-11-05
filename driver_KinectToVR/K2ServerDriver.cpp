@@ -184,7 +184,7 @@ void K2ServerDriver::parse_message(std::string message)
 					replace_all(_parameters, "20", " ");
 
 					// Create input archive from second parameter
-					std::istringstream ifs(_parameters);
+					std::istringstream ifs(_parameter1);
 					boost::archive::text_iarchive ia(ifs);
 
 					// Read parameters (tracker base)
