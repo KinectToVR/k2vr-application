@@ -118,6 +118,7 @@ void K2ServerDriver::parse_message(std::string message)
 
 				LOG(INFO) << "New tracker added! Serial: " + _tracker.data.serial + " Role: " + _tracker.data.role;
 			}
+			else LOG(ERROR) << "Couldn't add new tracker. Serial already present.";
 			oneParamCompleted = true; // At least 1 command done
 		}
 			// Set all trackers' state
@@ -172,7 +173,9 @@ void K2ServerDriver::parse_message(std::string message)
 						// Set tracker's state to one gathered from argument
 						trackerVector.at(_id).set_state(_state);
 						_reply = "1"; // If success, return true
+						LOG(INFO) << "Tracker id: " + std::to_string(_id) + " state has been set to: " + std::to_string(_state);
 					}
+					else LOG(ERROR) << "Couldn't set tracker id: " + std::to_string(_id) + " state. Index out of bounds.";
 				}
 				// Update one tracker's pose
 				else if (_command == "UPDATE_POSE")
