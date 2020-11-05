@@ -142,6 +142,13 @@ void K2ServerDriver::parse_message(std::string message)
 
 		if (!oneParamCompleted) { // Skip this part if command has run
 				// Rest of commands will need /P1 switch
+
+			// ZMQ replaces all spaces with 20
+			replace_all(_parameters, "20", " ");
+			
+			// Remove parameter indicator
+			_command = _command.substr(0, _command.rfind(param));
+			
 			std::string _parameter0 = _parameters.substr(0, _parameters.rfind(param1)),
 				_parameter1 = _parameters.substr(_parameters.rfind(param1) + param1.length());
 
@@ -153,6 +160,8 @@ void K2ServerDriver::parse_message(std::string message)
 				// Set one tracker's state
 				if (_command == "SET_STATE")
 				{
+					LOG(INFO) << "s";
+					
 					isReplying = true; // We're replying to this request
 					_reply = "0"; // Assume operation failed
 
@@ -163,12 +172,14 @@ void K2ServerDriver::parse_message(std::string message)
 					bool _state = boost::lexical_cast<bool>(_parameter1);
 
 					// Set tracker's state to one gathered from argument
-					trackerVector.at(_id).set_state(_state);
+					trackerVector.at(0).set_state(true);
 					_reply = "1"; // If success, return true
 				}
 				// Update one tracker's pose
 				else if (_command == "UPDATE_POSE")
 				{
+					LOG(INFO) << "p";
+					
 					// Construct bool variable from first parameter
 					int _id = boost::lexical_cast<int>(_parameter0);
 
@@ -197,6 +208,8 @@ void K2ServerDriver::parse_message(std::string message)
 				// Update one tracker's data: only if it's not initialized yet
 				else if (_command == "UPDATE_DATA")
 				{
+					LOG(INFO) << "d";
+					
 					// Construct bool variable from first parameter
 					int _id = boost::lexical_cast<int>(_parameter0);
 
