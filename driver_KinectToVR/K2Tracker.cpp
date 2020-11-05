@@ -3,6 +3,8 @@
 #include <string>
 #include <thread>
 
+#include "easylogging++.h"
+
 K2Tracker::K2Tracker(K2Objects::K2TrackerBase const& tracker_base)
 {
 	_serial = tracker_base.data.serial;
@@ -92,8 +94,27 @@ bool K2Tracker::spawn()
 	try {
 		if (!_added && !_serial.empty())
 		{
+			// Add device to OpenVR devices list
 			vr::VRServerDriverHost()->TrackedDeviceAdded(_serial.c_str(), vr::TrackedDeviceClass_GenericTracker, this);
-			return true;
+
+			// Force tracker to update at 120fps until exit
+			std::thread([&]()
+				{
+					// For limiting loop's iterations/s
+					using clock = std::chrono::steady_clock;
+					auto next_frame = clock::now();
+				
+					while (true)
+					{
+						// Add time to wait
+						next_frame += std::chrono::milliseconds(1000 / 120);
+						// Update tracker's pose
+						update();
+						//Sleep until next frame
+						std::this_thread::sleep_until(next_frame);
+					}
+				}).detach();
+				return true;
 		}
 	}
 	catch (...) {}

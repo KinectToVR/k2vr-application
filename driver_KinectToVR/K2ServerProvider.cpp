@@ -26,11 +26,17 @@ namespace k2_driver
 			VR_INIT_SERVER_DRIVER_CONTEXT(pDriverContext);
 			LOG(INFO) << "Driver context init success";
 
-			LOG(INFO) << "Driver networking server init code: " + 
-				std::to_string(m_ServerDriver.init_ServerDriver("tcp://127.0.0.1:" + std::to_string(port)));
+			const int initCode = m_ServerDriver.init_ServerDriver("tcp://127.0.0.1:" + std::to_string(port));
+			LOG(INFO) << "Driver's networking server init code: " + 
+				std::to_string(initCode);
+
+			if (initCode == 0) {
+				LOG(INFO) << "OpenVR ServerDriver init success";
+				return vr::VRInitError_None;
+			}
 			
-			LOG(INFO) << "OpenVR ServerDriver init success";
-			return vr::VRInitError_None;
+			LOG(ERROR) << "OpenVR ServerDriver init failure! Aborting...";
+			return vr::VRInitError_Driver_Failed;
 		}
 
 		void Cleanup() override

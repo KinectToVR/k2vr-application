@@ -115,6 +115,8 @@ void K2ServerDriver::parse_message(std::string message)
 				// Push new tracker to vector and return its id
 				trackerVector.emplace_back(K2Tracker(_tracker));
 				_reply = std::to_string(trackerVector.size() - 1);
+
+				LOG(INFO) << "New tracker added! Serial: " + _tracker.data.serial + " Role: " + _tracker.data.role;
 			}
 			oneParamCompleted = true; // At least 1 command done
 		}
@@ -133,18 +135,21 @@ void K2ServerDriver::parse_message(std::string message)
 				if (!k2_tracker.is_added()) k2_tracker.spawn(); // spawn if needed
 				k2_tracker.set_state(_state); // set state
 			}
+			LOG(INFO) << "All trackers' state has been set to: " + std::to_string(_state);
 			_reply = "1"; // If success, return true
 			oneParamCompleted = true; // At least 1 command done
 		}
 
-		try {
-			// Rest of commands will need /P1 switch
+		if (!oneParamCompleted) { // Skip this part if command has run
+				// Rest of commands will need /P1 switch
 			std::string _parameter0 = _parameters.substr(0, _parameters.rfind(param1)),
 				_parameter1 = _parameters.substr(_parameters.rfind(param1) + param1.length());
 
 			// Parse only if found more parameters
 			if (!_parameter0.empty() && !_parameter1.empty())
 			{
+				LOG(INFO) << _parameter0 + " " + _parameter1;
+
 				// Set one tracker's state
 				if (_command == "SET_STATE")
 				{
@@ -157,15 +162,9 @@ void K2ServerDriver::parse_message(std::string message)
 					// Construct bool variable from second parameter
 					bool _state = boost::lexical_cast<bool>(_parameter1);
 
-					try
-					{
-						// Set tracker's state to one gathered from argument
-						trackerVector.at(_id).set_state(_state);
-						_reply = "1"; // If success, return true
-					}
-					catch (...)
-					{
-					}
+					// Set tracker's state to one gathered from argument
+					trackerVector.at(_id).set_state(_state);
+					_reply = "1"; // If success, return true
 				}
 				// Update one tracker's pose
 				else if (_command == "UPDATE_POSE")
@@ -184,21 +183,15 @@ void K2ServerDriver::parse_message(std::string message)
 					K2Objects::K2PosePacket _pose_packet;
 					ia >> _pose_packet;
 
-					try
+					// Update tracker pose (with time offset)
+					if (int(_pose_packet.millisFromNow) != 0)
 					{
-						// Update tracker pose (with time offset)
-						if (int(_pose_packet.millisFromNow) != 0)
-						{
-							trackerVector.at(_id).set_pose(_pose_packet, _pose_packet.millisFromNow);
-						}
-						else
-						{
-							// If there is no time offset, just update
-							trackerVector.at(_id).set_pose(_pose_packet);
-						}
+						trackerVector.at(_id).set_pose(_pose_packet, _pose_packet.millisFromNow);
 					}
-					catch (...)
+					else
 					{
+						// If there is no time offset, just update
+						trackerVector.at(_id).set_pose(_pose_packet);
 					}
 				}
 				// Update one tracker's data: only if it's not initialized yet
@@ -218,31 +211,20 @@ void K2ServerDriver::parse_message(std::string message)
 					K2Objects::K2DataPacket _data_packet;
 					ia >> _data_packet;
 
-					try
+					// Update tracker pose (with time offset)
+					if (int(_data_packet.millisFromNow) != 0)
 					{
-						// Update tracker pose (with time offset)
-						if (int(_data_packet.millisFromNow) != 0)
-						{
-							trackerVector.at(_id).set_data(_data_packet, _data_packet.millisFromNow);
-						}
-						else
-						{
-							// If there is no time offset, just update
-							trackerVector.at(_id).set_data(_data_packet);
-						}
+						trackerVector.at(_id).set_data(_data_packet, _data_packet.millisFromNow);
 					}
-					catch (...)
+					else
 					{
+						// If there is no time offset, just update
+						trackerVector.at(_id).set_data(_data_packet);
 					}
 				}
 			}
 		}
-		catch (std::exception const& e)
-		{
-			LOG(ERROR) << std::string("Partial parsing error: ") + e.what() + '\n' + 
-				(oneParamCompleted ? "All commands have been parsed although." : "None commands were parsed.");
-		}
-
+		
 		if (isReplying)
 		{
 			// send the reply to the client
