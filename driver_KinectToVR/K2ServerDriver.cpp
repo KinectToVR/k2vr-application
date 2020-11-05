@@ -155,15 +155,11 @@ void K2ServerDriver::parse_message(std::string message)
 			// Parse only if found more parameters
 			if (!_parameter0.empty() && !_parameter1.empty())
 			{
-				LOG(INFO) << _parameter0 + " " + _parameter1;
-
 				// Set one tracker's state
 				if (_command == "SET_STATE")
 				{
-					LOG(INFO) << "s";
-					
 					isReplying = true; // We're replying to this request
-					_reply = "0"; // Assume operation failed
+					_reply = "-1"; // Assume operation failed
 
 					// Construct bool variable from first parameter
 					int _id = boost::lexical_cast<int>(_parameter0);
@@ -171,15 +167,16 @@ void K2ServerDriver::parse_message(std::string message)
 					// Construct bool variable from second parameter
 					bool _state = boost::lexical_cast<bool>(_parameter1);
 
-					// Set tracker's state to one gathered from argument
-					trackerVector.at(0).set_state(true);
-					_reply = "1"; // If success, return true
+					// Check if desired tracker exists
+					if (_id < trackerVector.size()) {
+						// Set tracker's state to one gathered from argument
+						trackerVector.at(_id).set_state(_state);
+						_reply = "1"; // If success, return true
+					}
 				}
 				// Update one tracker's pose
 				else if (_command == "UPDATE_POSE")
 				{
-					LOG(INFO) << "p";
-					
 					// Construct bool variable from first parameter
 					int _id = boost::lexical_cast<int>(_parameter0);
 
@@ -194,22 +191,23 @@ void K2ServerDriver::parse_message(std::string message)
 					K2Objects::K2PosePacket _pose_packet;
 					ia >> _pose_packet;
 
-					// Update tracker pose (with time offset)
-					if (int(_pose_packet.millisFromNow) != 0)
-					{
-						trackerVector.at(_id).set_pose(_pose_packet, _pose_packet.millisFromNow);
-					}
-					else
-					{
-						// If there is no time offset, just update
-						trackerVector.at(_id).set_pose(_pose_packet);
+					// Check if desired tracker exists
+					if (_id < trackerVector.size()) {
+						// Update tracker pose (with time offset)
+						if (int(_pose_packet.millisFromNow) != 0)
+						{
+							trackerVector.at(_id).set_pose(_pose_packet, _pose_packet.millisFromNow);
+						}
+						else
+						{
+							// If there is no time offset, just update
+							trackerVector.at(_id).set_pose(_pose_packet);
+						}
 					}
 				}
 				// Update one tracker's data: only if it's not initialized yet
 				else if (_command == "UPDATE_DATA")
 				{
-					LOG(INFO) << "d";
-					
 					// Construct bool variable from first parameter
 					int _id = boost::lexical_cast<int>(_parameter0);
 
@@ -224,15 +222,18 @@ void K2ServerDriver::parse_message(std::string message)
 					K2Objects::K2DataPacket _data_packet;
 					ia >> _data_packet;
 
-					// Update tracker pose (with time offset)
-					if (int(_data_packet.millisFromNow) != 0)
-					{
-						trackerVector.at(_id).set_data(_data_packet, _data_packet.millisFromNow);
-					}
-					else
-					{
-						// If there is no time offset, just update
-						trackerVector.at(_id).set_data(_data_packet);
+					// Check if desired tracker exists
+					if (_id < trackerVector.size()) {
+						// Update tracker pose (with time offset)
+						if (int(_data_packet.millisFromNow) != 0)
+						{
+							trackerVector.at(_id).set_data(_data_packet, _data_packet.millisFromNow);
+						}
+						else
+						{
+							// If there is no time offset, just update
+							trackerVector.at(_id).set_data(_data_packet);
+						}
 					}
 				}
 			}
