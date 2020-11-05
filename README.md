@@ -14,18 +14,18 @@ repository before posting an issue with building or missing files.
 <br>
 
 2. External dependiences
-   - Download latest Eigen release and unpack it at src level to<br> 'external\Eigen',<br> 
-   creating file path like 'external\Eigen\Geometry' available
-   - Download latest glm release and unpack it to 'external\glm',<br> 
-   making file path similar to 'external\glm\glm.hpp' available
-   - Download boost 1.74 and unpack it to 'external'.<br> 
-   Change folder name from 'boost_1_74_0' to 'boost',<br> 
-   making file path like 'external\boost\lib64-msvc-14.2\\*.lib' available
-   - Download opencv 3.4.0 and unpack it to 'external\opencv',<br> 
-   making file path like 'external\opencv\build\bin\\*.dll' available
-   - Download latest openvr and unpack it to 'external\openvr',<br> 
-   creating file path similar to 'external\openvr\headers\\*.h' available
-   - You may also build static ZMQ library and update files in 'external\ZMQ\'
+   - Download latest Eigen release and unpack it at src level to<br> ```external\Eigen```,<br> 
+   creating file path like ```external\Eigen\Geometry``` available
+   - Download latest glm release and unpack it to ```external\glm```,<br> 
+   making file path similar to ```external\glm\glm.hpp``` available
+   - Download boost 1.74 and unpack it to ```external```.<br> 
+   Change folder name from ```boost_1_74_0``` to ```boost```,<br> 
+   making file path like ```external\boost\lib64-msvc-14.2\\*.lib``` available
+   - Download opencv 3.4.0 and unpack it to ```external\opencv```,<br> 
+   making file path like ```external\opencv\build\bin\\*.dll``` available
+   - Download latest openvr and unpack it to ```external\openvr```,<br> 
+   creating file path similar to ```external\openvr\headers\\*.h``` available
+   - You may also build ZMQ library and update files in ```external\ZMQ\```
 <br>
 
 3. Setting up project files
@@ -37,9 +37,9 @@ repository before posting an issue with building or missing files.
 <br>
 
 4. Building projects
-   - Make sure project 'KinectToVR' is being built first,<br> 
+   - Make sure project ```KinectToVR``` is being built first,<br> 
    other projects will need its output library from output directory<br> 
-   (Should be built to '$(Platform)\$(Configuration)')
+   (Should be built to ```$(Platform)\$(Configuration)```)
 <br>
 
 5. Deploying project
@@ -48,3 +48,17 @@ repository before posting an issue with building or missing files.
    and checking with degugger to achieve better results.<br> 
    You may also download [zip](https://drive.google.com/file/d/15FX0Ubg9m7rEBj8G2OBDGCgHNLwfZ53W/view?usp=sharing) from my own workaround,<br> 
    assuming you haven't added any other plugins.
+
+## Debugging
+
+1. Change run command in project properties, selecting your SteamVR installation path. <br>
+(Path to vrserver.exe) <br>
+![](https://imgur.com/QAvogtW.png)
+
+2. Remove driver dll from ```OutDir/driver/KinectToVR/bin/win64``` and create a hard link:
+   - Open cmd and navigate to ```OutDir``` <br>
+   (Where you've built your binaries, default is ```x64/$(Configuration)```)
+   - Delete ```driver_KinectToVR.dll``` but keep rest
+   - Create a hard link: ```mklink /h driver\KinectToVR\bin\win64\driver_KinectToVR.dll driver_KinectToVR.dll```
+
+3. Click on ```driver_KinectToVR``` project and select ```Debug→Start New Instance```

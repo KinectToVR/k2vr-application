@@ -76,7 +76,6 @@ void replace_all(std::string& str, const std::string& from, const std::string& t
 void K2ServerDriver::parse_message(std::string message)
 {
 	std::string _reply; // Reply that will be sent to client
-	bool isReplying = false;
 	const std::string cmd("/C"), param("/P"), param1("/P1"), term("/T");
 	const std::string _data = message.substr(0, message.rfind(term));
 
@@ -92,7 +91,6 @@ void K2ServerDriver::parse_message(std::string message)
 		// Add new tracker to server
 		if (_command == "ADD_TRACKER")
 		{
-			isReplying = true; // We're replying to this request
 			_reply = "-1"; // Assume fail
 
 			// ZMQ replaces all spaces with 20
@@ -124,7 +122,6 @@ void K2ServerDriver::parse_message(std::string message)
 			// Set all trackers' state
 		else if (_command == "SET_STATE_ALL")
 		{
-			isReplying = true; // We're replying to this request
 			_reply = "0"; // Assume operation failed
 
 			// Construct bool variable from parameter
@@ -159,7 +156,6 @@ void K2ServerDriver::parse_message(std::string message)
 				// Set one tracker's state
 				if (_command == "SET_STATE")
 				{
-					isReplying = true; // We're replying to this request
 					_reply = "-1"; // Assume operation failed
 
 					// Construct bool variable from first parameter
@@ -180,6 +176,7 @@ void K2ServerDriver::parse_message(std::string message)
 				// Update one tracker's pose
 				else if (_command == "UPDATE_POSE")
 				{
+					_reply = "-1"; // Assume fail
 					// Construct bool variable from first parameter
 					int _id = boost::lexical_cast<int>(_parameter0);
 
@@ -206,11 +203,14 @@ void K2ServerDriver::parse_message(std::string message)
 							// If there is no time offset, just update
 							trackerVector.at(_id).set_pose(_pose_packet);
 						}
+						_reply = std::to_string(_id); // If success, return tracker id
 					}
+					else LOG(ERROR) << "Couldn't set tracker id: " + std::to_string(_id) + " pose. Index out of bounds.";
 				}
 				// Update one tracker's data: only if it's not initialized yet
 				else if (_command == "UPDATE_DATA")
 				{
+					_reply = "-1"; // Assume fail
 					// Construct bool variable from first parameter
 					int _id = boost::lexical_cast<int>(_parameter0);
 
@@ -237,18 +237,17 @@ void K2ServerDriver::parse_message(std::string message)
 							// If there is no time offset, just update
 							trackerVector.at(_id).set_data(_data_packet);
 						}
+						_reply = std::to_string(_id); // If success, return tracker id
 					}
+					else LOG(ERROR) << "Couldn't set tracker id: " + std::to_string(_id) + " data. Index out of bounds.";
 				}
 			}
 		}
-		
-		if (isReplying)
-		{
-			// send the reply to the client
-			zmq::message_t reply(_reply.size());
-			std::memcpy(reply.data(), _reply.data(), _reply.size());
-			socket.send(reply);
-		}
+
+		// send the reply to the client
+		zmq::message_t reply(_reply.size());
+		std::memcpy(reply.data(), _reply.data(), _reply.size());
+		socket.send(reply);
 	}
 }
 
