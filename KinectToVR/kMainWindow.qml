@@ -5125,7 +5125,7 @@ Item {
                         color: "#ffffff"
                         objectName: "Autocalib_move"
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: "Move somewhere else"
+                        //text: "Move somewhere else"
                         anchors.horizontalCenterOffset: 1
                         font.bold: true
                         font.pointSize: 60
@@ -5262,14 +5262,17 @@ Item {
                     }
                     highlighted: false
                     hoverEnabled: true
-                    onClicked: {
-                        _cppContext.cppSlot("AUTOCALIBRATION_ABORTED")
+                    function closeAutoCalibration() {
                         chooseCalibTab.visible = true
                         calibrationWindow.visible = false
                         generalControlTab.enabled = true
                         cancelAutoCalibButton.visible = true
                         startAutoCalibButton.visible = true
                         abortAutoCalibButton.visible = false
+                    }
+                    onClicked: {
+                        _cppContext.cppSlot("AUTOCALIBRATION_ABORTED")
+                        closeAutoCalibration()
                     }
                     onHoveredChanged: {
                         cabg11.color = abortAutoCalibButton.hovered ? "#5D6BD4" : "#0d21b3"

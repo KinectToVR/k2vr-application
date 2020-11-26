@@ -47,19 +47,22 @@ void signalHandler::cppSlot(const QString& msg)
 			process.orientationOffsetsBackup = kinectSettings.orientationOffsets;
 		}
 
-		if (msg == "START_AUTOCALIB" || msg == "START_MANUALCALIB")
-		{
-			/* Backup calibration values */
-		}
-
-		if(msg=="MANUALCALIBRATION_CANCELLED")
-		{
-			/* Recover calibration values from backup */
-		}
-		
 		if (msg == "AUTOCALIBRATION_STARTED")
 		{
 			/* Start automatic calibration */
+			startCalibration();
+		}
+
+		if(msg=="START_MANUALCALIB")
+		{
+			/* Start manual calibration */
+			startCalibration(false);
+		}
+
+		if (msg == "MANUALCALIBRATION_CANCELLED" || msg == "AUTOCALIBRATION_ABORTED")
+		{
+			/* Recover calibration values from backup */
+			abortCalibration = true;
 		}
 
 		kinectSettings.saveSettings();

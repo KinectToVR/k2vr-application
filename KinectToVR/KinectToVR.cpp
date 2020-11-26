@@ -179,29 +179,17 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 
 
 			/* Get kinect joint poses, rots and state and push it to runtime variables */
-			Kinect.update();
-			process.isSkeletonTracked = Kinect.isSkeletonTracked;
+			if (!Kinect.isPSMS) {
+				Kinect.update();
+				process.isSkeletonTracked = Kinect.isSkeletonTracked;
 
-			switch (Kinect.kinectVersion)
-			{
-			case 1:
 				std::copy(std::begin(Kinect.jointPositions), std::end(Kinect.jointPositions),
-				          std::begin(process.jointPositions));
+					std::begin(process.jointPositions));
 				std::copy(std::begin(Kinect.boneOrientations), std::end(Kinect.boneOrientations),
-				          std::begin(process.boneOrientations));
+					std::begin(process.boneOrientations));
 				std::copy(std::begin(Kinect.trackingStates), std::end(Kinect.trackingStates),
-				          std::begin(process.trackingStates));
-				break;
-			case 2:
-				std::copy(std::begin(Kinect.jointPositions), std::end(Kinect.jointPositions),
-				          std::begin(process.jointPositions));
-				std::copy(std::begin(Kinect.boneOrientations), std::end(Kinect.boneOrientations),
-				          std::begin(process.boneOrientations));
-				std::copy(std::begin(Kinect.trackingStates), std::end(Kinect.trackingStates),
-				          std::begin(process.trackingStates));
-				break;
+					std::begin(process.trackingStates));
 			}
-
 
 			std::this_thread::sleep_until(next_frame); //Sleep until next frame, if time didn't pass yet
 		}
@@ -295,5 +283,46 @@ void updateQSpinboxes(std::array<Eigen::Vector3f, 3>& pos, std::array<Eigen::Qua
 		pos[2].x() = static_cast<float>(quickObj->findChild<QObject*>("control3R")->property("value").toInt()) / 100.f;
 		pos[2].y() = static_cast<float>(quickObj->findChild<QObject*>("control4R")->property("value").toInt()) / 100.f;
 		pos[2].z() = static_cast<float>(quickObj->findChild<QObject*>("control5R")->property("value").toInt()) / 100.f;
+	}
+}
+
+void startCalibration(bool automatic)
+{
+	if (automatic) {
+		std::thread([&]
+			{
+				/* Loop over 3 points and grab positions */
+				for (int i = 1; i <= 3; i++) {
+
+					/* Tell user to move somewhere else */
+					quickObj->findChild<QObject*>("Autocalib_seconds")->setProperty("text", "~");
+					quickObj->findChild<QObject*>("Autocalib_move")->setProperty("text", "Move somewhere else...");
+					std::this_thread::sleep_for(std::chrono::seconds(5));
+					if (abortCalibration) break;
+
+					/* Capture positions */
+					quickObj->findChild<QObject*>("Autocalib_move")->setProperty("text", "Please stand still!");
+					for (int j = 5; j >= 0; j--)
+					{
+						quickObj->findChild<QObject*>("Autocalib_seconds")->setProperty("text", j);
+						std::this_thread::sleep_for(std::chrono::seconds(1));
+						if (abortCalibration) break;
+					}
+				}
+
+				/* Compose translations */
+			
+
+				/* Finish: close the window and save */
+				QMetaObject::invokeMethod(quickObj->findChild<QObject*>("abortAutoCalibButton"), "closeAutoCalibration");
+
+			}).detach();
+	}
+	else
+	{
+		std::thread([&]
+			{
+
+			}).detach();
 	}
 }

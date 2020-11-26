@@ -338,7 +338,7 @@ void OverlayController::SetWidget(QQuickItem* quickItem,
 				+ std::string(vr::VROverlay()->GetOverlayErrorNameFromEnum(
 					overlayError))));
 		}
-		vr::VROverlay()->SetOverlayWidthInMeters(m_ulOverlayHandle, 2.5f);
+		vr::VROverlay()->SetOverlayWidthInMeters(m_ulOverlayHandle, 3.7f); //2.5f
 		vr::VROverlay()->SetOverlayInputMethod(
 			m_ulOverlayHandle, vr::VROverlayInputMethod_Mouse);
 		vr::VROverlay()->SetOverlayFlag(

@@ -68,10 +68,12 @@
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <QtInstall>Qt-5.15.1</QtInstall>
     <QtModules>core;gui;multimedia;network;opengl;qml;quick;quickcontrols2;quickwidgets;widgets</QtModules>
+    <QtQMLDebugEnable>true</QtQMLDebugEnable>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <QtInstall>Qt-5.15.1</QtInstall>
     <QtModules>core;gui;multimedia;network;opengl;qml;quick;quickcontrols2;quickwidgets;widgets</QtModules>
+    <QtQMLDebugEnable>true</QtQMLDebugEnable>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
     <Import Project="$(QtMsBuild)\qt.props" />

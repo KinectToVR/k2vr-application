@@ -40,3 +40,5 @@ extern "C" KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kin
 
 /* Pass quaternion, although spinboxes are using euler angles, should result same */
 void updateQSpinboxes(std::array<Eigen::Vector3f, 3>& pos, std::array<Eigen::Quaternionf, 3>& qrot, bool set = false);
+void startCalibration(bool automatic = true);
+inline bool abortCalibration = false;

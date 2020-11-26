@@ -33,6 +33,7 @@ public:
         virtual void update() {};
 
 	int kinectVersion = 0;
+	bool isPSMS = false;
 	glm::vec4 jointPositions[25] = { glm::vec4() }; //Create quick handler for kinect joints, with xOne number
 													//If we will be using x360 we'll just count to <20 instead of <25
 	glm::quat boneOrientations[25] = { glm::quat() };
