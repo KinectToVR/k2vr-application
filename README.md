@@ -14,18 +14,11 @@ repository before posting an issue with building or missing files.
 <br>
 
 2. External dependiences
-   - Download latest Eigen release and unpack it at src level to<br> ```external\Eigen```,<br> 
-   creating file path like ```external\Eigen\Geometry``` available
-   - Download latest glm release and unpack it to ```external\glm```,<br> 
-   making file path similar to ```external\glm\glm.hpp``` available
-   - Download boost 1.74 and unpack it to ```external```.<br> 
-   Change folder name from ```boost_1_74_0``` to ```boost```,<br> 
-   making file path like ```external\boost\lib64-msvc-14.2\\*.lib``` available
+   - Restore NuGet packages for solution
    - Download opencv 3.4.0 and unpack it to ```external\opencv```,<br> 
-   making file path like ```external\opencv\build\bin\\*.dll``` available
-   - Download latest openvr and unpack it to ```external\openvr```,<br> 
-   creating file path similar to ```external\openvr\headers\\*.h``` available
-   - You may also build ZMQ library and update files in ```external\ZMQ\```
+   creating file path similar to ```external\opencv\build\bin\\*.dll```
+   - Clone latest openvr to ```external\openvr```
+   - You may also update ZMQ library for C++ in ```external\ZMQ\```
 <br>
 
 3. Setting up project files
@@ -49,7 +42,7 @@ repository before posting an issue with building or missing files.
    You may also download [zip](https://drive.google.com/file/d/15FX0Ubg9m7rEBj8G2OBDGCgHNLwfZ53W/view?usp=sharing) from my own workaround,<br> 
    assuming you haven't added any other plugins.
 
-## Debugging
+## Debugging OpenVR driver
 
 1. Change run command in project properties, selecting your SteamVR installation path. <br>
 (Path to vrserver.exe) <br>

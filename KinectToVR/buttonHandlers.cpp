@@ -47,6 +47,20 @@ void signalHandler::cppSlot(const QString& msg)
 			process.orientationOffsetsBackup = kinectSettings.orientationOffsets;
 		}
 
+		if (msg == "START_AUTOCALIB" || msg == "START_MANUALCALIB")
+		{
+			/* Backup calibration values */
+		}
+
+		if(msg=="MANUALCALIBRATION_CANCELLED")
+		{
+			/* Recover calibration values from backup */
+		}
+		
+		if (msg == "AUTOCALIBRATION_STARTED")
+		{
+			/* Start automatic calibration */
+		}
 
 		kinectSettings.saveSettings();
 	}
@@ -62,23 +76,25 @@ void signalHandler::multiCpp(const QString& msg, const QString& arg)
 	/* Parse only if we finished set-up to omit dummy messages */
 	if (process.started)
 	{
-		if (msg == "HIPS")
+		if (msg == "HIPS") {
 			if (arg == " Device-inferred Rotation")
 				kinectSettings.waistOrientationTrackingOption = k_EnableWaistOrientationFilter;
 			else if (arg == " Follow Headset")
 				kinectSettings.waistOrientationTrackingOption = k_EnableWaistOrientationFilter_UseHeadOrientation;
 			else if (arg == " Disable Rotation")
 				kinectSettings.waistOrientationTrackingOption = k_DisableWaistOrientationFilter;
+		}
 
-		if (msg == "FEET")
+		if (msg == "FEET") {
 			if (arg == " Device-inferred Rotation")
 				kinectSettings.feetOrientationTrackingOption = k_EnableFeetOrientationFilter;
 			else if (arg == " Follow Headset")
 				kinectSettings.feetOrientationTrackingOption = k_EnableFeetOrientationFilter_UseHeadOrientation;
 			else if (arg == " Disable Rotation")
 				kinectSettings.feetOrientationTrackingOption = k_DisableFeetOrientationFilter;
+		}
 
-		if (msg == "FILTER")
+		if (msg == "FILTER") {
 			if (arg == " Linear Interpolation")
 				kinectSettings.positionalTrackingFilterOption = k_EnableTrackingFilter_LERP;
 			else if (arg == " Lowpass Optical")
@@ -87,6 +103,7 @@ void signalHandler::multiCpp(const QString& msg, const QString& arg)
 				kinectSettings.positionalTrackingFilterOption = k_EnableTrackingFilter_Kalman;
 			else if (arg == " Disable Filter")
 				kinectSettings.positionalTrackingFilterOption = k_DisableTrackingFilter;
+		}
 
 
 		kinectSettings.saveSettings();

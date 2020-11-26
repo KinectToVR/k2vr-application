@@ -47,4 +47,7 @@
       <Filter>Generated Files</Filter>
     </CustomBuild>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>

@@ -166,6 +166,7 @@
     <QtRcc Include="resources.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="overlaycontroller.h">

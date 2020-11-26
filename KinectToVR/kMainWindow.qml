@@ -5175,6 +5175,7 @@ Item {
                         calibSeconds.color = "#20910B"
                         cancelAutoCalibButton.visible = false
                         startAutoCalibButton.visible = false
+                        abortAutoCalibButton.visible = true
                     }
                 }
 
@@ -5222,6 +5223,56 @@ Item {
                     }
                     onHoveredChanged: {
                         cabg1.color = cancelAutoCalibButton.hovered ? "#5D6BD4" : "#0d21b3"
+                    }
+                }
+
+                Button {
+                    id: abortAutoCalibButton
+                    objectName: "abortAutoCalibButton"
+                    x: 1917
+                    y: 1323
+                    width: 643
+                    height: 193
+                    visible: false
+                    background: Rectangle {
+                        id: cabg11
+                        color: "#0d21b3"
+                        radius: 30
+                        border.color: "#1630ee"
+                        border.width: 15
+                    }
+                    flat: true
+                    Text {
+                        color: "#1630ee"
+                        text: qsTr("Cancel")
+                        anchors.bottomMargin: 0
+                        anchors.leftMargin: 0
+                        font.pointSize: 48
+                        anchors.centerIn: parent
+                        leftPadding: 0
+                        topPadding: 0
+                        font.bold: true
+                        bottomPadding: 0
+                        font.family: "JostSemi"
+                        horizontalAlignment: Text.AlignHCenter
+                        rightPadding: 0
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.rightMargin: 0
+                        anchors.topMargin: 0
+                    }
+                    highlighted: false
+                    hoverEnabled: true
+                    onClicked: {
+                        _cppContext.cppSlot("AUTOCALIBRATION_ABORTED")
+                        chooseCalibTab.visible = true
+                        calibrationWindow.visible = false
+                        generalControlTab.enabled = true
+                        cancelAutoCalibButton.visible = true
+                        startAutoCalibButton.visible = true
+                        abortAutoCalibButton.visible = false
+                    }
+                    onHoveredChanged: {
+                        cabg11.color = abortAutoCalibButton.hovered ? "#5D6BD4" : "#0d21b3"
                     }
                 }
 

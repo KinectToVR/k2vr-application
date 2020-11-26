@@ -56,8 +56,6 @@
     <CustomBuild Include="release\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
-    
-    
   </ItemGroup>
   <ItemGroup>
     <None Include="..\KinectToVR\Group-15.png">
@@ -90,5 +88,6 @@
     <QtRcc Include="..\KinectToVR\resources.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

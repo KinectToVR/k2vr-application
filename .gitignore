@@ -29,3 +29,5 @@ KinectToVR/KinectToVR.pro.user
 /x64/Release
 
 driver_KinectToVR/x64/
+
+packages/
