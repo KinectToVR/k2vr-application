@@ -91,5 +91,5 @@ namespace k2_api
 	 * \param data String which is to send
 	 * \return Returns server's reply to message
 	 */
-	std::string send_message(std::string const& data) noexcept(false);
+	std::string send_message(std::string data) noexcept(false);
 }

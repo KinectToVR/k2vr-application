@@ -5,6 +5,16 @@
 #include <boost/lexical_cast.hpp>
 #include <random>
 
+void replace_all(std::string& str, const std::string& from, const std::string& to) {
+	if (from.empty())
+		return;
+	size_t start_pos = 0;
+	while ((start_pos = str.find(from, start_pos)) != std::string::npos) {
+		str.replace(start_pos, from.length(), to);
+		start_pos += to.length();
+	}
+}
+
 namespace k2_api
 {
 	int init_socket(const int port) noexcept
@@ -191,8 +201,11 @@ namespace k2_api
 		}
 	}
 
-	std::string send_message(std::string const& data) noexcept(false)
+	std::string send_message(std::string data) noexcept(false)
 	{
+		// Replace all spaces into normal characters
+		replace_all(data, " ", ",");
+		
 		// construct new ZMQ message and copy data to it
 		zmq::message_t message(data.size());
 		std::memcpy(message.data(), data.data(), data.size());

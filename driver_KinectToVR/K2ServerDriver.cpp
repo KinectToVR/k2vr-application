@@ -94,7 +94,7 @@ void K2ServerDriver::parse_message(std::string message)
 			_reply = "-1"; // Assume fail
 
 			// ZMQ replaces all spaces with 20
-			replace_all(_parameters, "20", " ");
+			replace_all(_parameters, ",", " ");
 
 			// Create input archive to read parameters
 			std::istringstream ifs(_parameters);
@@ -142,7 +142,7 @@ void K2ServerDriver::parse_message(std::string message)
 				// Rest of commands will need /P1 switch
 
 			// ZMQ replaces all spaces with 20
-			replace_all(_parameters, "20", " ");
+			replace_all(_parameters, ",", " ");
 			
 			// Remove parameter indicator
 			_command = _command.substr(0, _command.rfind(param));
@@ -181,7 +181,7 @@ void K2ServerDriver::parse_message(std::string message)
 					int _id = boost::lexical_cast<int>(_parameter0);
 
 					// ZMQ replaces all spaces with 20
-					replace_all(_parameters, "20", " ");
+					replace_all(_parameters, ",", " ");
 
 					// Create input archive from second parameter
 					std::istringstream ifs(_parameter1);
@@ -215,7 +215,7 @@ void K2ServerDriver::parse_message(std::string message)
 					int _id = boost::lexical_cast<int>(_parameter0);
 
 					// ZMQ replaces all spaces with 20
-					replace_all(_parameters, "20", " ");
+					replace_all(_parameters, ",", " ");
 
 					// Create input archive from second parameter
 					std::istringstream ifs(_parameter1);
