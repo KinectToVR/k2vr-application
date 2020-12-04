@@ -11,6 +11,15 @@ Item {
     antialiasing: true
     signal qmlSignal(string msg)
 
+    property var primaryColor: "#121212"
+    property var secondaryColor: "#323232"
+    property var tertiaryColor: "#444444"
+
+    property var gradientStartColor: "#7826CD"
+    property var gradientEndColor: "#A6369B"
+    property var secondaryButtonColor: "#2A035D"
+
+    property var textColor: "#9E9E9E"
 
     /*transform: Scale {
         origin.x: 0; origin.y: 0; xScale: parent.width / 3915; yScale: parent.height / 2292
@@ -35,7 +44,7 @@ Item {
         }
 
         Button {
-            property var foreground: "#2CB812"
+            property var foreground: gradientStartColor
             id: generalButton
             objectName: "generalButton"
             x: 296
@@ -67,7 +76,7 @@ Item {
                 qmlSignal(qsTr("GENERAL"))
                 pageIndicator.x = generalButton.x
                 pageIndicator.width = generalButton.width
-                generalButton.foreground = "#2CB812"
+                generalButton.foreground = gradientStartColor
                 controllersButton.foreground = "#FFFFFF"
                 devicesButton.foreground = "#FFFFFF"
                 configurationButton.foreground = "#FFFFFF"
@@ -105,7 +114,7 @@ Item {
                 pageIndicator.x = controllersButton.x
                 pageIndicator.width = controllersButton.width
                 generalButton.foreground = "#FFFFFF"
-                controllersButton.foreground = "#2CB812"
+                controllersButton.foreground = gradientStartColor
                 devicesButton.foreground = "#FFFFFF"
                 configurationButton.foreground = "#FFFFFF"
             }
@@ -143,7 +152,7 @@ Item {
                 pageIndicator.width = devicesButton.width
                 generalButton.foreground = "#FFFFFF"
                 controllersButton.foreground = "#FFFFFF"
-                devicesButton.foreground = "#2CB812"
+                devicesButton.foreground = gradientStartColor
                 configurationButton.foreground = "#FFFFFF"
             }
         }
@@ -180,7 +189,7 @@ Item {
                 generalButton.foreground = "#FFFFFF"
                 controllersButton.foreground = "#FFFFFF"
                 devicesButton.foreground = "#FFFFFF"
-                configurationButton.foreground = "#2CB812"
+                configurationButton.foreground = gradientStartColor
             }
         }
 
@@ -190,7 +199,7 @@ Item {
             y: 0
             width: 200
             height: 62
-            color: "#0c1b89"
+            color: secondaryColor
             visible: true
             anchors.rightMargin: 0
             z: -1
@@ -203,12 +212,13 @@ Item {
 
         Label {
             id: label
-            x: 3352
-            y: 79
+            x: 3327
+            y: 78
             width: 526
             height: 60
             color: "#8cffffff"
-            text: qsTr("KinectToVR v0.7.1 EX")
+            text: qsTr("KinectToVR v1.0.0")
+            horizontalAlignment: Text.AlignRight
             font.bold: true
             font.pointSize: 36
         }
@@ -220,7 +230,7 @@ Item {
             y: 201
             width: 255
             height: 15
-            color: "#2cb812"
+            color: gradientStartColor
             anchors.leftMargin: 0
             anchors.bottom: rectangle.bottom
         }
@@ -231,7 +241,7 @@ Item {
             y: 0
             width: 200
             height: 216
-            color: "#0c1b89"
+            color: secondaryColor
             anchors.fill: parent
             visible: true
             z: -1
@@ -315,7 +325,7 @@ Item {
                 y: 42
                 width: 294
                 height: 78
-                color: "#66ccff"
+                color: textColor
                 text: qsTr("Trackers:")
                 font.bold: true
                 font.pointSize: 48
@@ -331,7 +341,7 @@ Item {
                 height: 200
                 hoverEnabled: true
                 onHoveredChanged: {
-                    calibrationButton.hovered ? bg.color = "#42C929" : bg.color = "#20910B"
+                    bg.color = calibrationButton.hovered ? "#42C929" : gradientStartColor
                 }
 
                 Text {
@@ -356,7 +366,7 @@ Item {
                 flat: true
                 background: Rectangle {
                     id: bg
-                    color: "#20910B"
+                    color: gradientStartColor
                     radius: 20
                 }
                 onClicked: {
@@ -379,7 +389,7 @@ Item {
                 flat: true
                 hoverEnabled: true
                 onHoveredChanged: {
-                    offsetsButton.hovered ? bg1.color = "#7180EE" : bg1.color = "#1630ee"
+                    bg1.color = offsetsButton.hovered ? "#7180EE" : secondaryButtonColor
                 }
                 Text {
                     color: "#ffffff"
@@ -401,22 +411,20 @@ Item {
                 }
                 background: Rectangle {
                     id: bg1
-                    color: "#1630EE"
+                    color: secondaryButtonColor
                     radius: 20
                 }
                 onClicked: {
                     /* Little hack to refresh offsets spinners */
-                    if(offsetsControl.visibleOffsetsWindowIndex == 0) {
+                    if (offsetsControl.visibleOffsetsWindowIndex == 0) {
                         waistOffsetControl.visible = true
                         leftFootOffsetControl.visible = false
                         rightFootOffsetControl.visible = false
-                    }
-                    else if(offsetsControl.visibleOffsetsWindowIndex == 1) {
+                    } else if (offsetsControl.visibleOffsetsWindowIndex == 1) {
                         waistOffsetControl.visible = false
                         leftFootOffsetControl.visible = true
                         rightFootOffsetControl.visible = false
-                    }
-                    else if(offsetsControl.visibleOffsetsWindowIndex == 2) {
+                    } else if (offsetsControl.visibleOffsetsWindowIndex == 2) {
                         waistOffsetControl.visible = false
                         leftFootOffsetControl.visible = false
                         rightFootOffsetControl.visible = true
@@ -440,7 +448,7 @@ Item {
                 flat: true
                 hoverEnabled: true
                 onHoveredChanged: {
-                    disconnectTrackersButton.hovered ? bg2.color = "#7180EE" : bg2.color = "#1630ee"
+                    bg2.color = disconnectTrackersButton.hovered ? "#7180EE" : secondaryButtonColor
                 }
                 Text {
                     color: "#ffffff"
@@ -462,7 +470,7 @@ Item {
                 }
                 background: Rectangle {
                     id: bg2
-                    color: "#1630ee"
+                    color: secondaryButtonColor
                     radius: 20
                 }
                 objectName: "disconnectTrackersButton"
@@ -480,7 +488,7 @@ Item {
                 y: 991
                 width: 556
                 height: 82
-                color: "#66ccff"
+                color: textColor
                 text: qsTr("Tracking Settings:")
                 font.bold: true
                 font.family: "JostSemi"
@@ -493,7 +501,7 @@ Item {
                 y: 1160
                 width: 215
                 height: 82
-                color: "#66ccff"
+                color: textColor
                 text: qsTr("Waist:")
                 font.bold: true
                 horizontalAlignment: Text.AlignRight
@@ -507,7 +515,7 @@ Item {
                 y: 1395
                 width: 215
                 height: 82
-                color: "#66ccff"
+                color: textColor
                 text: qsTr("Feet:")
                 font.bold: true
                 horizontalAlignment: Text.AlignRight
@@ -521,7 +529,7 @@ Item {
                 y: 1634
                 width: 215
                 height: 82
-                color: "#66ccff"
+                color: textColor
                 text: qsTr("Filter:")
                 font.bold: true
                 horizontalAlignment: Text.AlignRight
@@ -535,7 +543,7 @@ Item {
                 y: 1860
                 width: 912
                 height: 82
-                color: "#66ccff"
+                color: textColor
                 text: qsTr("Mirror tracking when turning:")
                 font.bold: true
                 font.family: "JostSemi"
@@ -557,7 +565,7 @@ Item {
                 onCheckStateChanged: _cppContext.cppSlot("FLIPCHANGED")
                 hoverEnabled: true
                 onHoveredChanged: {
-                    checkBox.hovered ? bg01.color = "#7180EE" : bg01.color = "#0D21B3"
+                    bg01.color = checkBox.hovered ? "#7180EE" : primaryColor
                 }
 
                 Component.onCompleted: checked = _get.get(qsTr("FLIPSKELETON"))
@@ -576,7 +584,7 @@ Item {
                         implicitWidth: parent.width / 1.17
                         implicitHeight: parent.height / 1.17
                         radius: 12
-                        color: "#0D21B3"
+                        color: primaryColor
                         border.width: 0
                     }
 
@@ -619,7 +627,7 @@ Item {
                 y: 8
                 width: 3915
                 height: 2068
-                color: "#0d21b3"
+                color: primaryColor
                 z: -11
                 radius: 60
             }
@@ -630,7 +638,7 @@ Item {
                 y: 0
                 width: 3915
                 height: 104
-                color: "#0d21b3"
+                color: primaryColor
                 z: -12
             }
 
@@ -649,7 +657,7 @@ Item {
                 onDisplayTextChanged: _cppContext.multiCpp(
                                           "HIPS", hipsComboBox.displayText)
                 onHoveredChanged: {
-                    hipsComboBox.hovered ? bg02.color = "#7180EE" : bg02.color = "#0D21B3"
+                    bg02.color = hipsComboBox.hovered ? "#7180EE" : primaryColor
                 }
 
                 Rectangle {
@@ -731,10 +739,10 @@ Item {
                         height: parent.height - 28
                         implicitWidth: 120
                         implicitHeight: 40
-                        border.color: "#0D21B3"
+                        border.color: primaryColor
                         border.width: 0
                         radius: 12
-                        color: "#0D21B3"
+                        color: primaryColor
                     }
                 }
 
@@ -764,10 +772,10 @@ Item {
                             y: 13
                             height: parent.height - 28
                             width: parent.width - 28
-                            border.color: "#0D21B3"
+                            border.color: primaryColor
                             border.width: 0
                             radius: 12
-                            color: "#0D21B3"
+                            color: primaryColor
                         }
                     }
                 }
@@ -788,7 +796,7 @@ Item {
                 onDisplayTextChanged: _cppContext.multiCpp(
                                           "FEET", feetComboBox.displayText)
                 onHoveredChanged: {
-                    feetComboBox.hovered ? bg03.color = "#7180EE" : bg03.color = "#0D21B3"
+                    bg03.color = feetComboBox.hovered ? "#7180EE" : primaryColor
                 }
 
                 Rectangle {
@@ -870,10 +878,10 @@ Item {
                         height: parent.height - 28
                         implicitWidth: 120
                         implicitHeight: 40
-                        border.color: "#0D21B3"
+                        border.color: primaryColor
                         border.width: 0
                         radius: 12
-                        color: "#0D21B3"
+                        color: primaryColor
                     }
                 }
 
@@ -903,10 +911,10 @@ Item {
                             y: 13
                             height: parent.height - 28
                             width: parent.width - 28
-                            border.color: "#0D21B3"
+                            border.color: primaryColor
                             border.width: 0
                             radius: 12
-                            color: "#0D21B3"
+                            color: primaryColor
                         }
                     }
                 }
@@ -928,7 +936,7 @@ Item {
                 onDisplayTextChanged: _cppContext.multiCpp(
                                           "FILTER", filterComboBox.displayText)
                 onHoveredChanged: {
-                    filterComboBox.hovered ? bg04.color = "#7180EE" : bg04.color = "#0D21B3"
+                    bg04.color = filterComboBox.hovered ? "#7180EE" : primaryColor
                 }
 
                 Rectangle {
@@ -1010,10 +1018,10 @@ Item {
                         height: parent.height - 28
                         implicitWidth: 120
                         implicitHeight: 40
-                        border.color: "#0D21B3"
+                        border.color: primaryColor
                         border.width: 0
                         radius: 12
-                        color: "#0D21B3"
+                        color: primaryColor
                     }
                 }
 
@@ -1043,10 +1051,10 @@ Item {
                             y: 13
                             height: parent.height - 28
                             width: parent.width - 28
-                            border.color: "#0D21B3"
+                            border.color: primaryColor
                             border.width: 0
                             radius: 12
-                            color: "#0D21B3"
+                            color: primaryColor
                         }
                     }
                 }
@@ -1066,7 +1074,7 @@ Item {
                 flat: true
                 hoverEnabled: true
                 onHoveredChanged: {
-                    skeletonButton.hovered ? bg001.color = "#5266F3" : bg001.color = "#0D21B3"
+                    bg001.color = skeletonButton.hovered ? "#5266F3" : secondaryButtonColor
                 }
                 Text {
                     color: "#ffffff"
@@ -1099,7 +1107,7 @@ Item {
 
                 background: Rectangle {
                     id: bg001
-                    color: "#0D21B3"
+                    color: primaryColor
                     radius: 20
                 }
                 objectName: "skeletonButton"
@@ -1112,18 +1120,19 @@ Item {
 
             Label {
                 id: label6
-                x: 3273
-                y: 46
+                x: 3240
+                y: 53
                 z: 1
                 width: 612
                 height: 56
                 color: "#8cffffff"
-                text: qsTr("Kinect for Xbox ___ (V_)")
+                text: qsTr("Kinect for Xbox 360 (V1)")
                 font.bold: true
                 font.pointSize: 38
                 font.family: "JostSemi"
                 anchors.verticalCenterOffset: 24
                 anchors.verticalCenter: rectangle1.verticalCenter
+                horizontalAlignment: Text.AlignRight
             }
 
             Item {
@@ -1167,7 +1176,8 @@ Item {
 
                     onPaint: {
                         painterCanvas.visible = _get.get(qsTr("SKELETONSTATE"))
-                                && skeletonButton.show && _get.get(qsTr("VISIBLE"))
+                                && skeletonButton.show && _get.get(
+                                    qsTr("VISIBLE"))
                         var cx = getContext("2d")
                         cx.reset()
 
@@ -1268,10 +1278,12 @@ Item {
                         running: true
                         repeat: true
                         onTriggered: {
-                            if(painterCanvas.run)
+                            if (painterCanvas.run)
                                 painterCanvas.requestPaint()
 
-                            if(_get.get(qsTr("SKELETONSTATE")) && skeletonButton.show && _get.get(qsTr("VISIBLE")))
+                            if (_get.get(qsTr("SKELETONSTATE"))
+                                    && skeletonButton.show && _get.get(
+                                        qsTr("VISIBLE")))
                                 painterCanvas.run = true
                             else
                                 painterCanvas.run = false
@@ -1392,7 +1404,7 @@ Item {
                     y: 358
                     width: 2618
                     height: 1578
-                    color: "#0d21b3"
+                    color: primaryColor
                     radius: 40
                 }
             }
@@ -1410,7 +1422,8 @@ Item {
                     anchors.centerIn: parent
                     editable: true
 
-                    onValueChanged: _cppContext.multiCpp("WAISTPITCH", '' + value)
+                    onValueChanged: _cppContext.multiCpp("WAISTPITCH",
+                                                         '' + value)
 
                     property int decimals: 2
                     property real realValue: value / 100
@@ -1460,7 +1473,7 @@ Item {
                     }
 
                     background: Rectangle {
-                        color: "#0d21b3"
+                        color: primaryColor
                         implicitWidth: 140
                         border.color: "#ffffff"
                         border.width: 15
@@ -1608,7 +1621,7 @@ Item {
                     }
 
                     background: Rectangle {
-                        color: "#0d21b3"
+                        color: primaryColor
                         implicitWidth: 140
                         border.color: "#ffffff"
                         border.width: 15
@@ -1756,7 +1769,7 @@ Item {
                     }
 
                     background: Rectangle {
-                        color: "#0d21b3"
+                        color: primaryColor
                         implicitWidth: 140
                         border.color: "#ffffff"
                         border.width: 15
@@ -1903,7 +1916,7 @@ Item {
                     }
 
                     background: Rectangle {
-                        color: "#0d21b3"
+                        color: primaryColor
                         implicitWidth: 140
                         border.color: "#ffffff"
                         border.width: 15
@@ -2050,7 +2063,7 @@ Item {
                     }
 
                     background: Rectangle {
-                        color: "#0d21b3"
+                        color: primaryColor
                         implicitWidth: 140
                         border.color: "#ffffff"
                         border.width: 15
@@ -2197,7 +2210,7 @@ Item {
                     }
 
                     background: Rectangle {
-                        color: "#0d21b3"
+                        color: primaryColor
                         implicitWidth: 140
                         border.color: "#ffffff"
                         border.width: 15
@@ -2293,7 +2306,7 @@ Item {
                     y: 833
                     width: 291
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Rotation:")
                     font.weight: Font.DemiBold
                     font.bold: false
@@ -2307,7 +2320,7 @@ Item {
                     y: 988
                     width: 158
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Roll:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -2321,7 +2334,7 @@ Item {
                     y: 1229
                     width: 158
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Yaw:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -2335,7 +2348,7 @@ Item {
                     y: 1463
                     width: 158
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Pitch:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -2349,7 +2362,7 @@ Item {
                     y: 833
                     width: 291
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Position:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -2363,7 +2376,7 @@ Item {
                     y: 988
                     width: 158
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("X:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -2377,7 +2390,7 @@ Item {
                     y: 1229
                     width: 158
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Y:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -2391,7 +2404,7 @@ Item {
                     y: 1463
                     width: 158
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Z:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -2460,7 +2473,7 @@ Item {
                     }
 
                     background: Rectangle {
-                        color: "#0d21b3"
+                        color: primaryColor
                         implicitWidth: 140
                         border.color: "#ffffff"
                         border.width: 15
@@ -2608,7 +2621,7 @@ Item {
                     }
 
                     background: Rectangle {
-                        color: "#0d21b3"
+                        color: primaryColor
                         implicitWidth: 140
                         border.color: "#ffffff"
                         border.width: 15
@@ -2756,7 +2769,7 @@ Item {
                     }
 
                     background: Rectangle {
-                        color: "#0d21b3"
+                        color: primaryColor
                         implicitWidth: 140
                         border.color: "#ffffff"
                         border.width: 15
@@ -2903,7 +2916,7 @@ Item {
                     }
 
                     background: Rectangle {
-                        color: "#0d21b3"
+                        color: primaryColor
                         implicitWidth: 140
                         border.color: "#ffffff"
                         border.width: 15
@@ -3050,7 +3063,7 @@ Item {
                     }
 
                     background: Rectangle {
-                        color: "#0d21b3"
+                        color: primaryColor
                         implicitWidth: 140
                         border.color: "#ffffff"
                         border.width: 15
@@ -3197,7 +3210,7 @@ Item {
                     }
 
                     background: Rectangle {
-                        color: "#0d21b3"
+                        color: primaryColor
                         implicitWidth: 140
                         border.color: "#ffffff"
                         border.width: 15
@@ -3293,7 +3306,7 @@ Item {
                     y: 833
                     width: 291
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Rotation:")
                     font.weight: Font.DemiBold
                     font.bold: false
@@ -3307,7 +3320,7 @@ Item {
                     y: 988
                     width: 158
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Roll:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -3321,7 +3334,7 @@ Item {
                     y: 1229
                     width: 158
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Yaw:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -3335,7 +3348,7 @@ Item {
                     y: 1463
                     width: 158
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Pitch:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -3349,7 +3362,7 @@ Item {
                     y: 833
                     width: 291
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Position:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -3363,7 +3376,7 @@ Item {
                     y: 988
                     width: 158
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("X:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -3377,7 +3390,7 @@ Item {
                     y: 1229
                     width: 158
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Y:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -3391,7 +3404,7 @@ Item {
                     y: 1463
                     width: 158
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Z:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -3460,7 +3473,7 @@ Item {
                     }
 
                     background: Rectangle {
-                        color: "#0d21b3"
+                        color: primaryColor
                         implicitWidth: 140
                         border.color: "#ffffff"
                         border.width: 15
@@ -3608,7 +3621,7 @@ Item {
                     }
 
                     background: Rectangle {
-                        color: "#0d21b3"
+                        color: primaryColor
                         implicitWidth: 140
                         border.color: "#ffffff"
                         border.width: 15
@@ -3756,7 +3769,7 @@ Item {
                     }
 
                     background: Rectangle {
-                        color: "#0d21b3"
+                        color: primaryColor
                         implicitWidth: 140
                         border.color: "#ffffff"
                         border.width: 15
@@ -3903,7 +3916,7 @@ Item {
                     }
 
                     background: Rectangle {
-                        color: "#0d21b3"
+                        color: primaryColor
                         implicitWidth: 140
                         border.color: "#ffffff"
                         border.width: 15
@@ -4050,7 +4063,7 @@ Item {
                     }
 
                     background: Rectangle {
-                        color: "#0d21b3"
+                        color: primaryColor
                         implicitWidth: 140
                         border.color: "#ffffff"
                         border.width: 15
@@ -4197,7 +4210,7 @@ Item {
                     }
 
                     background: Rectangle {
-                        color: "#0d21b3"
+                        color: primaryColor
                         implicitWidth: 140
                         border.color: "#ffffff"
                         border.width: 15
@@ -4293,7 +4306,7 @@ Item {
                     y: 833
                     width: 291
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Rotation:")
                     font.weight: Font.DemiBold
                     font.bold: false
@@ -4307,7 +4320,7 @@ Item {
                     y: 988
                     width: 158
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Roll:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -4321,7 +4334,7 @@ Item {
                     y: 1229
                     width: 158
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Yaw:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -4335,7 +4348,7 @@ Item {
                     y: 1463
                     width: 158
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Pitch:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -4349,7 +4362,7 @@ Item {
                     y: 833
                     width: 291
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Position:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -4363,7 +4376,7 @@ Item {
                     y: 988
                     width: 158
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("X:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -4377,7 +4390,7 @@ Item {
                     y: 1229
                     width: 158
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Y:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -4391,7 +4404,7 @@ Item {
                     y: 1463
                     width: 158
                     height: 75
-                    color: "#66ccff"
+                    color: textColor
                     text: qsTr("Z:")
                     font.bold: false
                     font.weight: Font.DemiBold
@@ -4406,7 +4419,7 @@ Item {
                 y: 420
                 width: 464
                 height: 86
-                color: "#66ccff"
+                color: textColor
                 text: qsTr("Adjust Offsets:")
                 font.weight: Font.Bold
                 font.pointSize: 48
@@ -4421,7 +4434,7 @@ Item {
                 height: 193
                 hoverEnabled: true
                 onHoveredChanged: {
-                    owbg.color = waistOffsetButton.hovered ? (offsetsControl.visibleOffsetsWindowIndex === 0 ? "#3EB828" : "#7081FF") : (offsetsControl.visibleOffsetsWindowIndex === 0 ? "#20910B" : "#1630EE")
+                    owbg.color = waistOffsetButton.hovered ? (offsetsControl.visibleOffsetsWindowIndex === 0 ? "#3EB828" : "#7081FF") : (offsetsControl.visibleOffsetsWindowIndex === 0 ? gradientStartColor : secondaryButtonColor)
                 }
 
                 Text {
@@ -4446,7 +4459,7 @@ Item {
                 flat: true
                 background: Rectangle {
                     id: owbg
-                    color: "#20910B"
+                    color: gradientStartColor
                     radius: 30
                     Rectangle {
                         color: owbg.color
@@ -4460,9 +4473,9 @@ Item {
                     rightFootOffsetControl.visible = false
                     offsetsControl.visibleOffsetsWindowIndex = 0
 
-                    owbg.color = "#20910B"
-                    olfbg.color = "#1630ee"
-                    orfbg.color = "#1630ee"
+                    owbg.color = gradientStartColor
+                    olfbg.color = secondaryButtonColor
+                    orfbg.color = secondaryButtonColor
                 }
             }
 
@@ -4476,11 +4489,11 @@ Item {
                 highlighted: false
                 flat: true
                 onHoveredChanged: {
-                    olfbg.color = leftFootOffsetButton.hovered ? (offsetsControl.visibleOffsetsWindowIndex === 1 ? "#3EB828" : "#7081FF") : (offsetsControl.visibleOffsetsWindowIndex === 1 ? "#20910B" : "#1630EE")
+                    olfbg.color = leftFootOffsetButton.hovered ? (offsetsControl.visibleOffsetsWindowIndex === 1 ? "#3EB828" : "#7081FF") : (offsetsControl.visibleOffsetsWindowIndex === 1 ? gradientStartColor : secondaryButtonColor)
                 }
                 background: Rectangle {
                     id: olfbg
-                    color: "#1630ee"
+                    color: secondaryButtonColor
                 }
                 Text {
                     color: "#ffffff"
@@ -4506,13 +4519,13 @@ Item {
                     rightFootOffsetControl.visible = false
                     offsetsControl.visibleOffsetsWindowIndex = 1
 
-                    owbg.color = "#1630ee"
+                    owbg.color = secondaryButtonColor
                     if (connectOffsetsCheckBox.checked === true) {
-                        olfbg.color = "#20910B"
-                        orfbg.color = "#20910B"
+                        olfbg.color = gradientStartColor
+                        orfbg.color = gradientStartColor
                     } else {
-                        olfbg.color = "#20910B"
-                        orfbg.color = "#1630ee"
+                        olfbg.color = gradientStartColor
+                        orfbg.color = secondaryButtonColor
                     }
                 }
             }
@@ -4527,11 +4540,11 @@ Item {
                 highlighted: false
                 flat: true
                 onHoveredChanged: {
-                    orfbg.color = rightFootOffsetButton.hovered ? (offsetsControl.visibleOffsetsWindowIndex === 2 ? "#3EB828" : (offsetsControl.visibleOffsetsWindowIndex === 1 && connectOffsetsCheckBox.checked ? "#3EB828" : "#7081FF")) : (offsetsControl.visibleOffsetsWindowIndex === 2 ? "#20910B" : (offsetsControl.visibleOffsetsWindowIndex === 1 && connectOffsetsCheckBox.checked ? "#20910B" : "#1630EE"))
+                    orfbg.color = rightFootOffsetButton.hovered ? (offsetsControl.visibleOffsetsWindowIndex === 2 ? "#3EB828" : (offsetsControl.visibleOffsetsWindowIndex === 1 && connectOffsetsCheckBox.checked ? "#3EB828" : "#7081FF")) : (offsetsControl.visibleOffsetsWindowIndex === 2 ? gradientStartColor : (offsetsControl.visibleOffsetsWindowIndex === 1 && connectOffsetsCheckBox.checked ? gradientStartColor : secondaryButtonColor))
                 }
                 background: Rectangle {
                     id: orfbg
-                    color: "#1630ee"
+                    color: secondaryButtonColor
                     radius: 30
                     Rectangle {
                         color: orfbg.color
@@ -4560,16 +4573,16 @@ Item {
                 onClicked: {
                     waistOffsetControl.visible = false
 
-                    owbg.color = "#1630ee"
+                    owbg.color = secondaryButtonColor
                     if (connectOffsetsCheckBox.checked === true) {
-                        olfbg.color = "#20910B"
-                        orfbg.color = "#20910B"
+                        olfbg.color = gradientStartColor
+                        orfbg.color = gradientStartColor
                         leftFootOffsetControl.visible = true
                         rightFootOffsetControl.visible = false
                         offsetsControl.visibleOffsetsWindowIndex = 1
                     } else {
-                        olfbg.color = "#1630ee"
-                        orfbg.color = "#20910B"
+                        olfbg.color = secondaryButtonColor
+                        orfbg.color = gradientStartColor
                         leftFootOffsetControl.visible = false
                         rightFootOffsetControl.visible = true
                         offsetsControl.visibleOffsetsWindowIndex = 2
@@ -4596,9 +4609,9 @@ Item {
                         rightFootOffsetControl.visible = false
                         offsetsControl.visibleOffsetsWindowIndex = 0
 
-                        owbg.color = "#20910B"
-                        olfbg.color = "#1630ee"
-                        orfbg.color = "#1630ee"
+                        owbg.color = gradientStartColor
+                        olfbg.color = secondaryButtonColor
+                        orfbg.color = secondaryButtonColor
                     }
                     _cppContext.multiCpp("CONNECTOFFSETSCHANGED",
                                          connectOffsetsCheckBox.checked)
@@ -4606,16 +4619,16 @@ Item {
 
                 hoverEnabled: true
                 onHoveredChanged: {
-                    cobg.color = connectOffsetsCheckBox.hovered ? "#7180EE" : "#1630EE"
+                    cobg.color = connectOffsetsCheckBox.hovered ? "#7180EE" : secondaryButtonColor
                 }
 
                 indicator: Rectangle {
-                    color: "#0d21b3"
+                    color: primaryColor
                     implicitWidth: parent.width
                     implicitHeight: parent.height
                     radius: 20
                     border.width: 20
-                    border.color: "#0d21b3"
+                    border.color: primaryColor
 
                     Rectangle {
                         id: cobg
@@ -4626,9 +4639,9 @@ Item {
                         implicitWidth: parent.width / 1.17
                         implicitHeight: parent.height / 1.17
                         radius: 30
-                        color: "#1630ee"
+                        color: secondaryButtonColor
                         border.width: 15
-                        border.color: "#0D21B3"
+                        border.color: primaryColor
 
                         Image {
                             anchors.rightMargin: 0
@@ -4662,7 +4675,7 @@ Item {
                 height: 193
                 background: Rectangle {
                     id: orfbg1
-                    color: "#1630ee"
+                    color: gradientStartColor
                     radius: 30
                 }
                 flat: true
@@ -4687,7 +4700,7 @@ Item {
                 }
                 highlighted: false
                 onHoveredChanged: {
-                    orfbg1.color = confirmOffsetButton.hovered ? "#7081FF" : "#1630ee"
+                    orfbg1.color = confirmOffsetButton.hovered ? "#7081FF" : gradientStartColor
                 }
 
                 onClicked: {
@@ -4705,14 +4718,14 @@ Item {
                 height: 193
                 background: Rectangle {
                     id: orfbg2
-                    color: "#0d21b3"
+                    color: primaryColor
                     radius: 30
-                    border.color: "#1630ee"
+                    border.color: secondaryButtonColor
                     border.width: 15
                 }
                 flat: true
                 Text {
-                    color: "#1630ee"
+                    color: secondaryButtonColor
                     text: qsTr("Cancel")
                     anchors.bottomMargin: 0
                     anchors.leftMargin: 0
@@ -4733,17 +4746,15 @@ Item {
                 hoverEnabled: true
                 onClicked: {
                     /* Little hack to refresh offsets spinners */
-                    if(offsetsControl.visibleOffsetsWindowIndex == 0) {
+                    if (offsetsControl.visibleOffsetsWindowIndex == 0) {
                         waistOffsetControl.visible = false
                         leftFootOffsetControl.visible = true
                         rightFootOffsetControl.visible = false
-                    }
-                    else if(offsetsControl.visibleOffsetsWindowIndex == 1) {
+                    } else if (offsetsControl.visibleOffsetsWindowIndex == 1) {
                         waistOffsetControl.visible = true
                         leftFootOffsetControl.visible = false
                         rightFootOffsetControl.visible = false
-                    }
-                    else if(offsetsControl.visibleOffsetsWindowIndex == 2) {
+                    } else if (offsetsControl.visibleOffsetsWindowIndex == 2) {
                         waistOffsetControl.visible = true
                         leftFootOffsetControl.visible = false
                         rightFootOffsetControl.visible = false
@@ -4754,7 +4765,7 @@ Item {
                     generalControlTab.enabled = true
                 }
                 onHoveredChanged: {
-                    orfbg2.color = cancelOffsetButton.hovered ? "#5D6BD4" : "#0d21b3"
+                    orfbg2.color = cancelOffsetButton.hovered ? "#5D6BD4" : primaryColor
                 }
             }
         }
@@ -4784,7 +4795,7 @@ Item {
                 width: 2618
                 height: 1504
                 anchors.centerIn: parent
-                color: "#0d21b3"
+                color: primaryColor
                 radius: 40
                 id: chooseCalibTab
                 visible: true
@@ -4815,11 +4826,11 @@ Item {
                     flat: true
                     hoverEnabled: true
                     onHoveredChanged: {
-                        bgac.color = autoCalibButton.hovered ? "#7180EE" : "#1630ee"
+                        bgac.color = autoCalibButton.hovered ? "#7180EE" : secondaryButtonColor
                     }
                     background: Rectangle {
                         id: bgac
-                        color: "#1630ee"
+                        color: secondaryButtonColor
                         radius: 20
                     }
 
@@ -4828,9 +4839,9 @@ Item {
                         _cppContext.cppSlot("START_AUTOCALIB")
                         cancelAutoCalibButton.visible = true
                         startAutoCalibButton.txt = "Start"
-                        calibSeconds.color = "#1630EE"
+                        calibSeconds.color = secondaryButtonColor
                         chooseCalibTab.visible = false
-                        autoCalibTab.visible = true;
+                        autoCalibTab.visible = true
                     }
 
                     Label {
@@ -4883,7 +4894,7 @@ Item {
                     flat: true
                     background: Rectangle {
                         id: bgmc
-                        color: "#1630ee"
+                        color: secondaryButtonColor
                         radius: 20
                     }
                     objectName: "manualCalibButton"
@@ -4891,10 +4902,10 @@ Item {
                     onClicked: {
                         _cppContext.cppSlot("START_MANUALCALIB")
                         chooseCalibTab.visible = false
-                        manualCalibTab.visible = true;
+                        manualCalibTab.visible = true
                     }
                     onHoveredChanged: {
-                        bgmc.color = manualCalibButton.hovered ? "#7180EE" : "#1630ee"
+                        bgmc.color = manualCalibButton.hovered ? "#7180EE" : secondaryButtonColor
                     }
                     hoverEnabled: true
 
@@ -4946,7 +4957,7 @@ Item {
                 width: 2618
                 height: 1578
                 anchors.centerIn: parent
-                color: "#0d21b3"
+                color: primaryColor
                 radius: 40
                 id: manualCalibTab
                 visible: false
@@ -4980,7 +4991,7 @@ Item {
                     height: 193
                     background: Rectangle {
                         id: cmbg
-                        color: "#1630ee"
+                        color: secondaryButtonColor
                         radius: 30
                         border.width: 0
                     }
@@ -5006,7 +5017,7 @@ Item {
                     }
                     highlighted: false
                     onHoveredChanged: {
-                        cmbg.color = confirmManualCalibButton.hovered ? "#7081FF" : "#1630ee"
+                        cmbg.color = confirmManualCalibButton.hovered ? "#7081FF" : secondaryButtonColor
                     }
                     onClicked: {
                         _cppContext.cppSlot("MANUALCALIBRATION_APPROVED")
@@ -5025,14 +5036,14 @@ Item {
                     visible: true
                     background: Rectangle {
                         id: cmbg1
-                        color: "#0d21b3"
+                        color: primaryColor
                         radius: 30
-                        border.color: "#1630ee"
+                        border.color: secondaryButtonColor
                         border.width: 15
                     }
                     flat: true
                     Text {
-                        color: "#1630ee"
+                        color: secondaryButtonColor
                         text: qsTr("Cancel")
                         anchors.bottomMargin: 0
                         anchors.leftMargin: 0
@@ -5058,10 +5069,9 @@ Item {
                         generalControlTab.enabled = true
                     }
                     onHoveredChanged: {
-                        cmbg1.color = cancelManualCalibButton.hovered ? "#5D6BD4" : "#0d21b3"
+                        cmbg1.color = cancelManualCalibButton.hovered ? "#5D6BD4" : primaryColor
                     }
                 }
-
             }
 
             Rectangle {
@@ -5070,7 +5080,7 @@ Item {
                 width: 2618
                 height: 1578
                 anchors.centerIn: parent
-                color: "#0d21b3"
+                color: primaryColor
                 radius: 40
                 id: autoCalibTab
                 visible: false
@@ -5094,20 +5104,20 @@ Item {
                 Label {
                     y: 388
                     color: "#ffffff"
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: "Follow the directions"
-                        anchors.horizontalCenterOffset: 1
-                        font.bold: true
-                        font.pointSize: 52
-                        font.family: "JostSemi"
-                    }
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "Follow the directions"
+                    anchors.horizontalCenterOffset: 1
+                    font.bold: true
+                    font.pointSize: 52
+                    font.family: "JostSemi"
+                }
 
                 Rectangle {
                     width: 500
                     height: 500
                     anchors.centerIn: parent
                     radius: 300
-                    color: "#1630EE"
+                    color: secondaryButtonColor
                     id: calibSeconds
 
                     Label {
@@ -5143,7 +5153,7 @@ Item {
                     height: 193
                     background: Rectangle {
                         id: cabg
-                        color: "#20910B"
+                        color: gradientStartColor
                         radius: 30
                     }
                     flat: true
@@ -5168,11 +5178,11 @@ Item {
                     }
                     highlighted: false
                     onHoveredChanged: {
-                        cabg.color = startAutoCalibButton.hovered ? "#42C929" : "#20910B"
+                        cabg.color = startAutoCalibButton.hovered ? "#42C929" : gradientStartColor
                     }
                     onClicked: {
                         _cppContext.cppSlot("AUTOCALIBRATION_STARTED")
-                        calibSeconds.color = "#20910B"
+                        calibSeconds.color = gradientStartColor
                         cancelAutoCalibButton.visible = false
                         startAutoCalibButton.visible = false
                         abortAutoCalibButton.visible = true
@@ -5189,14 +5199,14 @@ Item {
                     visible: true
                     background: Rectangle {
                         id: cabg1
-                        color: "#0d21b3"
+                        color: primaryColor
                         radius: 30
-                        border.color: "#1630ee"
+                        border.color: secondaryButtonColor
                         border.width: 15
                     }
                     flat: true
                     Text {
-                        color: "#1630ee"
+                        color: secondaryButtonColor
                         text: qsTr("Cancel")
                         anchors.bottomMargin: 0
                         anchors.leftMargin: 0
@@ -5222,7 +5232,7 @@ Item {
                         generalControlTab.enabled = true
                     }
                     onHoveredChanged: {
-                        cabg1.color = cancelAutoCalibButton.hovered ? "#5D6BD4" : "#0d21b3"
+                        cabg1.color = cancelAutoCalibButton.hovered ? "#5D6BD4" : primaryColor
                     }
                 }
 
@@ -5236,14 +5246,14 @@ Item {
                     visible: false
                     background: Rectangle {
                         id: cabg11
-                        color: "#0d21b3"
+                        color: primaryColor
                         radius: 30
-                        border.color: "#1630ee"
+                        border.color: secondaryButtonColor
                         border.width: 15
                     }
                     flat: true
                     Text {
-                        color: "#1630ee"
+                        color: secondaryButtonColor
                         text: qsTr("Cancel")
                         anchors.bottomMargin: 0
                         anchors.leftMargin: 0
@@ -5275,13 +5285,10 @@ Item {
                         closeAutoCalibration()
                     }
                     onHoveredChanged: {
-                        cabg11.color = abortAutoCalibButton.hovered ? "#5D6BD4" : "#0d21b3"
+                        cabg11.color = abortAutoCalibButton.hovered ? "#5D6BD4" : primaryColor
                     }
                 }
-
             }
-
-
         }
     }
 }
@@ -5293,7 +5300,7 @@ Rectangle {
                 width: 2618
                 height: 1578
                 anchors.centerIn: parent
-                color: "#0d21b3"
+                color: primaryColor
                 radius: 40
                 id: manualCalibTab
 
@@ -5305,7 +5312,7 @@ Rectangle {
                     height: 193
                     background: Rectangle {
                         id: cmbg
-                        color: "#1630ee"
+                        color: secondaryButtonColor
                         radius: 30
                     }
                     flat: true
@@ -5330,7 +5337,7 @@ Rectangle {
                     }
                     highlighted: false
                     onHoveredChanged: {
-                        cmbg.color = confirmManualCalibButton.hovered ? "#7081FF" : "#1630ee"
+                        cmbg.color = confirmManualCalibButton.hovered ? "#7081FF" : secondaryButtonColor
                     }
                     onClicked: {
                         _cppContext.cppSlot("MANUALCALIBRATION_APPROVED")
@@ -5346,14 +5353,14 @@ Rectangle {
                     visible: true
                     background: Rectangle {
                         id: cmbg1
-                        color: "#0d21b3"
+                        color: primaryColor
                         radius: 30
-                        border.color: "#1630ee"
+                        border.color: secondaryButtonColor
                         border.width: 15
                     }
                     flat: true
                     Text {
-                        color: "#1630ee"
+                        color: secondaryButtonColor
                         text: qsTr("Cancel")
                         anchors.bottomMargin: 0
                         anchors.leftMargin: 0
@@ -5376,15 +5383,17 @@ Rectangle {
                         _cppContext.cppSlot("MANUALCALIBRATION_CANCELLED")
                     }
                     onHoveredChanged: {
-                        cmbg1.color = cancelManualCalibButton.hovered ? "#5D6BD4" : "#0d21b3"
+                        cmbg1.color = cancelManualCalibButton.hovered ? "#5D6BD4" : primaryColor
                     }
                 }
 
             }
 */
 
+
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.33000001311302185}
+    D{i:0;formeditorZoom:0.20000000298023224}
 }
 ##^##*/
+
