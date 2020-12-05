@@ -21,6 +21,7 @@ Item {
 
     property var textColor: "#9E9E9E"
 
+
     /*transform: Scale {
         origin.x: 0; origin.y: 0; xScale: parent.width / 3915; yScale: parent.height / 2292
     }*/
@@ -340,6 +341,7 @@ Item {
                 width: 776
                 height: 200
                 hoverEnabled: true
+
                 onHoveredChanged: {
                     bg.color = calibrationButton.hovered ? "#42C929" : gradientStartColor
                 }
@@ -364,9 +366,26 @@ Item {
                 }
                 highlighted: false
                 flat: true
+
                 background: Rectangle {
                     id: bg
-                    color: gradientStartColor
+                    x: 289
+                    y: -287
+                    width: parent.height
+                    height: parent.width
+                    rotation: 90
+                    gradient: Gradient {
+                        GradientStop {
+                            position: 0.0
+                            color: gradientEndColor
+                        }
+                        GradientStop {
+                            position: 1.0
+                            color: gradientStartColor
+                        }
+                    }
+
+                    //color: gradientStartColor
                     radius: 20
                 }
                 onClicked: {
@@ -4675,7 +4694,7 @@ Item {
                 height: 193
                 background: Rectangle {
                     id: orfbg1
-                    color: gradientStartColor
+                    color: secondaryButtonColor
                     radius: 30
                 }
                 flat: true
@@ -4700,7 +4719,7 @@ Item {
                 }
                 highlighted: false
                 onHoveredChanged: {
-                    orfbg1.color = confirmOffsetButton.hovered ? "#7081FF" : gradientStartColor
+                    orfbg1.color = confirmOffsetButton.hovered ? "#7081FF" : secondaryButtonColor
                 }
 
                 onClicked: {
@@ -5153,7 +5172,7 @@ Item {
                     height: 193
                     background: Rectangle {
                         id: cabg
-                        color: gradientStartColor
+                        color: secondaryButtonColor
                         radius: 30
                     }
                     flat: true
@@ -5178,7 +5197,7 @@ Item {
                     }
                     highlighted: false
                     onHoveredChanged: {
-                        cabg.color = startAutoCalibButton.hovered ? "#42C929" : gradientStartColor
+                        cabg.color = startAutoCalibButton.hovered ? "#42C929" : secondaryButtonColor
                     }
                     onClicked: {
                         _cppContext.cppSlot("AUTOCALIBRATION_STARTED")
@@ -5391,9 +5410,5 @@ Rectangle {
 */
 
 
-/*##^##
-Designer {
-    D{i:0;formeditorZoom:0.20000000298023224}
-}
-##^##*/
+
 
