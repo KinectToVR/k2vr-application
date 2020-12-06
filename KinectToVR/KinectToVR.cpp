@@ -288,6 +288,8 @@ void updateQSpinboxes(std::array<Eigen::Vector3f, 3>& pos, std::array<Eigen::Qua
 
 void startCalibration(bool automatic)
 {
+	abortCalibration = false; // Reset
+	
 	if (automatic) {
 		std::thread([&]
 			{
@@ -297,24 +299,33 @@ void startCalibration(bool automatic)
 					/* Tell user to move somewhere else */
 					quickObj->findChild<QObject*>("Autocalib_seconds")->setProperty("text", "~");
 					quickObj->findChild<QObject*>("Autocalib_move")->setProperty("text", "Move somewhere else...");
-					std::this_thread::sleep_for(std::chrono::seconds(5));
-					if (abortCalibration) break;
+					for (int j = 0; j < 7; j++) { // 3.5 seconds
+						std::this_thread::sleep_for(std::chrono::milliseconds(500));
+						if (abortCalibration) break; // Check more frequently
+					}
+					if (abortCalibration) break; // Exit
 
 					/* Capture positions */
 					quickObj->findChild<QObject*>("Autocalib_move")->setProperty("text", "Please stand still!");
-					for (int j = 5; j >= 0; j--)
+					for (int j = 3; j >= 0; j--)
 					{
 						quickObj->findChild<QObject*>("Autocalib_seconds")->setProperty("text", j);
-						std::this_thread::sleep_for(std::chrono::seconds(1));
-						if (abortCalibration) break;
+						for (int j = 0; j < 2; j++) {
+							std::this_thread::sleep_for(std::chrono::milliseconds(500));
+							if (abortCalibration) break; // Check more frequently
+						}
+						if (abortCalibration) break; // Exit second loop
 					}
+					if (abortCalibration) break; // Exit
 				}
 
 				/* Compose translations */
 			
 
-				/* Finish: close the window and save */
+				/* Finish: close windows, update labels and save */
 				QMetaObject::invokeMethod(quickObj->findChild<QObject*>("abortAutoCalibButton"), "closeAutoCalibration");
+				quickObj->findChild<QObject*>("Autocalib_seconds")->setProperty("text", "~");
+				quickObj->findChild<QObject*>("Autocalib_move")->setProperty("text", "");
 
 			}).detach();
 	}
