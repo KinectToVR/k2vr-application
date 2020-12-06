@@ -45,6 +45,26 @@ Item {
             source: "k2vr-logo.png"
         }
 
+        Rectangle {
+            id: gradientRect
+            width: 10
+            height: 10
+            gradient: Gradient {
+                orientation: Gradient.Horizontal
+                GradientStop {
+                    position: 0
+                    color: gradientStartColor
+                }
+                GradientStop {
+                    position: 1
+                    color: gradientEndColor
+                }
+            }
+            visible: false // should not be visible on screen.
+            layer.enabled: true
+            layer.smooth: true
+        }
+
         Button {
             property var foreground: gradientStartColor
             id: generalButton
@@ -57,25 +77,7 @@ Item {
             anchors.topMargin: 0
             anchors.bottom: rectangle.bottom
 
-            Rectangle {
-                id: gradientRect
-                width: 10
-                height: 10
-                gradient: Gradient {
-                    orientation: Gradient.Horizontal
-                    GradientStop {
-                        position: 0
-                        color: gradientStartColor
-                    }
-                    GradientStop {
-                        position: 1
-                        color: gradientEndColor
-                    }
-                }
-                visible: false // should not be visible on screen.
-                layer.enabled: true
-                layer.smooth: true
-            }
+            property bool layer_en: true
 
             Text {
                 x: 5
@@ -91,22 +93,22 @@ Item {
                 font.family: "JostSemi"
 
                 color: "#ffffff"
-                layer.enabled: true
+                layer.enabled: generalButton.layer_en
                 layer.samplerName: "maskSource"
                 layer.effect: ShaderEffect {
                     property var colorSource: gradientRect
                     fragmentShader: "
-                        uniform lowp sampler2D colorSource;
-                        uniform lowp sampler2D maskSource;
-                        uniform lowp float qt_Opacity;
-                        varying highp vec2 qt_TexCoord0;
-                        void main() {
-                            gl_FragColor =
-                                texture2D(colorSource, qt_TexCoord0)
-                                * texture2D(maskSource, qt_TexCoord0).a
-                                * qt_Opacity;
-                        }
-                    "
+uniform lowp sampler2D colorSource;
+uniform lowp sampler2D maskSource;
+uniform lowp float qt_Opacity;
+varying highp vec2 qt_TexCoord0;
+void main() {
+gl_FragColor =
+texture2D(colorSource, qt_TexCoord0)
+* texture2D(maskSource, qt_TexCoord0).a
+* qt_Opacity;
+}
+"
                 }
             }
 
@@ -116,10 +118,13 @@ Item {
                 qmlSignal(qsTr("GENERAL"))
                 pageIndicator.x = generalButton.x
                 pageIndicator.width = generalButton.width
-                generalButton.foreground = gradientStartColor
-                controllersButton.foreground = "#FFFFFF"
-                devicesButton.foreground = "#FFFFFF"
-                configurationButton.foreground = "#FFFFFF"
+
+                generalButton.layer_en = true
+                controllersButton.layer_en = false
+                devicesButton.layer_en = false
+                configurationButton.layer_en = false
+
+                // Show general tab
                 generalControlTab.visible = true
             }
         }
@@ -134,6 +139,8 @@ Item {
             height: 216
             anchors.top: parent.top
             anchors.bottom: rectangle1.bottom
+            property bool layer_en: false
+
             Text {
                 x: 5
                 width: parent.width - 10
@@ -145,7 +152,25 @@ Item {
                 font.bold: true
                 font.pointSize: 48
                 font.family: "JostSemi"
-                color: controllersButton.foreground
+
+                color: "#ffffff"
+                layer.enabled: controllersButton.layer_en
+                layer.samplerName: "maskSource"
+                layer.effect: ShaderEffect {
+                    property var colorSource: gradientRect
+                    fragmentShader: "
+uniform lowp sampler2D colorSource;
+uniform lowp sampler2D maskSource;
+uniform lowp float qt_Opacity;
+varying highp vec2 qt_TexCoord0;
+void main() {
+gl_FragColor =
+texture2D(colorSource, qt_TexCoord0)
+* texture2D(maskSource, qt_TexCoord0).a
+* qt_Opacity;
+}
+"
+                }
             }
             highlighted: false
             flat: true
@@ -153,10 +178,13 @@ Item {
                 qmlSignal(qsTr("CONTROLLERS"))
                 pageIndicator.x = controllersButton.x
                 pageIndicator.width = controllersButton.width
-                generalButton.foreground = "#FFFFFF"
-                controllersButton.foreground = gradientStartColor
-                devicesButton.foreground = "#FFFFFF"
-                configurationButton.foreground = "#FFFFFF"
+
+                generalButton.layer_en = false
+                controllersButton.layer_en = true
+                devicesButton.layer_en = false
+                configurationButton.layer_en = false
+
+                // Show controllers tab
             }
         }
 
@@ -171,6 +199,8 @@ Item {
             font.pointSize: 51
             anchors.top: parent.top
             anchors.bottom: rectangle1.bottom
+            property bool layer_en: false
+
             Text {
                 x: 5
                 width: parent.width - 10
@@ -182,7 +212,25 @@ Item {
                 font.bold: true
                 font.pointSize: 48
                 font.family: "JostSemi"
-                color: devicesButton.foreground
+
+                color: "#ffffff"
+                layer.enabled: devicesButton.layer_en
+                layer.samplerName: "maskSource"
+                layer.effect: ShaderEffect {
+                    property var colorSource: gradientRect
+                    fragmentShader: "
+uniform lowp sampler2D colorSource;
+uniform lowp sampler2D maskSource;
+uniform lowp float qt_Opacity;
+varying highp vec2 qt_TexCoord0;
+void main() {
+gl_FragColor =
+texture2D(colorSource, qt_TexCoord0)
+* texture2D(maskSource, qt_TexCoord0).a
+* qt_Opacity;
+}
+"
+                }
             }
             highlighted: false
             flat: true
@@ -190,10 +238,13 @@ Item {
                 qmlSignal(qsTr("DEVICES"))
                 pageIndicator.x = devicesButton.x
                 pageIndicator.width = devicesButton.width
-                generalButton.foreground = "#FFFFFF"
-                controllersButton.foreground = "#FFFFFF"
-                devicesButton.foreground = gradientStartColor
-                configurationButton.foreground = "#FFFFFF"
+
+                generalButton.layer_en = false
+                controllersButton.layer_en = false
+                devicesButton.layer_en = true
+                configurationButton.layer_en = false
+
+                // Show devices tab
             }
         }
 
@@ -207,6 +258,8 @@ Item {
             height: 216
             anchors.top: parent.top
             anchors.bottom: rectangle1.bottom
+            property bool layer_en: false
+
             Text {
                 x: 5
                 width: parent.width - 10
@@ -218,7 +271,25 @@ Item {
                 font.bold: true
                 font.pointSize: 48
                 font.family: "JostSemi"
-                color: configurationButton.foreground
+
+                color: "#ffffff"
+                layer.enabled: configurationButton.layer_en
+                layer.samplerName: "maskSource"
+                layer.effect: ShaderEffect {
+                    property var colorSource: gradientRect
+                    fragmentShader: "
+uniform lowp sampler2D colorSource;
+uniform lowp sampler2D maskSource;
+uniform lowp float qt_Opacity;
+varying highp vec2 qt_TexCoord0;
+void main() {
+gl_FragColor =
+texture2D(colorSource, qt_TexCoord0)
+* texture2D(maskSource, qt_TexCoord0).a
+* qt_Opacity;
+}
+"
+                }
             }
             highlighted: false
             flat: true
@@ -226,10 +297,13 @@ Item {
                 qmlSignal(qsTr("CONFIGURATION"))
                 pageIndicator.x = configurationButton.x
                 pageIndicator.width = configurationButton.width
-                generalButton.foreground = "#FFFFFF"
-                controllersButton.foreground = "#FFFFFF"
-                devicesButton.foreground = "#FFFFFF"
-                configurationButton.foreground = gradientStartColor
+
+                generalButton.layer_en = false
+                controllersButton.layer_en = false
+                devicesButton.layer_en = false
+                configurationButton.layer_en = true
+
+                // Show configuration tab
             }
         }
 
@@ -417,6 +491,13 @@ Item {
                 }
                 highlighted: false
                 flat: true
+
+                Rectangle {
+                    visible: parent.hovered
+                    anchors.fill: parent
+                    radius: 20
+                    color: "#43fdfdfd"
+                }
 
                 background: Rectangle {
                     id: bg
@@ -5465,3 +5546,4 @@ Designer {
     D{i:0;formeditorZoom:0.75}
 }
 ##^##*/
+
