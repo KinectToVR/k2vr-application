@@ -467,10 +467,6 @@ texture2D(colorSource, qt_TexCoord0)
                 height: 200
                 hoverEnabled: true
 
-                onHoveredChanged: {
-                    bg.color = calibrationButton.hovered ? "#42C929" : gradientStartColor
-                }
-
                 Text {
                     text: qsTr("Begin Calibration")
                     font.bold: true
@@ -538,9 +534,14 @@ texture2D(colorSource, qt_TexCoord0)
                 highlighted: false
                 flat: true
                 hoverEnabled: true
-                onHoveredChanged: {
-                    bg1.color = offsetsButton.hovered ? "#7180EE" : secondaryButtonColor
+                
+                Rectangle {
+                    visible: parent.hovered
+                    anchors.fill: parent
+                    radius: 20
+                    color: "#43fdfdfd"
                 }
+
                 Text {
                     color: "#ffffff"
                     text: qsTr("Adjust Offsets")
@@ -597,9 +598,14 @@ texture2D(colorSource, qt_TexCoord0)
                 highlighted: false
                 flat: true
                 hoverEnabled: true
-                onHoveredChanged: {
-                    bg2.color = disconnectTrackersButton.hovered ? "#7180EE" : secondaryButtonColor
+                
+                Rectangle {
+                    visible: parent.hovered
+                    anchors.fill: parent
+                    radius: 20
+                    color: "#43fdfdfd"
                 }
+
                 Text {
                     color: "#ffffff"
                     text: disconnectTrackersButton.textL
@@ -714,8 +720,12 @@ texture2D(colorSource, qt_TexCoord0)
                 checked: true
                 onCheckStateChanged: _cppContext.cppSlot("FLIPCHANGED")
                 hoverEnabled: true
-                onHoveredChanged: {
-                    bg01.color = checkBox.hovered ? "#7180EE" : primaryColor
+                
+                Rectangle {
+                    visible: parent.hovered
+                    anchors.fill: parent
+                    radius: 20
+                    color: "#43fdfdfd"
                 }
 
                 Component.onCompleted: checked = _get.get(qsTr("FLIPSKELETON"))
@@ -806,8 +816,12 @@ texture2D(colorSource, qt_TexCoord0)
                 model: [" Device-inferred Rotation", " Follow Headset", " Disable Rotation"]
                 onDisplayTextChanged: _cppContext.multiCpp(
                                           "HIPS", hipsComboBox.displayText)
-                onHoveredChanged: {
-                    bg02.color = hipsComboBox.hovered ? "#7180EE" : primaryColor
+                
+                Rectangle {
+                    visible: parent.hovered
+                    anchors.fill: parent
+                    radius: 20
+                    color: "#43fdfdfd"
                 }
 
                 Rectangle {
@@ -816,7 +830,7 @@ texture2D(colorSource, qt_TexCoord0)
                     width: 163
                     height: 101
                     z: 10
-                    color: bg02.color
+                    color: "#00000000"
 
                     Rectangle {
                         x: 41
@@ -945,8 +959,12 @@ texture2D(colorSource, qt_TexCoord0)
                 model: [" Device-inferred Rotation", " Follow Headset", " Disable Rotation"]
                 onDisplayTextChanged: _cppContext.multiCpp(
                                           "FEET", feetComboBox.displayText)
-                onHoveredChanged: {
-                    bg03.color = feetComboBox.hovered ? "#7180EE" : primaryColor
+                
+                Rectangle {
+                    visible: parent.hovered
+                    anchors.fill: parent
+                    radius: 20
+                    color: "#43fdfdfd"
                 }
 
                 Rectangle {
@@ -955,7 +973,7 @@ texture2D(colorSource, qt_TexCoord0)
                     width: 163
                     height: 101
                     z: 10
-                    color: bg03.color
+                    color: "#00000000"
 
                     Rectangle {
                         x: 41
@@ -1085,8 +1103,12 @@ texture2D(colorSource, qt_TexCoord0)
                 model: [" Linear Interpolation", " Lowpass Optical", " Extended Kalman", " Disable Filter"]
                 onDisplayTextChanged: _cppContext.multiCpp(
                                           "FILTER", filterComboBox.displayText)
-                onHoveredChanged: {
-                    bg04.color = filterComboBox.hovered ? "#7180EE" : primaryColor
+                
+                Rectangle {
+                    visible: parent.hovered
+                    anchors.fill: parent
+                    radius: 20
+                    color: "#43fdfdfd"
                 }
 
                 Rectangle {
@@ -1095,7 +1117,7 @@ texture2D(colorSource, qt_TexCoord0)
                     width: 163
                     height: 101
                     z: 10
-                    color: bg04.color
+                    color: "#00000000"
 
                     Rectangle {
                         x: 41
@@ -1211,6 +1233,7 @@ texture2D(colorSource, qt_TexCoord0)
             }
 
             Button {
+                // Set these two to true to show skeleton by default
                 property bool connected: true
                 property bool show: true
                 property var textL: "    Skeleton"
@@ -1223,9 +1246,14 @@ texture2D(colorSource, qt_TexCoord0)
                 highlighted: false
                 flat: true
                 hoverEnabled: true
-                onHoveredChanged: {
-                    bg001.color = skeletonButton.hovered ? "#5266F3" : secondaryButtonColor
+                
+                Rectangle {
+                    visible: parent.hovered
+                    anchors.fill: parent
+                    radius: 20
+                    color: "#43fdfdfd"
                 }
+
                 Text {
                     color: "#ffffff"
                     text: skeletonButton.textL
@@ -4975,9 +5003,14 @@ texture2D(colorSource, qt_TexCoord0)
                     highlighted: false
                     flat: true
                     hoverEnabled: true
-                    onHoveredChanged: {
-                        bgac.color = autoCalibButton.hovered ? "#7180EE" : secondaryButtonColor
+                    
+                    Rectangle {
+                        visible: parent.hovered
+                        anchors.fill: parent
+                        radius: 20
+                        color: "#43fdfdfd"
                     }
+
                     background: Rectangle {
                         id: bgac
                         color: secondaryButtonColor
@@ -5054,9 +5087,14 @@ texture2D(colorSource, qt_TexCoord0)
                         chooseCalibTab.visible = false
                         manualCalibTab.visible = true
                     }
-                    onHoveredChanged: {
-                        bgmc.color = manualCalibButton.hovered ? "#7180EE" : secondaryButtonColor
+                    
+                    Rectangle {
+                        visible: parent.hovered
+                        anchors.fill: parent
+                        radius: 20
+                        color: "#43fdfdfd"
                     }
+
                     hoverEnabled: true
 
                     Label {
