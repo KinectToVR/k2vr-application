@@ -18,14 +18,16 @@ Item {
 
     property var gradientStartColor: "#7826CD"
     property var gradientEndColor: "#A6369B"
-    property var secondaryButtonColor: "#2A035D"
-
     property var textColor: "#9E9E9E"
 
+    property var secondaryButtonColor: "#2A035D"
+    property var sbHighlightColor: "#614487" // For non-fully-rounded buttons (normal)
+    property var sbcHighlightColor: "#995DD8" // For non-fully-rounded buttons (brighter)
 
     /*transform: Scale {
         origin.x: 0; origin.y: 0; xScale: parent.width / 3915; yScale: parent.height / 2292
     }*/
+
     Item {
         id: buttoncontrols
         width: 3915
@@ -429,20 +431,6 @@ texture2D(colorSource, qt_TexCoord0)
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.topMargin: 0
-
-                Image {
-                    id: image
-                    x: 0
-                    y: -215
-                    width: 3915
-                    height: 2282
-                    visible: false
-                    anchors.leftMargin: 0
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    fillMode: Image.Stretch
-                    source: "../main.png"
-                }
             }
 
             Label {
@@ -1566,25 +1554,14 @@ texture2D(colorSource, qt_TexCoord0)
                 visible: true
             }
 
-            Image {
-                id: imageio
-                x: 0
-                y: 0
-                width: 3915
-                height: 2292
-                visible: true
-                fillMode: Image.PreserveAspectFit
-                source: "../offsets.png"
-
-                Rectangle {
-                    id: rectangleio
-                    x: 652
-                    y: 358
-                    width: 2618
-                    height: 1578
-                    color: primaryColor
-                    radius: 40
-                }
+            Rectangle {
+                id: rectangleio
+                x: 652
+                y: 358
+                width: 2618
+                height: 1578
+                color: primaryColor
+                radius: 40
             }
 
             Item {
@@ -4612,7 +4589,7 @@ texture2D(colorSource, qt_TexCoord0)
                 height: 193
                 hoverEnabled: true
                 onHoveredChanged: {
-                    owbg.color = waistOffsetButton.hovered ? (offsetsControl.visibleOffsetsWindowIndex === 0 ? "#3EB828" : "#7081FF") : (offsetsControl.visibleOffsetsWindowIndex === 0 ? gradientStartColor : secondaryButtonColor)
+                    owbg.color = waistOffsetButton.hovered ? (offsetsControl.visibleOffsetsWindowIndex === 0 ? sbcHighlightColor : sbHighlightColor) : (offsetsControl.visibleOffsetsWindowIndex === 0 ? gradientStartColor : secondaryButtonColor)
                 }
 
                 Text {
@@ -4667,7 +4644,7 @@ texture2D(colorSource, qt_TexCoord0)
                 highlighted: false
                 flat: true
                 onHoveredChanged: {
-                    olfbg.color = leftFootOffsetButton.hovered ? (offsetsControl.visibleOffsetsWindowIndex === 1 ? "#3EB828" : "#7081FF") : (offsetsControl.visibleOffsetsWindowIndex === 1 ? gradientStartColor : secondaryButtonColor)
+                    olfbg.color = leftFootOffsetButton.hovered ? (offsetsControl.visibleOffsetsWindowIndex === 1 ? sbcHighlightColor : sbHighlightColor) : (offsetsControl.visibleOffsetsWindowIndex === 1 ? gradientStartColor : secondaryButtonColor)
                 }
                 background: Rectangle {
                     id: olfbg
@@ -4718,7 +4695,7 @@ texture2D(colorSource, qt_TexCoord0)
                 highlighted: false
                 flat: true
                 onHoveredChanged: {
-                    orfbg.color = rightFootOffsetButton.hovered ? (offsetsControl.visibleOffsetsWindowIndex === 2 ? "#3EB828" : (offsetsControl.visibleOffsetsWindowIndex === 1 && connectOffsetsCheckBox.checked ? "#3EB828" : "#7081FF")) : (offsetsControl.visibleOffsetsWindowIndex === 2 ? gradientStartColor : (offsetsControl.visibleOffsetsWindowIndex === 1 && connectOffsetsCheckBox.checked ? gradientStartColor : secondaryButtonColor))
+                    orfbg.color = rightFootOffsetButton.hovered ? (offsetsControl.visibleOffsetsWindowIndex === 2 ? sbcHighlightColor : (offsetsControl.visibleOffsetsWindowIndex === 1 && connectOffsetsCheckBox.checked ? sbcHighlightColor : sbHighlightColor)) : (offsetsControl.visibleOffsetsWindowIndex === 2 ? gradientStartColor : (offsetsControl.visibleOffsetsWindowIndex === 1 && connectOffsetsCheckBox.checked ? gradientStartColor : secondaryButtonColor))
                 }
                 background: Rectangle {
                     id: orfbg
@@ -4796,10 +4773,6 @@ texture2D(colorSource, qt_TexCoord0)
                 }
 
                 hoverEnabled: true
-                onHoveredChanged: {
-                    cobg.color = connectOffsetsCheckBox.hovered ? "#7180EE" : secondaryButtonColor
-                }
-
                 indicator: Rectangle {
                     color: primaryColor
                     implicitWidth: parent.width
@@ -4807,7 +4780,7 @@ texture2D(colorSource, qt_TexCoord0)
                     radius: 20
                     border.width: 20
                     border.color: primaryColor
-
+                    
                     Rectangle {
                         id: cobg
                         x: 0
@@ -4820,6 +4793,13 @@ texture2D(colorSource, qt_TexCoord0)
                         color: secondaryButtonColor
                         border.width: 15
                         border.color: primaryColor
+                        Rectangle {
+                            visible: connectOffsetsCheckBox.hovered
+                            anchors.fill: parent
+                            anchors.margins: 15
+                            radius: 20
+                            color: "#43fdfdfd"
+                        }
 
                         Image {
                             anchors.rightMargin: 0
@@ -5325,7 +5305,7 @@ texture2D(colorSource, qt_TexCoord0)
                         color: "#ffffff"
                         objectName: "Autocalib_seconds"
                         anchors.centerIn: parent
-                        text: "5"
+                        text: "~"
                         font.bold: true
                         font.pointSize: 180
                         font.family: "JostSemi"
