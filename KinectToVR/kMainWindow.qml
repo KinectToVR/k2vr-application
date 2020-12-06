@@ -4856,6 +4856,12 @@ texture2D(colorSource, qt_TexCoord0)
                     color: secondaryButtonColor
                     radius: 30
                 }
+                Rectangle {
+                    visible: parent.hovered
+                    anchors.fill: parent
+                    radius: 20
+                    color: "#43fdfdfd"
+                }
                 flat: true
                 hoverEnabled: true
                 Text {
@@ -4877,10 +4883,6 @@ texture2D(colorSource, qt_TexCoord0)
                     anchors.rightMargin: 0
                 }
                 highlighted: false
-                onHoveredChanged: {
-                    orfbg1.color = confirmOffsetButton.hovered ? "#7081FF" : secondaryButtonColor
-                }
-
                 onClicked: {
                     offsetsControl.visible = false
                     _cppContext.cppSlot("OFFSETSAPPROVED")
@@ -4900,6 +4902,13 @@ texture2D(colorSource, qt_TexCoord0)
                     radius: 30
                     border.color: secondaryButtonColor
                     border.width: 15
+                    Rectangle {
+                        visible: parent.parent.hovered
+                        anchors.fill: parent
+                        anchors.margins: 15
+                        radius: 20
+                        color: "#43fdfdfd"
+                    }
                 }
                 flat: true
                 Text {
@@ -4941,9 +4950,6 @@ texture2D(colorSource, qt_TexCoord0)
                     offsetsControl.visible = false
                     _cppContext.cppSlot("OFFSETSCANCELLED")
                     generalControlTab.enabled = true
-                }
-                onHoveredChanged: {
-                    orfbg2.color = cancelOffsetButton.hovered ? "#5D6BD4" : primaryColor
                 }
             }
         }
