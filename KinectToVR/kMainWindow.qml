@@ -5204,8 +5204,11 @@ texture2D(colorSource, qt_TexCoord0)
                         anchors.rightMargin: 0
                     }
                     highlighted: false
-                    onHoveredChanged: {
-                        cmbg.color = confirmManualCalibButton.hovered ? "#7081FF" : secondaryButtonColor
+                    Rectangle {
+                        visible: parent.hovered
+                        anchors.fill: parent
+                        radius: 20
+                        color: "#43fdfdfd"
                     }
                     onClicked: {
                         _cppContext.cppSlot("MANUALCALIBRATION_APPROVED")
@@ -5228,6 +5231,13 @@ texture2D(colorSource, qt_TexCoord0)
                         radius: 30
                         border.color: secondaryButtonColor
                         border.width: 15
+                        Rectangle {
+                            visible: parent.parent.hovered
+                            anchors.fill: parent
+                            anchors.margins: 15
+                            radius: 20
+                            color: "#43fdfdfd"
+                        }
                     }
                     flat: true
                     Text {
@@ -5255,9 +5265,6 @@ texture2D(colorSource, qt_TexCoord0)
                         chooseCalibTab.visible = true
                         calibrationWindow.visible = false
                         generalControlTab.enabled = true
-                    }
-                    onHoveredChanged: {
-                        cmbg1.color = cancelManualCalibButton.hovered ? "#5D6BD4" : primaryColor
                     }
                 }
             }
@@ -5365,8 +5372,11 @@ texture2D(colorSource, qt_TexCoord0)
                         anchors.rightMargin: 0
                     }
                     highlighted: false
-                    onHoveredChanged: {
-                        cabg.color = startAutoCalibButton.hovered ? "#42C929" : secondaryButtonColor
+                    Rectangle {
+                        visible: parent.hovered
+                        anchors.fill: parent
+                        radius: 20
+                        color: "#43fdfdfd"
                     }
                     onClicked: {
                         _cppContext.cppSlot("AUTOCALIBRATION_STARTED")
@@ -5391,6 +5401,13 @@ texture2D(colorSource, qt_TexCoord0)
                         radius: 30
                         border.color: secondaryButtonColor
                         border.width: 15
+                        Rectangle {
+                            visible: parent.parent.hovered
+                            anchors.fill: parent
+                            anchors.margins: 15
+                            radius: 20
+                            color: "#43fdfdfd"
+                        }
                     }
                     flat: true
                     Text {
@@ -5419,9 +5436,6 @@ texture2D(colorSource, qt_TexCoord0)
                         calibrationWindow.visible = false
                         generalControlTab.enabled = true
                     }
-                    onHoveredChanged: {
-                        cabg1.color = cancelAutoCalibButton.hovered ? "#5D6BD4" : primaryColor
-                    }
                 }
 
                 Button {
@@ -5438,6 +5452,13 @@ texture2D(colorSource, qt_TexCoord0)
                         radius: 30
                         border.color: secondaryButtonColor
                         border.width: 15
+                        Rectangle {
+                            visible: parent.parent.hovered
+                            anchors.fill: parent
+                            anchors.margins: 15
+                            radius: 20
+                            color: "#43fdfdfd"
+                        }
                     }
                     flat: true
                     Text {
@@ -5471,9 +5492,6 @@ texture2D(colorSource, qt_TexCoord0)
                     onClicked: {
                         _cppContext.cppSlot("AUTOCALIBRATION_ABORTED")
                         closeAutoCalibration()
-                    }
-                    onHoveredChanged: {
-                        cabg11.color = abortAutoCalibButton.hovered ? "#5D6BD4" : primaryColor
                     }
                 }
             }
