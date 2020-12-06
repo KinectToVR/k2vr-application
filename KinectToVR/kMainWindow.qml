@@ -96,17 +96,17 @@ Item {
                 layer.effect: ShaderEffect {
                     property var colorSource: gradientRect
                     fragmentShader: "
-uniform lowp sampler2D colorSource;
-uniform lowp sampler2D maskSource;
-uniform lowp float qt_Opacity;
-varying highp vec2 qt_TexCoord0;
-void main() {
-gl_FragColor =
-texture2D(colorSource, qt_TexCoord0)
-* texture2D(maskSource, qt_TexCoord0).a
-* qt_Opacity;
-}
-"
+                        uniform lowp sampler2D colorSource;
+                        uniform lowp sampler2D maskSource;
+                        uniform lowp float qt_Opacity;
+                        varying highp vec2 qt_TexCoord0;
+                        void main() {
+                            gl_FragColor =
+                                texture2D(colorSource, qt_TexCoord0)
+                                * texture2D(maskSource, qt_TexCoord0).a
+                                * qt_Opacity;
+                        }
+                    "
                 }
             }
 
@@ -115,7 +115,7 @@ texture2D(colorSource, qt_TexCoord0)
             onClicked: function () {
                 qmlSignal(qsTr("GENERAL"))
                 pageIndicator.x = generalButton.x
-                pageIndicator.height = generalButton.width
+                pageIndicator.width = generalButton.width
                 generalButton.foreground = gradientStartColor
                 controllersButton.foreground = "#FFFFFF"
                 devicesButton.foreground = "#FFFFFF"
@@ -152,7 +152,7 @@ texture2D(colorSource, qt_TexCoord0)
             onClicked: function () {
                 qmlSignal(qsTr("CONTROLLERS"))
                 pageIndicator.x = controllersButton.x
-                pageIndicator.height = controllersButton.width
+                pageIndicator.width = controllersButton.width
                 generalButton.foreground = "#FFFFFF"
                 controllersButton.foreground = gradientStartColor
                 devicesButton.foreground = "#FFFFFF"
@@ -189,7 +189,7 @@ texture2D(colorSource, qt_TexCoord0)
             onClicked: function () {
                 qmlSignal(qsTr("DEVICES"))
                 pageIndicator.x = devicesButton.x
-                pageIndicator.height = devicesButton.width
+                pageIndicator.width = devicesButton.width
                 generalButton.foreground = "#FFFFFF"
                 controllersButton.foreground = "#FFFFFF"
                 devicesButton.foreground = gradientStartColor
@@ -225,7 +225,7 @@ texture2D(colorSource, qt_TexCoord0)
             onClicked: function () {
                 qmlSignal(qsTr("CONFIGURATION"))
                 pageIndicator.x = configurationButton.x
-                pageIndicator.height = configurationButton.width
+                pageIndicator.width = configurationButton.width
                 generalButton.foreground = "#FFFFFF"
                 controllersButton.foreground = "#FFFFFF"
                 devicesButton.foreground = "#FFFFFF"
