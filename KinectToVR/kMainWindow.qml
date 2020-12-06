@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Templates 2.0
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.11
+import QtGraphicalEffects 1.15
 
 Item {
     id: main
@@ -55,9 +56,28 @@ Item {
             anchors.top: parent.top
             anchors.topMargin: 0
             anchors.bottom: rectangle.bottom
+
+            Rectangle {
+                id: gradientRect
+                width: 10
+                height: 10
+                gradient: Gradient {
+                    orientation: Gradient.Horizontal
+                    GradientStop {
+                        position: 0
+                        color: gradientStartColor
+                    }
+                    GradientStop {
+                        position: 1
+                        color: gradientEndColor
+                    }
+                }
+                visible: false // should not be visible on screen.
+                layer.enabled: true
+                layer.smooth: true
+            }
+
             Text {
-                objectName: "buttonText"
-                id: element1
                 x: 5
                 width: parent.width - 10
                 height: parent.height
@@ -69,14 +89,33 @@ Item {
                 font.bold: true
                 font.pointSize: 48
                 font.family: "JostSemi"
-                color: generalButton.foreground
+
+                color: "#ffffff"
+                layer.enabled: true
+                layer.samplerName: "maskSource"
+                layer.effect: ShaderEffect {
+                    property var colorSource: gradientRect
+                    fragmentShader: "
+uniform lowp sampler2D colorSource;
+uniform lowp sampler2D maskSource;
+uniform lowp float qt_Opacity;
+varying highp vec2 qt_TexCoord0;
+void main() {
+gl_FragColor =
+texture2D(colorSource, qt_TexCoord0)
+* texture2D(maskSource, qt_TexCoord0).a
+* qt_Opacity;
+}
+"
+                }
             }
+
             highlighted: false
             flat: true
             onClicked: function () {
                 qmlSignal(qsTr("GENERAL"))
                 pageIndicator.x = generalButton.x
-                pageIndicator.width = generalButton.width
+                pageIndicator.height = generalButton.width
                 generalButton.foreground = gradientStartColor
                 controllersButton.foreground = "#FFFFFF"
                 devicesButton.foreground = "#FFFFFF"
@@ -113,7 +152,7 @@ Item {
             onClicked: function () {
                 qmlSignal(qsTr("CONTROLLERS"))
                 pageIndicator.x = controllersButton.x
-                pageIndicator.width = controllersButton.width
+                pageIndicator.height = controllersButton.width
                 generalButton.foreground = "#FFFFFF"
                 controllersButton.foreground = gradientStartColor
                 devicesButton.foreground = "#FFFFFF"
@@ -150,7 +189,7 @@ Item {
             onClicked: function () {
                 qmlSignal(qsTr("DEVICES"))
                 pageIndicator.x = devicesButton.x
-                pageIndicator.width = devicesButton.width
+                pageIndicator.height = devicesButton.width
                 generalButton.foreground = "#FFFFFF"
                 controllersButton.foreground = "#FFFFFF"
                 devicesButton.foreground = gradientStartColor
@@ -186,7 +225,7 @@ Item {
             onClicked: function () {
                 qmlSignal(qsTr("CONFIGURATION"))
                 pageIndicator.x = configurationButton.x
-                pageIndicator.width = configurationButton.width
+                pageIndicator.height = configurationButton.width
                 generalButton.foreground = "#FFFFFF"
                 controllersButton.foreground = "#FFFFFF"
                 devicesButton.foreground = "#FFFFFF"
@@ -227,13 +266,25 @@ Item {
         Rectangle {
             id: pageIndicator
             objectName: "pageIndicator"
-            x: 296
+            x: generalButton.x
             y: 201
-            width: 255
+            width: generalButton.width
             height: 15
             color: gradientStartColor
             anchors.leftMargin: 0
             anchors.bottom: rectangle.bottom
+
+            gradient: Gradient {
+                orientation: Gradient.Horizontal
+                GradientStop {
+                    position: 0.0
+                    color: gradientStartColor
+                }
+                GradientStop {
+                    position: 1.0
+                    color: gradientEndColor
+                }
+            }
         }
 
         Rectangle {
@@ -371,21 +422,20 @@ Item {
                     id: bg
                     x: 289
                     y: -287
-                    width: parent.height
-                    height: parent.width
-                    rotation: 90
+                    anchors.fill: parent
+
                     gradient: Gradient {
+                        orientation: Gradient.Horizontal
                         GradientStop {
                             position: 0.0
-                            color: gradientEndColor
+                            color: gradientStartColor
                         }
                         GradientStop {
                             position: 1.0
-                            color: gradientStartColor
+                            color: gradientEndColor
                         }
                     }
 
-                    //color: gradientStartColor
                     radius: 20
                 }
                 onClicked: {
@@ -1126,7 +1176,7 @@ Item {
 
                 background: Rectangle {
                     id: bg001
-                    color: primaryColor
+                    color: secondaryButtonColor
                     radius: 20
                 }
                 objectName: "skeletonButton"
@@ -5410,5 +5460,8 @@ Rectangle {
 */
 
 
-
-
+/*##^##
+Designer {
+    D{i:0;formeditorZoom:0.75}
+}
+##^##*/
