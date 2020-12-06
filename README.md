@@ -39,8 +39,6 @@ repository before posting an issue with building or missing files.
    - Run [windeployqt](https://doc.qt.io/qt-5/windows-deployment.html) in output directory.<br> 
    You may ned to experiment with removing some plugins<br> 
    and checking with degugger to achieve better results.<br> 
-   You may also download [zip](https://drive.google.com/file/d/15FX0Ubg9m7rEBj8G2OBDGCgHNLwfZ53W/view?usp=sharing) from my own workaround,<br> 
-   assuming you haven't added any other plugins.
 
 ## Debugging OpenVR driver
 
