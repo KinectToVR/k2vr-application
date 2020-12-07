@@ -320,12 +320,21 @@ void startCalibration(bool automatic)
 				}
 
 				/* Compose translations */
-			
 
-				/* Finish: close windows, update labels and save */
-				QMetaObject::invokeMethod(quickObj->findChild<QObject*>("abortAutoCalibButton"), "closeAutoCalibration");
+
+				/* Reset labels */
 				quickObj->findChild<QObject*>("Autocalib_seconds")->setProperty("text", "~");
 				quickObj->findChild<QObject*>("Autocalib_move")->setProperty("text", "");
+			
+				/* Notify that we're done */
+				if (!abortCalibration) {
+					quickObj->findChild<QObject*>("Autocalib_title")->setProperty("text", "Calibration done!");
+					std::this_thread::sleep_for(std::chrono::seconds(2));
+				}
+
+				/* Finish: close windows */
+				QMetaObject::invokeMethod(quickObj->findChild<QObject*>("abortAutoCalibButton"), "closeAutoCalibration");
+				quickObj->findChild<QObject*>("Autocalib_title")->setProperty("text", "Follow the directions");
 
 			}).detach();
 	}

@@ -4588,11 +4588,9 @@ texture2D(colorSource, qt_TexCoord0)
                 width: 792
                 height: 193
                 hoverEnabled: true
-                onHoveredChanged: {
-                    owbg.color = waistOffsetButton.hovered ? (offsetsControl.visibleOffsetsWindowIndex === 0 ? sbcHighlightColor : sbHighlightColor) : (offsetsControl.visibleOffsetsWindowIndex === 0 ? gradientStartColor : secondaryButtonColor)
-                }
 
                 Text {
+                    z: 101
                     text: qsTr("Waist")
                     font.bold: true
                     rightPadding: 0
@@ -4612,15 +4610,43 @@ texture2D(colorSource, qt_TexCoord0)
                 }
                 highlighted: false
                 flat: true
+
                 background: Rectangle {
                     id: owbg
-                    color: gradientStartColor
+                    color: secondaryButtonColor
                     radius: 30
+
                     Rectangle {
-                        color: owbg.color
-                        anchors.leftMargin: 662
+                        z: 102
+                        visible: waistOffsetButton.hovered
                         anchors.fill: parent
+                        radius: 30
+                        color: "#43fdfdfd"
                     }
+
+                    Rectangle {
+                        z: 100
+                        anchors.fill: parent
+                        radius: 30
+                        visible: offsetsControl.visibleOffsetsWindowIndex === 0
+                        gradient: Gradient {
+                            orientation: Gradient.Horizontal
+                            GradientStop {
+                                position: 0.0
+                                color: gradientStartColor
+                            }
+                            GradientStop {
+                                position: 1.0
+                                color: gradientEndColor
+                            }
+                        }
+                    }
+
+                    // Rectangle {
+                    //     color: gradientEndColor
+                    //     anchors.leftMargin: 662
+                    //     anchors.fill: parent
+                    // }
                 }
                 onClicked: {
                     waistOffsetControl.visible = true
@@ -4643,14 +4669,40 @@ texture2D(colorSource, qt_TexCoord0)
                 hoverEnabled: true
                 highlighted: false
                 flat: true
-                onHoveredChanged: {
-                    olfbg.color = leftFootOffsetButton.hovered ? (offsetsControl.visibleOffsetsWindowIndex === 1 ? sbcHighlightColor : sbHighlightColor) : (offsetsControl.visibleOffsetsWindowIndex === 1 ? gradientStartColor : secondaryButtonColor)
-                }
+
                 background: Rectangle {
                     id: olfbg
                     color: secondaryButtonColor
+                    radius: 30
+
+                    Rectangle {
+                        z: 102
+                        visible: leftFootOffsetButton.hovered || connectOffsetsCheckBox.checked && rightFootOffsetButton.hovered
+                        anchors.fill: parent
+                        radius: 30
+                        color: "#43fdfdfd"
+                    }
+
+                    Rectangle {
+                        z: 100
+                        anchors.fill: parent
+                        radius: 30
+                        visible: offsetsControl.visibleOffsetsWindowIndex === 1
+                        gradient: Gradient {
+                            orientation: Gradient.Horizontal
+                            GradientStop {
+                                position: 0.0
+                                color: gradientStartColor
+                            }
+                            GradientStop {
+                                position: 1.0
+                                color: gradientEndColor
+                            }
+                        }
+                    }
                 }
                 Text {
+                    z: 101
                     color: "#ffffff"
                     text: qsTr("Left Foot")
                     anchors.topMargin: 0
@@ -4675,7 +4727,7 @@ texture2D(colorSource, qt_TexCoord0)
                     offsetsControl.visibleOffsetsWindowIndex = 1
 
                     owbg.color = secondaryButtonColor
-                    if (connectOffsetsCheckBox.checked === true) {
+                    if (connectOffsetsCheckBox.checked) {
                         olfbg.color = gradientStartColor
                         orfbg.color = gradientStartColor
                     } else {
@@ -4694,20 +4746,40 @@ texture2D(colorSource, qt_TexCoord0)
                 hoverEnabled: true
                 highlighted: false
                 flat: true
-                onHoveredChanged: {
-                    orfbg.color = rightFootOffsetButton.hovered ? (offsetsControl.visibleOffsetsWindowIndex === 2 ? sbcHighlightColor : (offsetsControl.visibleOffsetsWindowIndex === 1 && connectOffsetsCheckBox.checked ? sbcHighlightColor : sbHighlightColor)) : (offsetsControl.visibleOffsetsWindowIndex === 2 ? gradientStartColor : (offsetsControl.visibleOffsetsWindowIndex === 1 && connectOffsetsCheckBox.checked ? gradientStartColor : secondaryButtonColor))
-                }
+                
                 background: Rectangle {
                     id: orfbg
                     color: secondaryButtonColor
                     radius: 30
+
                     Rectangle {
-                        color: orfbg.color
-                        anchors.rightMargin: 683
+                        z: 102
+                        visible: rightFootOffsetButton.hovered || connectOffsetsCheckBox.checked && leftFootOffsetButton.hovered
                         anchors.fill: parent
+                        radius: 30
+                        color: "#43fdfdfd"
+                    }
+
+                    Rectangle {
+                        z: 100
+                        anchors.fill: parent
+                        radius: 30
+                        visible: offsetsControl.visibleOffsetsWindowIndex === 2 || connectOffsetsCheckBox.checked && offsetsControl.visibleOffsetsWindowIndex === 1
+                        gradient: Gradient {
+                            orientation: Gradient.Horizontal
+                            GradientStop {
+                                position: 0.0
+                                color: gradientStartColor
+                            }
+                            GradientStop {
+                                position: 1.0
+                                color: gradientEndColor
+                            }
+                        }
                     }
                 }
                 Text {
+                    z: 101
                     color: "#ffffff"
                     text: qsTr("Right Foot")
                     anchors.topMargin: 0
@@ -4729,7 +4801,7 @@ texture2D(colorSource, qt_TexCoord0)
                     waistOffsetControl.visible = false
 
                     owbg.color = secondaryButtonColor
-                    if (connectOffsetsCheckBox.checked === true) {
+                    if (connectOffsetsCheckBox.checked) {
                         olfbg.color = gradientStartColor
                         orfbg.color = gradientStartColor
                         leftFootOffsetControl.visible = true
@@ -4835,6 +4907,18 @@ texture2D(colorSource, qt_TexCoord0)
                     id: orfbg1
                     color: secondaryButtonColor
                     radius: 30
+
+                    gradient: Gradient {
+                        orientation: Gradient.Horizontal
+                        GradientStop {
+                            position: 0.0
+                            color: gradientStartColor
+                        }
+                        GradientStop {
+                            position: 1.0
+                            color: gradientEndColor
+                        }
+                    }
                 }
                 Rectangle {
                     visible: parent.hovered
@@ -4878,21 +4962,20 @@ texture2D(colorSource, qt_TexCoord0)
                 height: 193
                 background: Rectangle {
                     id: orfbg2
-                    color: primaryColor
+                    color: secondaryButtonColor
                     radius: 30
                     border.color: secondaryButtonColor
                     border.width: 15
                     Rectangle {
                         visible: parent.parent.hovered
                         anchors.fill: parent
-                        anchors.margins: 15
                         radius: 20
                         color: "#43fdfdfd"
                     }
                 }
                 flat: true
                 Text {
-                    color: secondaryButtonColor
+                    color: "#ffffff"
                     text: qsTr("Cancel")
                     anchors.bottomMargin: 0
                     anchors.leftMargin: 0
@@ -5168,6 +5251,18 @@ texture2D(colorSource, qt_TexCoord0)
                         color: secondaryButtonColor
                         radius: 30
                         border.width: 0
+
+                        gradient: Gradient {
+                            orientation: Gradient.Horizontal
+                            GradientStop {
+                                position: 0.0
+                                color: gradientStartColor
+                            }
+                            GradientStop {
+                                position: 1.0
+                                color: gradientEndColor
+                            }
+                        }
                     }
                     flat: true
                     hoverEnabled: true
@@ -5213,21 +5308,20 @@ texture2D(colorSource, qt_TexCoord0)
                     visible: true
                     background: Rectangle {
                         id: cmbg1
-                        color: primaryColor
+                        color: secondaryButtonColor
                         radius: 30
                         border.color: secondaryButtonColor
                         border.width: 15
                         Rectangle {
                             visible: parent.parent.hovered
                             anchors.fill: parent
-                            anchors.margins: 15
                             radius: 20
                             color: "#43fdfdfd"
                         }
                     }
                     flat: true
                     Text {
-                        color: secondaryButtonColor
+                        color: "#ffffff"
                         text: qsTr("Cancel")
                         anchors.bottomMargin: 0
                         anchors.leftMargin: 0
@@ -5283,6 +5377,7 @@ texture2D(colorSource, qt_TexCoord0)
                 }
 
                 Label {
+                    objectName: "Autocalib_title"
                     y: 388
                     color: "#ffffff"
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -5298,8 +5393,20 @@ texture2D(colorSource, qt_TexCoord0)
                     height: 500
                     anchors.centerIn: parent
                     radius: 300
-                    color: secondaryButtonColor
+                    //color: secondaryButtonColor
                     id: calibSeconds
+
+                    gradient: Gradient {
+                        orientation: Gradient.Horizontal
+                        GradientStop {
+                            position: 0.0
+                            color: gradientStartColor
+                        }
+                        GradientStop {
+                            position: 1.0
+                            color: gradientEndColor
+                        }
+                    }
 
                     Label {
                         color: "#ffffff"
@@ -5336,6 +5443,18 @@ texture2D(colorSource, qt_TexCoord0)
                         id: cabg
                         color: secondaryButtonColor
                         radius: 30
+
+                        gradient: Gradient {
+                            orientation: Gradient.Horizontal
+                            GradientStop {
+                                position: 0.0
+                                color: gradientStartColor
+                            }
+                            GradientStop {
+                                position: 1.0
+                                color: gradientEndColor
+                            }
+                        }
                     }
                     flat: true
                     hoverEnabled: true
@@ -5366,7 +5485,7 @@ texture2D(colorSource, qt_TexCoord0)
                     }
                     onClicked: {
                         _cppContext.cppSlot("AUTOCALIBRATION_STARTED")
-                        calibSeconds.color = gradientStartColor
+                        //calibSeconds.color = gradientStartColor
                         cancelAutoCalibButton.visible = false
                         startAutoCalibButton.visible = false
                         abortAutoCalibButton.visible = true
@@ -5383,21 +5502,20 @@ texture2D(colorSource, qt_TexCoord0)
                     visible: true
                     background: Rectangle {
                         id: cabg1
-                        color: primaryColor
+                        color: secondaryButtonColor
                         radius: 30
                         border.color: secondaryButtonColor
                         border.width: 15
                         Rectangle {
                             visible: parent.parent.hovered
                             anchors.fill: parent
-                            anchors.margins: 15
                             radius: 20
                             color: "#43fdfdfd"
                         }
                     }
                     flat: true
                     Text {
-                        color: secondaryButtonColor
+                        color: "#ffffff"
                         text: qsTr("Cancel")
                         anchors.bottomMargin: 0
                         anchors.leftMargin: 0
@@ -5434,21 +5552,20 @@ texture2D(colorSource, qt_TexCoord0)
                     visible: false
                     background: Rectangle {
                         id: cabg11
-                        color: primaryColor
+                        color: secondaryButtonColor
                         radius: 30
                         border.color: secondaryButtonColor
                         border.width: 15
                         Rectangle {
                             visible: parent.parent.hovered
                             anchors.fill: parent
-                            anchors.margins: 15
                             radius: 20
                             color: "#43fdfdfd"
                         }
                     }
                     flat: true
                     Text {
-                        color: secondaryButtonColor
+                        color: "#ffffff"
                         text: qsTr("Cancel")
                         anchors.bottomMargin: 0
                         anchors.leftMargin: 0
