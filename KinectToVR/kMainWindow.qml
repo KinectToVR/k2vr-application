@@ -2,7 +2,6 @@ import QtQuick 2.15
 import QtQuick.Templates 2.0
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.11
-import QtGraphicalEffects 1.15
 
 Item {
     id: main
@@ -24,10 +23,10 @@ Item {
     property var sbHighlightColor: "#614487" // For non-fully-rounded buttons (normal)
     property var sbcHighlightColor: "#995DD8" // For non-fully-rounded buttons (brighter)
 
+
     /*transform: Scale {
         origin.x: 0; origin.y: 0; xScale: parent.width / 3915; yScale: parent.height / 2292
     }*/
-
     Item {
         id: buttoncontrols
         width: 3915
@@ -98,19 +97,8 @@ Item {
                 layer.enabled: generalButton.layer_en
                 layer.samplerName: "maskSource"
                 layer.effect: ShaderEffect {
-                    property var colorSource: gradientRect
-                    fragmentShader: "
-uniform lowp sampler2D colorSource;
-uniform lowp sampler2D maskSource;
-uniform lowp float qt_Opacity;
-varying highp vec2 qt_TexCoord0;
-void main() {
-gl_FragColor =
-texture2D(colorSource, qt_TexCoord0)
-* texture2D(maskSource, qt_TexCoord0).a
-* qt_Opacity;
-}
-"
+                    property var colorSource: gradientRect;
+                    fragmentShader: "mask.frag.qsb"
                 }
             }
 
@@ -159,19 +147,8 @@ texture2D(colorSource, qt_TexCoord0)
                 layer.enabled: controllersButton.layer_en
                 layer.samplerName: "maskSource"
                 layer.effect: ShaderEffect {
-                    property var colorSource: gradientRect
-                    fragmentShader: "
-uniform lowp sampler2D colorSource;
-uniform lowp sampler2D maskSource;
-uniform lowp float qt_Opacity;
-varying highp vec2 qt_TexCoord0;
-void main() {
-gl_FragColor =
-texture2D(colorSource, qt_TexCoord0)
-* texture2D(maskSource, qt_TexCoord0).a
-* qt_Opacity;
-}
-"
+                    property var colorSource: gradientRect;
+                    fragmentShader: "mask.frag.qsb"
                 }
             }
             highlighted: false
@@ -219,19 +196,8 @@ texture2D(colorSource, qt_TexCoord0)
                 layer.enabled: devicesButton.layer_en
                 layer.samplerName: "maskSource"
                 layer.effect: ShaderEffect {
-                    property var colorSource: gradientRect
-                    fragmentShader: "
-uniform lowp sampler2D colorSource;
-uniform lowp sampler2D maskSource;
-uniform lowp float qt_Opacity;
-varying highp vec2 qt_TexCoord0;
-void main() {
-gl_FragColor =
-texture2D(colorSource, qt_TexCoord0)
-* texture2D(maskSource, qt_TexCoord0).a
-* qt_Opacity;
-}
-"
+                    property var colorSource: gradientRect;
+                    fragmentShader: "mask.frag.qsb"
                 }
             }
             highlighted: false
@@ -278,19 +244,8 @@ texture2D(colorSource, qt_TexCoord0)
                 layer.enabled: configurationButton.layer_en
                 layer.samplerName: "maskSource"
                 layer.effect: ShaderEffect {
-                    property var colorSource: gradientRect
-                    fragmentShader: "
-uniform lowp sampler2D colorSource;
-uniform lowp sampler2D maskSource;
-uniform lowp float qt_Opacity;
-varying highp vec2 qt_TexCoord0;
-void main() {
-gl_FragColor =
-texture2D(colorSource, qt_TexCoord0)
-* texture2D(maskSource, qt_TexCoord0).a
-* qt_Opacity;
-}
-"
+                    property var colorSource: gradientRect;
+                    fragmentShader: "mask.frag.qsb"
                 }
             }
             highlighted: false
@@ -522,7 +477,7 @@ texture2D(colorSource, qt_TexCoord0)
                 highlighted: false
                 flat: true
                 hoverEnabled: true
-                
+
                 Rectangle {
                     visible: parent.hovered
                     anchors.fill: parent
@@ -586,7 +541,7 @@ texture2D(colorSource, qt_TexCoord0)
                 highlighted: false
                 flat: true
                 hoverEnabled: true
-                
+
                 Rectangle {
                     visible: parent.hovered
                     anchors.fill: parent
@@ -708,7 +663,7 @@ texture2D(colorSource, qt_TexCoord0)
                 checked: true
                 onCheckStateChanged: _cppContext.cppSlot("FLIPCHANGED")
                 hoverEnabled: true
-                
+
                 Rectangle {
                     visible: parent.hovered
                     anchors.fill: parent
@@ -804,7 +759,7 @@ texture2D(colorSource, qt_TexCoord0)
                 model: [" Device-inferred Rotation", " Follow Headset", " Disable Rotation"]
                 onDisplayTextChanged: _cppContext.multiCpp(
                                           "HIPS", hipsComboBox.displayText)
-                
+
                 Rectangle {
                     visible: parent.hovered
                     anchors.fill: parent
@@ -947,7 +902,7 @@ texture2D(colorSource, qt_TexCoord0)
                 model: [" Device-inferred Rotation", " Follow Headset", " Disable Rotation"]
                 onDisplayTextChanged: _cppContext.multiCpp(
                                           "FEET", feetComboBox.displayText)
-                
+
                 Rectangle {
                     visible: parent.hovered
                     anchors.fill: parent
@@ -1083,7 +1038,6 @@ texture2D(colorSource, qt_TexCoord0)
                 y: 1580
                 width: 1130
                 height: 185
-                editable: false
                 font.bold: false
                 font.pointSize: 53
                 font.family: "JostSemi"
@@ -1091,7 +1045,7 @@ texture2D(colorSource, qt_TexCoord0)
                 model: [" Linear Interpolation", " Lowpass Optical", " Extended Kalman", " Disable Filter"]
                 onDisplayTextChanged: _cppContext.multiCpp(
                                           "FILTER", filterComboBox.displayText)
-                
+
                 Rectangle {
                     visible: parent.hovered
                     anchors.fill: parent
@@ -1234,7 +1188,7 @@ texture2D(colorSource, qt_TexCoord0)
                 highlighted: false
                 flat: true
                 hoverEnabled: true
-                
+
                 Rectangle {
                     visible: parent.hovered
                     anchors.fill: parent
@@ -4614,20 +4568,20 @@ texture2D(colorSource, qt_TexCoord0)
                 background: Rectangle {
                     id: owbg
                     color: secondaryButtonColor
-                    radius: 30
+                    radius: 20
 
                     Rectangle {
                         z: 102
                         visible: waistOffsetButton.hovered
                         anchors.fill: parent
-                        radius: 30
+                        radius: 20
                         color: "#43fdfdfd"
                     }
 
                     Rectangle {
                         z: 100
                         anchors.fill: parent
-                        radius: 30
+                        radius: 20
                         visible: offsetsControl.visibleOffsetsWindowIndex === 0
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
@@ -4673,20 +4627,22 @@ texture2D(colorSource, qt_TexCoord0)
                 background: Rectangle {
                     id: olfbg
                     color: secondaryButtonColor
-                    radius: 30
+                    radius: 20
 
                     Rectangle {
                         z: 102
-                        visible: leftFootOffsetButton.hovered || connectOffsetsCheckBox.checked && rightFootOffsetButton.hovered
+                        visible: leftFootOffsetButton.hovered
+                                 || connectOffsetsCheckBox.checked
+                                 && rightFootOffsetButton.hovered
                         anchors.fill: parent
-                        radius: 30
+                        radius: 20
                         color: "#43fdfdfd"
                     }
 
                     Rectangle {
                         z: 100
                         anchors.fill: parent
-                        radius: 30
+                        radius: 20
                         visible: offsetsControl.visibleOffsetsWindowIndex === 1
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
@@ -4746,25 +4702,29 @@ texture2D(colorSource, qt_TexCoord0)
                 hoverEnabled: true
                 highlighted: false
                 flat: true
-                
+
                 background: Rectangle {
                     id: orfbg
                     color: secondaryButtonColor
-                    radius: 30
+                    radius: 20
 
                     Rectangle {
                         z: 102
-                        visible: rightFootOffsetButton.hovered || connectOffsetsCheckBox.checked && leftFootOffsetButton.hovered
+                        visible: rightFootOffsetButton.hovered
+                                 || connectOffsetsCheckBox.checked
+                                 && leftFootOffsetButton.hovered
                         anchors.fill: parent
-                        radius: 30
+                        radius: 20
                         color: "#43fdfdfd"
                     }
 
                     Rectangle {
                         z: 100
                         anchors.fill: parent
-                        radius: 30
-                        visible: offsetsControl.visibleOffsetsWindowIndex === 2 || connectOffsetsCheckBox.checked && offsetsControl.visibleOffsetsWindowIndex === 1
+                        radius: 20
+                        visible: offsetsControl.visibleOffsetsWindowIndex === 2
+                                 || connectOffsetsCheckBox.checked
+                                 && offsetsControl.visibleOffsetsWindowIndex === 1
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
                             GradientStop {
@@ -4852,7 +4812,7 @@ texture2D(colorSource, qt_TexCoord0)
                     radius: 20
                     border.width: 20
                     border.color: primaryColor
-                    
+
                     Rectangle {
                         id: cobg
                         x: 0
@@ -4861,7 +4821,7 @@ texture2D(colorSource, qt_TexCoord0)
                         height: 140
                         implicitWidth: parent.width / 1.17
                         implicitHeight: parent.height / 1.17
-                        radius: 30
+                        radius: 40
                         color: secondaryButtonColor
                         border.width: 15
                         border.color: primaryColor
@@ -4906,7 +4866,7 @@ texture2D(colorSource, qt_TexCoord0)
                 background: Rectangle {
                     id: orfbg1
                     color: secondaryButtonColor
-                    radius: 30
+                    radius: 20
 
                     gradient: Gradient {
                         orientation: Gradient.Horizontal
@@ -4963,7 +4923,7 @@ texture2D(colorSource, qt_TexCoord0)
                 background: Rectangle {
                     id: orfbg2
                     color: secondaryButtonColor
-                    radius: 30
+                    radius: 20
                     border.color: secondaryButtonColor
                     border.width: 15
                     Rectangle {
@@ -5072,7 +5032,7 @@ texture2D(colorSource, qt_TexCoord0)
                     highlighted: false
                     flat: true
                     hoverEnabled: true
-                    
+
                     Rectangle {
                         visible: parent.hovered
                         anchors.fill: parent
@@ -5156,7 +5116,7 @@ texture2D(colorSource, qt_TexCoord0)
                         chooseCalibTab.visible = false
                         manualCalibTab.visible = true
                     }
-                    
+
                     Rectangle {
                         visible: parent.hovered
                         anchors.fill: parent
@@ -5249,7 +5209,7 @@ texture2D(colorSource, qt_TexCoord0)
                     background: Rectangle {
                         id: cmbg
                         color: secondaryButtonColor
-                        radius: 30
+                        radius: 20
                         border.width: 0
 
                         gradient: Gradient {
@@ -5309,7 +5269,7 @@ texture2D(colorSource, qt_TexCoord0)
                     background: Rectangle {
                         id: cmbg1
                         color: secondaryButtonColor
-                        radius: 30
+                        radius: 20
                         border.color: secondaryButtonColor
                         border.width: 15
                         Rectangle {
@@ -5442,7 +5402,7 @@ texture2D(colorSource, qt_TexCoord0)
                     background: Rectangle {
                         id: cabg
                         color: secondaryButtonColor
-                        radius: 30
+                        radius: 20
 
                         gradient: Gradient {
                             orientation: Gradient.Horizontal
@@ -5503,7 +5463,7 @@ texture2D(colorSource, qt_TexCoord0)
                     background: Rectangle {
                         id: cabg1
                         color: secondaryButtonColor
-                        radius: 30
+                        radius: 20
                         border.color: secondaryButtonColor
                         border.width: 15
                         Rectangle {
@@ -5553,7 +5513,7 @@ texture2D(colorSource, qt_TexCoord0)
                     background: Rectangle {
                         id: cabg11
                         color: secondaryButtonColor
-                        radius: 30
+                        radius: 20
                         border.color: secondaryButtonColor
                         border.width: 15
                         Rectangle {

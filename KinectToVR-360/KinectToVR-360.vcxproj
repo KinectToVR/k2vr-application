@@ -67,13 +67,13 @@
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <QtInstall>Qt-5.15.1</QtInstall>
-    <QtModules>core;opengl;network;gui;widgets;qml;quickwidgets;quick;quickcontrols2;multimedia</QtModules>
+    <QtInstall>Qt-6.0.0</QtInstall>
+    <QtModules>core;gui;network;opengl;qml;quick;quickcontrols2;quickwidgets;widgets</QtModules>
     <QtQMLDebugEnable>true</QtQMLDebugEnable>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <QtInstall>Qt-5.15.1</QtInstall>
-    <QtModules>core;opengl;network;gui;widgets;qml;quickwidgets;quick;quickcontrols2;multimedia</QtModules>
+    <QtInstall>Qt-6.0.0</QtInstall>
+    <QtModules>core;gui;network;opengl;qml;quick;quickcontrols2;quickwidgets;widgets</QtModules>
     <QtQMLDebugEnable>true</QtQMLDebugEnable>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
@@ -102,7 +102,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>KinectToVR.lib;Kinect10.lib;openvr_api.lib;opencv_world340.lib;$(QTDIR)\lib\Qt5QmlModels.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>KinectToVR.lib;Kinect10.lib;openvr_api.lib;opencv_world340.lib;$(QTDIR)\lib\Qt6QmlModels.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\openssl\lib;C:\Utils\my_sql\mysql-5.7.25-winx64\lib;C:\Utils\postgresql\pgsql\lib;$(SolutionDir)external\openvr\lib\win64;$(SolutionDir)external\opencv\build\x64\vc15\lib;$(SolutionDir)external\ZMQ\lib;$(KINECTSDK10_DIR)lib\amd64;$(SolutionDir)$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -227,6 +227,9 @@
   <ItemGroup>
     <ProjectReference Include="..\KinectToVR\KinectToVR.vcxproj">
       <Project>{6aae9d3b-fdfb-3af6-aa19-54b42cd72d2d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\KinectToVR_API\KinectToVR_API.vcxproj">
+      <Project>{3fb99a4e-d168-4efc-b909-ce2951543cf8}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

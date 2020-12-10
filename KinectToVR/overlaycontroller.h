@@ -24,7 +24,7 @@
 #include <KinectHandlerBase.h>
 #include <openvr_init.h>
 #include <ivrinput.h>
-#include <QtMultimedia/QSoundEffect>
+//#include <QtMultimedia/QSoundEffect>
 #include <Settings.h>
 #include <update_rate.h>
 #include <runtimeConfig.h>
@@ -69,7 +69,7 @@ private:
 	bool m_dashboardVisible = false;
 
 	QPoint m_ptLastMouse;
-	Qt::MouseButtons m_lastMouseButtons = nullptr;
+	Qt::MouseButtons m_lastMouseButtons = Qt::MouseButton::NoButton;
 
 	bool m_desktopMode;
 	bool m_noSound;
@@ -85,9 +85,9 @@ private:
 	QString m_versionCheckText = "";
 
 	QUrl m_runtimePathUrl;
-	QSoundEffect m_activationSoundEffect;
-	QSoundEffect m_focusChangedSoundEffect;
-	QSoundEffect m_alarm01SoundEffect;
+	//QSoundEffect m_activationSoundEffect;
+	//QSoundEffect m_focusChangedSoundEffect;
+	//QSoundEffect m_alarm01SoundEffect;
 
 	uint64_t m_currentFrame = 0;
 	uint64_t m_lastFrame = 0;
@@ -147,11 +147,11 @@ public slots:
 	void showKeyboard(QString existingText, unsigned long userValue = 0);
 	void setKeyboardPos();
 
-	void playActivationSound();
-	void playFocusChangedSound();
-	void playAlarm01Sound(bool loop = false);
-	void setAlarm01SoundVolume(float vol);
-	void cancelAlarm01Sound();
+	//void playActivationSound();
+	//void playFocusChangedSound();
+	//void playAlarm01Sound(bool loop = false);
+	//void setAlarm01SoundVolume(float vol);
+	//void cancelAlarm01Sound();
 
 signals:
 	void keyBoardInputSignal(QString input, unsigned long userValue = 0);

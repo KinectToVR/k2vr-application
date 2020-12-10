@@ -66,13 +66,13 @@
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <QtInstall>Qt-5.15.1</QtInstall>
-    <QtModules>core;gui;multimedia;network;opengl;qml;quick;quickcontrols2;quickwidgets;widgets</QtModules>
+    <QtInstall>Qt-6.0.0</QtInstall>
+    <QtModules>core;gui;network;opengl;qml;quick;quickcontrols2;quickwidgets;widgets</QtModules>
     <QtQMLDebugEnable>true</QtQMLDebugEnable>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <QtInstall>Qt-5.15.1</QtInstall>
-    <QtModules>core;gui;multimedia;network;opengl;qml;quick;quickcontrols2;quickwidgets;widgets</QtModules>
+    <QtInstall>Qt-6.0.0</QtInstall>
+    <QtModules>core;gui;network;opengl;qml;quick;quickcontrols2;quickwidgets;widgets</QtModules>
     <QtQMLDebugEnable>true</QtQMLDebugEnable>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
@@ -84,7 +84,7 @@
       <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>release\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
-      <DebugInformationFormat>None</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4577;4467;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ExceptionHandling>Sync</ExceptionHandling>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -267,6 +267,11 @@
     <None Include="kMainWindow.qml" />
     <QtRcc Include="resources.qrc">
     </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KinectToVR_API\KinectToVR_API.vcxproj">
+      <Project>{3fb99a4e-d168-4efc-b909-ce2951543cf8}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

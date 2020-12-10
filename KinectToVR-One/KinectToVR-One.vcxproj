@@ -200,6 +200,9 @@
     <ProjectReference Include="..\KinectToVR\KinectToVR.vcxproj">
       <Project>{6aae9d3b-fdfb-3af6-aa19-54b42cd72d2d}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\KinectToVR_API\KinectToVR_API.vcxproj">
+      <Project>{3fb99a4e-d168-4efc-b909-ce2951543cf8}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

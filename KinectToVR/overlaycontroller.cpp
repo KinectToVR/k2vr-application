@@ -7,7 +7,11 @@
 #include <QQmlEngine>
 #include <QQmlContext>
 #include <QtWidgets/QWidget>
-#include <QMouseEvent>
+//#include <QMouseEvent>
+#include <QSinglePointEvent>
+#include <QQuickRenderTarget>
+#include <QQuickGraphicsDevice>
+
 #include <QtWidgets/QGraphicsSceneMouseEvent>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QGraphicsEllipseItem>
@@ -30,11 +34,11 @@ namespace utils
 				{0.0f, 0.0f, 1.0f, 0.0f},
 				{0.0f, -1.0f, 0.0f, 0.0f}
 			}
-		};
+	};
 
 	inline vr::HmdMatrix34_t& initRotationMatrix(vr::HmdMatrix34_t& matrix,
-	                                             unsigned axisId,
-	                                             float angle)
+		unsigned axisId,
+		float angle)
 	{
 		switch (axisId)
 		{
@@ -87,8 +91,8 @@ namespace utils
 	}
 
 	inline vr::HmdMatrix34_t& matMul33(vr::HmdMatrix34_t& result,
-	                                   const vr::HmdMatrix34_t& a,
-	                                   const vr::HmdMatrix34_t& b)
+		const vr::HmdMatrix34_t& a,
+		const vr::HmdMatrix34_t& b)
 	{
 		for (unsigned i = 0; i < 3; i++)
 		{
@@ -105,8 +109,8 @@ namespace utils
 	}
 
 	inline vr::HmdVector3_t& matMul33(vr::HmdVector3_t& result,
-	                                  const vr::HmdMatrix34_t& a,
-	                                  const vr::HmdVector3_t& b)
+		const vr::HmdMatrix34_t& a,
+		const vr::HmdVector3_t& b)
 	{
 		for (unsigned i = 0; i < 3; i++)
 		{
@@ -120,8 +124,8 @@ namespace utils
 	}
 
 	inline vr::HmdVector3_t& matMul33(vr::HmdVector3_t& result,
-	                                  const vr::HmdVector3_t& a,
-	                                  const vr::HmdMatrix34_t& b)
+		const vr::HmdVector3_t& a,
+		const vr::HmdMatrix34_t& b)
 	{
 		for (unsigned i = 0; i < 3; i++)
 		{
@@ -150,10 +154,10 @@ int verifyCustomTickRate(const int tickRate)
 }
 
 OverlayController::OverlayController(bool desktopMode,
-                                     bool noSound,
-                                     QQmlEngine& qmlEngine, KinectHandlerBase& Kinect)
+	bool noSound,
+	QQmlEngine& qmlEngine, KinectHandlerBase& Kinect)
 	: QObject(), m_desktopMode(desktopMode),
-	  m_noSound(noSound), m_actions(), Kinect(Kinect)
+	m_noSound(noSound), m_actions(), Kinect(Kinect)
 {
 	// Arbitrarily chosen Max Length of Directory path, should be sufficient for
 	// Any set-up
@@ -176,7 +180,7 @@ OverlayController::OverlayController(bool desktopMode,
 	m_runtimePathUrl = QUrl::fromLocalFile(tempRuntimePath);
 	LOG(INFO) << u8"VRランタイムパス：" << m_runtimePathUrl.toLocalFile().toStdString();
 
-	constexpr auto clickSoundURL = "click.wav";
+	/*constexpr auto clickSoundURL = "click.wav";
 	const auto activationSoundFile
 		= paths::binaryDirectoryFindFile(clickSoundURL);
 
@@ -220,7 +224,7 @@ OverlayController::OverlayController(bool desktopMode,
 	else
 	{
 		LOG(ERROR) << u8"アラーム化音ファイルが見つかりませんでした　" << alarmFileName;
-	}
+	}*/
 
 	QSurfaceFormat format;
 	// Qt's QOpenGLPaintDevice is not compatible with OpenGL versions >= 3.0
@@ -253,9 +257,9 @@ OverlayController::OverlayController(bool desktopMode,
 
 	// Set qml context
 	qmlEngine.rootContext()->setContextProperty("applicationVersion",
-	                                            getVersionString());
+		getVersionString());
 	qmlEngine.rootContext()->setContextProperty("vrRuntimePath",
-	                                            getVRRuntimePathUrl());
+		getVRRuntimePathUrl());
 
 	// Grab local version number
 	QStringList verNumericalString
@@ -288,25 +292,25 @@ void OverlayController::exitApp()
 void OverlayController::Shutdown()
 {
 	disconnect(&m_pumpEventsTimer,
-	           SIGNAL(timeout()),
-	           this,
-	           SLOT(OnTimeoutPumpEvents()));
+		SIGNAL(timeout()),
+		this,
+		SLOT(OnTimeoutPumpEvents()));
 	m_pumpEventsTimer.stop();
 
 	if (m_pRenderTimer)
 	{
 		disconnect(&m_renderControl,
-		           SIGNAL(renderRequested()),
-		           this,
-		           SLOT(OnRenderRequest()));
+			SIGNAL(renderRequested()),
+			this,
+			SLOT(OnRenderRequest()));
 		disconnect(&m_renderControl,
-		           SIGNAL(sceneChanged()),
-		           this,
-		           SLOT(OnRenderRequest()));
+			SIGNAL(sceneChanged()),
+			this,
+			SLOT(OnRenderRequest()));
 		disconnect(m_pRenderTimer.get(),
-		           SIGNAL(timeout()),
-		           this,
-		           SLOT(renderOverlay()));
+			SIGNAL(timeout()),
+			this,
+			SLOT(renderOverlay()));
 		m_pRenderTimer->stop();
 		m_pRenderTimer.reset();
 	}
@@ -314,8 +318,8 @@ void OverlayController::Shutdown()
 }
 
 void OverlayController::SetWidget(QQuickItem* quickItem,
-                                  const std::string& name,
-                                  const std::string& key)
+	const std::string& name,
+	const std::string& key)
 {
 	if (!m_desktopMode)
 	{
@@ -330,8 +334,8 @@ void OverlayController::SetWidget(QQuickItem* quickItem,
 			if (overlayError == vr::VROverlayError_KeyInUse)
 			{
 				QMessageBox::critical(nullptr,
-				                      "OpenVR Advanced Settings Overlay",
-				                      "Another instance is already running.");
+					"OpenVR Advanced Settings Overlay",
+					"Another instance is already running.");
 			}
 			throw std::runtime_error(std::string(
 				"Failed to create Overlay: "
@@ -352,7 +356,7 @@ void OverlayController::SetWidget(QQuickItem* quickItem,
 		if (thumbIconPath.has_value())
 		{
 			vr::VROverlay()->SetOverlayFromFile(m_ulOverlayThumbnailHandle,
-			                                    thumbIconPath->c_str());
+				thumbIconPath->c_str());
 		}
 		else
 		{
@@ -367,43 +371,62 @@ void OverlayController::SetWidget(QQuickItem* quickItem,
 		m_pRenderTimer->setSingleShot(true);
 		m_pRenderTimer->setInterval(5);
 		connect(m_pRenderTimer.get(),
-		        SIGNAL(timeout()),
-		        this,
-		        SLOT(renderOverlay()));
+			SIGNAL(timeout()),
+			this,
+			SLOT(renderOverlay()));
 
 		QOpenGLFramebufferObjectFormat fboFormat;
 		fboFormat.setAttachment(
 			QOpenGLFramebufferObject::CombinedDepthStencil);
 		fboFormat.setTextureTarget(GL_TEXTURE_2D);
-		m_pFbo.reset(new QOpenGLFramebufferObject(
-			static_cast<int>(quickItem->width()),
-			static_cast<int>(quickItem->height()),
-			fboFormat));
+		m_pFbo.reset(new QOpenGLFramebufferObject(quickItem->size().toSize(), fboFormat));
 
-		m_window.setRenderTarget(m_pFbo.get());
+
+		/* Setup the OpenGL rendering */
+		/*******************************************/
+
+		// Changed in Qt 6.0.0
+		//m_window.setRenderTarget(m_pFbo.get());
+
+		// Set graphics mode and context
+		m_window.setGraphicsApi(QSGRendererInterface::OpenGL);
+		m_window.setGraphicsDevice(QQuickGraphicsDevice::fromOpenGLContext(&m_openGLContext));
+
+		// Set texture target
+		m_window.setRenderTarget(QQuickRenderTarget::fromOpenGLTexture(m_pFbo->texture(), m_pFbo->size()));
+
+		// Setup rendering redirecting
 		quickItem->setParentItem(m_window.contentItem());
 		m_window.setGeometry(0,
-		                     0,
-		                     static_cast<int>(quickItem->width()),
-		                     static_cast<int>(quickItem->height()));
-		m_renderControl.initialize(&m_openGLContext);
+			0,
+			static_cast<int>(quickItem->width()),
+			static_cast<int>(quickItem->height()));
+
+		// Changed in Qt 6.0.0
+		//m_renderControl.initialize(&m_openGLContext);
+
+		// Initialize and check for success
+		if (!m_renderControl.initialize())
+			LOG(FATAL) << "Failed to initialize redirected Qt Quick rendering!";
+		
+		/*******************************************/
 
 		vr::HmdVector2_t vecWindowSize
 			= {
 				static_cast<float>(quickItem->width()),
 				static_cast<float>(quickItem->height())
-			};
+		};
 		vr::VROverlay()->SetOverlayMouseScale(m_ulOverlayHandle,
-		                                      &vecWindowSize);
+			&vecWindowSize);
 
 		connect(&m_renderControl,
-		        SIGNAL(renderRequested()),
-		        this,
-		        SLOT(OnRenderRequest()));
+			SIGNAL(renderRequested()),
+			this,
+			SLOT(OnRenderRequest()));
 		connect(&m_renderControl,
-		        SIGNAL(sceneChanged()),
-		        this,
-		        SLOT(OnRenderRequest()));
+			SIGNAL(sceneChanged()),
+			this,
+			SLOT(OnRenderRequest()));
 
 		LOG(INFO) << u8"オーバーレイのQQuickWindowフラグセットアップを始めた…";
 		m_window.setFlags(Qt::FramelessWindowHint);
@@ -412,9 +435,9 @@ void OverlayController::SetWidget(QQuickItem* quickItem,
 	}
 
 	connect(&m_pumpEventsTimer,
-	        SIGNAL(timeout()),
-	        this,
-	        SLOT(OnTimeoutPumpEvents()));
+		SIGNAL(timeout()),
+		this,
+		SLOT(OnTimeoutPumpEvents()));
 
 	// Every 1ms we check if the current frame has advanced (for vsync)
 	m_pumpEventsTimer.setInterval(1);
@@ -439,9 +462,24 @@ void OverlayController::renderOverlay()
 				&& !vr::VROverlay()->IsOverlayVisible(
 					m_ulOverlayThumbnailHandle)))
 			return;
+
+		// Polish texture items
 		m_renderControl.polishItems();
+
+		/* Specifies the end of a graphics frame. Calls to sync() or render()
+		 * must be enclosed by calls to beginFrame() and endFrame().
+		 * When this function is called, any graphics commands enqueued
+		 * by the scenegraph are submitted to the context or command queue,
+		 * whichever is applicable. */
+
+		// New in Qt 6.0.0: begin the frame
+		m_renderControl.beginFrame();
+
 		m_renderControl.sync();
 		m_renderControl.render();
+
+		// New in Qt 6.0.0: end the frame
+		m_renderControl.endFrame();
 
 		GLuint unTexture = m_pFbo->texture();
 		if (unTexture != 0)
@@ -468,7 +506,7 @@ void OverlayController::renderOverlay()
 }
 
 bool OverlayController::pollNextEvent(vr::VROverlayHandle_t ulOverlayHandle,
-                                      vr::VREvent_t* pEvent)
+	vr::VREvent_t* pEvent)
 {
 	if (isDesktopMode())
 	{
@@ -539,125 +577,172 @@ void OverlayController::mainEventLoop()
 		switch (vrEvent.eventType)
 		{
 		case vr::VREvent_MouseMove:
+		{
+			QPoint ptNewMouse = getMousePositionForEvent(vrEvent.data.mouse);
+			if (ptNewMouse != m_ptLastMouse)
 			{
-				QPoint ptNewMouse = getMousePositionForEvent(vrEvent.data.mouse);
-				if (ptNewMouse != m_ptLastMouse)
-				{
-					QMouseEvent mouseEvent(QEvent::MouseMove,
-					                       ptNewMouse,
-					                       m_window.mapToGlobal(ptNewMouse),
-					                       Qt::NoButton,
-					                       m_lastMouseButtons,
-					                       nullptr);
-					m_ptLastMouse = ptNewMouse;
-					QCoreApplication::sendEvent(&m_window, &mouseEvent);
-					OnRenderRequest();
-				}
+				QMouseEvent mouseEvent(
+					(QEvent::Type)QEvent::MouseMove,
+					ptNewMouse,
+					m_window.mapToGlobal(ptNewMouse),
+					Qt::NoButton,
+					m_lastMouseButtons,
+					Qt::KeyboardModifier::NoModifier);
+
+				// Changed in Qt 6.0.0
+				/*QMouseEvent mouseEvent(QEvent::MouseMove,
+									   ptNewMouse,
+									   m_window.mapToGlobal(ptNewMouse),
+									   Qt::NoButton,
+									   m_lastMouseButtons,
+									   nullptr);*/
+
+				m_ptLastMouse = ptNewMouse;
+				QCoreApplication::sendEvent(&m_window, &mouseEvent);
+				OnRenderRequest();
 			}
-			break;
+		}
+		break;
 
 		case vr::VREvent_MouseButtonDown:
-			{
-				QPoint ptNewMouse = getMousePositionForEvent(vrEvent.data.mouse);
-				Qt::MouseButton button
-					= vrEvent.data.mouse.button == vr::VRMouseButton_Right
-						  ? Qt::RightButton
-						  : Qt::LeftButton;
-				m_lastMouseButtons |= button;
-				QMouseEvent mouseEvent(QEvent::MouseButtonPress,
-				                       ptNewMouse,
-				                       m_window.mapToGlobal(ptNewMouse),
-				                       button,
-				                       m_lastMouseButtons,
-				                       nullptr);
-				QCoreApplication::sendEvent(&m_window, &mouseEvent);
-			}
-			break;
+		{
+			QPoint ptNewMouse = getMousePositionForEvent(vrEvent.data.mouse);
+			Qt::MouseButton button
+				= vrEvent.data.mouse.button == vr::VRMouseButton_Right
+				? Qt::RightButton
+				: Qt::LeftButton;
+			m_lastMouseButtons |= button;
+
+			QMouseEvent mouseEvent(
+				(QEvent::Type)QEvent::MouseButtonPress,
+				ptNewMouse,
+				m_window.mapToGlobal(ptNewMouse),
+				button,
+				m_lastMouseButtons,
+				Qt::KeyboardModifier::NoModifier);
+
+			// Changed in Qt 6.0.0
+			/*QMouseEvent mouseEvent(QEvent::MouseButtonPress,
+								   ptNewMouse,
+								   m_window.mapToGlobal(ptNewMouse),
+								   button,
+								   m_lastMouseButtons,
+								   nullptr);*/
+
+			QCoreApplication::sendEvent(&m_window, &mouseEvent);
+		}
+		break;
 
 		case vr::VREvent_MouseButtonUp:
-			{
-				QPoint ptNewMouse = getMousePositionForEvent(vrEvent.data.mouse);
-				Qt::MouseButton button
-					= vrEvent.data.mouse.button == vr::VRMouseButton_Right
-						  ? Qt::RightButton
-						  : Qt::LeftButton;
-				m_lastMouseButtons &= ~button;
-				QMouseEvent mouseEvent(QEvent::MouseButtonRelease,
-				                       ptNewMouse,
-				                       m_window.mapToGlobal(ptNewMouse),
-				                       button,
-				                       m_lastMouseButtons,
-				                       nullptr);
-				QCoreApplication::sendEvent(&m_window, &mouseEvent);
-			}
-			break;
+		{
+			QPoint ptNewMouse = getMousePositionForEvent(vrEvent.data.mouse);
+			Qt::MouseButton button
+				= vrEvent.data.mouse.button == vr::VRMouseButton_Right
+				? Qt::RightButton
+				: Qt::LeftButton;
+			m_lastMouseButtons &= ~button;
+
+			QMouseEvent mouseEvent(
+				(QEvent::Type)QEvent::MouseButtonRelease,
+				ptNewMouse,
+				m_window.mapToGlobal(ptNewMouse),
+				button,
+				m_lastMouseButtons,
+				Qt::KeyboardModifier::NoModifier);
+
+			// Changed in Qt 6.0.0
+			/*QMouseEvent mouseEvent(QEvent::MouseButtonRelease,
+								   ptNewMouse,
+								   m_window.mapToGlobal(ptNewMouse),
+								   button,
+								   m_lastMouseButtons,
+								   nullptr);*/
+
+			QCoreApplication::sendEvent(&m_window, &mouseEvent);
+		}
+		break;
 
 		case vr::VREvent_ScrollSmooth:
-			{
-				// Wheel speed is defined as 1/8 of a degree
-				QWheelEvent wheelEvent(
-					m_ptLastMouse,
-					m_window.mapToGlobal(m_ptLastMouse),
-					QPoint(),
-					QPoint(static_cast<int>(vrEvent.data.scroll.xdelta
-						       * (360.0f * 8.0f)),
-					       static_cast<int>(vrEvent.data.scroll.ydelta
-						       * (360.0f * 8.0f))),
-					0,
-					Qt::Vertical,
-					m_lastMouseButtons,
-					nullptr);
-				QCoreApplication::sendEvent(&m_window, &wheelEvent);
-			}
-			break;
+		{
+			// Wheel speed is defined as 1/8 of a degree
+			QWheelEvent wheelEvent(
+				m_ptLastMouse,
+				m_window.mapToGlobal(m_ptLastMouse),
+				QPoint(),
+				QPoint(static_cast<int>(vrEvent.data.scroll.xdelta
+					* (360.0f * 8.0f)),
+					static_cast<int>(vrEvent.data.scroll.ydelta
+						* (360.0f * 8.0f))),
+				m_lastMouseButtons,
+				Qt::KeyboardModifier::NoModifier,
+				Qt::ScrollPhase::NoScrollPhase,
+				false);
+
+			// Changed in Qt 6.0.0
+			/*QWheelEvent wheelEvent(
+				m_ptLastMouse,
+				m_window.mapToGlobal(m_ptLastMouse),
+				QPoint(),
+				QPoint(static_cast<int>(vrEvent.data.scroll.xdelta
+					* (360.0f * 8.0f)),
+					static_cast<int>(vrEvent.data.scroll.ydelta
+						* (360.0f * 8.0f))),
+				0,
+				Qt::Vertical,
+				m_lastMouseButtons,
+				nullptr);*/
+				
+			QCoreApplication::sendEvent(&m_window, &wheelEvent);
+		}
+		break;
 
 		case vr::VREvent_OverlayShown:
-			{
-				m_window.update();
-			}
-			break;
+		{
+			m_window.update();
+		}
+		break;
 
 		case vr::VREvent_Quit:
-			{
-				LOG(INFO) << u8"処理済み出口要求。";
-				vr::VRSystem()->AcknowledgeQuit_Exiting(); // Let us buy some
-				// time just in case
+		{
+			LOG(INFO) << u8"処理済み出口要求。";
+			vr::VRSystem()->AcknowledgeQuit_Exiting(); // Let us buy some
+			// time just in case
 
-				exitApp();
-				// Won't fallthrough, but also exitApp() wont, but QT won't
-				// acknowledge
-				exit(EXIT_SUCCESS);
-			}
+			exitApp();
+			// Won't fallthrough, but also exitApp() wont, but QT won't
+			// acknowledge
+			exit(EXIT_SUCCESS);
+		}
 
 		case vr::VREvent_DashboardActivated:
-			{
-				LOG(DEBUG) << u8"ダッシュボードが作動した！";
-				m_dashboardVisible = true;
-			}
-			break;
+		{
+			LOG(DEBUG) << u8"ダッシュボードが作動した！";
+			m_dashboardVisible = true;
+		}
+		break;
 
 		case vr::VREvent_DashboardDeactivated:
-			{
-				LOG(DEBUG) << u8"ダッシュボードが不活性化！";
-				m_dashboardVisible = false;
-			}
-			break;
+		{
+			LOG(DEBUG) << u8"ダッシュボードが不活性化！";
+			m_dashboardVisible = false;
+		}
+		break;
 
 		case vr::VREvent_KeyboardDone:
-			{
-				char keyboardBuffer[1024];
-				vr::VROverlay()->GetKeyboardText(keyboardBuffer, 1024);
-				emit keyBoardInputSignal(QString(keyboardBuffer),
-				                         static_cast<unsigned long>(
-					                         vrEvent.data.keyboard.uUserValue));
-			}
-			break;
+		{
+			char keyboardBuffer[1024];
+			vr::VROverlay()->GetKeyboardText(keyboardBuffer, 1024);
+			emit keyBoardInputSignal(QString(keyboardBuffer),
+				static_cast<unsigned long>(
+					vrEvent.data.keyboard.uUserValue));
+		}
+		break;
 
 		case vr::VREvent_SeatedZeroPoseReset:
-			{
-				LOG(INFO) << u8"ポジションリセットを発動した！";
-			}
-			break;
+		{
+			LOG(INFO) << u8"ポジションリセットを発動した！";
+		}
+		break;
 		}
 	}
 
@@ -705,10 +790,10 @@ void OverlayController::mainEventLoop()
 			switch (vrEvent.eventType)
 			{
 			case vr::VREvent_OverlayShown:
-				{
-					m_window.update();
-				}
-				break;
+			{
+				m_window.update();
+			}
+			break;
 			}
 		}
 	}
@@ -740,7 +825,7 @@ const vr::VROverlayHandle_t& OverlayController::overlayThumbnailHandle()
 }
 
 void OverlayController::showKeyboard(QString existingText,
-                                     unsigned long userValue)
+	unsigned long userValue)
 {
 	vr::VROverlay()->ShowKeyboardForOverlay(
 		m_ulOverlayHandle,
@@ -765,44 +850,44 @@ void OverlayController::setKeyboardPos()
 	vr::VROverlay()->SetKeyboardPositionForOverlay(m_ulOverlayHandle, empty);
 }
 
-void OverlayController::playActivationSound()
-{
-	if (!m_noSound)
-	{
-		m_activationSoundEffect.play();
-	}
-}
-
-void OverlayController::playFocusChangedSound()
-{
-	if (!m_noSound)
-	{
-		m_focusChangedSoundEffect.play();
-	}
-}
-
-void OverlayController::playAlarm01Sound(bool loop)
-{
-	if (!m_noSound && !m_alarm01SoundEffect.isPlaying())
-	{
-		if (loop)
-		{
-			m_alarm01SoundEffect.setLoopCount(QSoundEffect::Infinite);
-		}
-		else
-		{
-			m_alarm01SoundEffect.setLoopCount(1);
-		}
-		m_alarm01SoundEffect.play();
-	}
-}
-
-void OverlayController::setAlarm01SoundVolume(float vol)
-{
-	m_alarm01SoundEffect.setVolume(static_cast<double>(vol));
-}
-
-void OverlayController::cancelAlarm01Sound()
-{
-	m_alarm01SoundEffect.stop();
-}
+//void OverlayController::playActivationSound()
+//{
+//	if (!m_noSound)
+//	{
+//		m_activationSoundEffect.play();
+//	}
+//}
+//
+//void OverlayController::playFocusChangedSound()
+//{
+//	if (!m_noSound)
+//	{
+//		m_focusChangedSoundEffect.play();
+//	}
+//}
+//
+//void OverlayController::playAlarm01Sound(bool loop)
+//{
+//	if (!m_noSound && !m_alarm01SoundEffect.isPlaying())
+//	{
+//		if (loop)
+//		{
+//			m_alarm01SoundEffect.setLoopCount(QSoundEffect::Infinite);
+//		}
+//		else
+//		{
+//			m_alarm01SoundEffect.setLoopCount(1);
+//		}
+//		m_alarm01SoundEffect.play();
+//	}
+//}
+//
+//void OverlayController::setAlarm01SoundVolume(float vol)
+//{
+//	m_alarm01SoundEffect.setVolume(static_cast<double>(vol));
+//}
+//
+//void OverlayController::cancelAlarm01Sound()
+//{
+//	m_alarm01SoundEffect.stop();
+//}
