@@ -1,7 +1,9 @@
-import QtQuick 2.15
-import QtQuick.Templates 2.0
-import QtQuick.Controls 2.0
+import QtQuick 6.0
+import QtQuick.Controls 6.0 as Controls
+import QtQuick.Templates 6.0
 import QtQuick.Layouts 1.11
+
+// 2.15, 2.0, 2.0, 1.11
 
 Item {
     id: main
@@ -808,14 +810,27 @@ Item {
 
                 delegate: ItemDelegate {
                     width: hipsComboBox.width
+                    height: 150
+
                     contentItem: Text {
                         text: modelData
                         color: "#FFFFFF"
-                        font: hipsComboBox.font
+                        font.bold: true
+                        font.pointSize: 47
+                        font.family: "JostSemi"
+
                         elide: Text.ElideRight
                         verticalAlignment: Text.AlignVCenter
+                        leftPadding: 20
                     }
                     highlighted: hipsComboBox.highlightedIndex === index
+                    
+                    id: hipsComboBoxDelegate
+                    Rectangle {
+                        visible: hipsComboBoxDelegate.hovered
+                        anchors.fill: hipsComboBoxDelegate
+                        color: "#43fdfdfd"
+                    }
                 }
 
                 contentItem: Text {
@@ -862,7 +877,7 @@ Item {
 
                     contentItem: ListView {
                         clip: true
-                        implicitHeight: contentHeight + 30
+                        implicitHeight: contentHeight + 20
                         model: hipsComboBox.popup.visible ? hipsComboBox.delegateModel : null
                         currentIndex: hipsComboBox.highlightedIndex
 
@@ -951,14 +966,27 @@ Item {
 
                 delegate: ItemDelegate {
                     width: feetComboBox.width
+                    height: 150
+
                     contentItem: Text {
                         text: modelData
                         color: "#FFFFFF"
-                        font: feetComboBox.font
+                        font.bold: true
+                        font.pointSize: 47
+                        font.family: "JostSemi"
+
                         elide: Text.ElideRight
                         verticalAlignment: Text.AlignVCenter
+                        leftPadding: 20
                     }
                     highlighted: feetComboBox.highlightedIndex === index
+                    
+                    id: feetComboBoxDelegate
+                    Rectangle {
+                        visible: feetComboBoxDelegate.hovered
+                        anchors.fill: feetComboBoxDelegate
+                        color: "#43fdfdfd"
+                    }
                 }
 
                 contentItem: Text {
@@ -1005,7 +1033,7 @@ Item {
 
                     contentItem: ListView {
                         clip: true
-                        implicitHeight: contentHeight + 30
+                        implicitHeight: contentHeight + 20
                         model: feetComboBox.popup.visible ? feetComboBox.delegateModel : null
                         currentIndex: feetComboBox.highlightedIndex
 
@@ -1094,14 +1122,27 @@ Item {
 
                 delegate: ItemDelegate {
                     width: filterComboBox.width
+                    height: 150
+
                     contentItem: Text {
                         text: modelData
                         color: "#FFFFFF"
-                        font: filterComboBox.font
+                        font.bold: true
+                        font.pointSize: 47
+                        font.family: "JostSemi"
+
                         elide: Text.ElideRight
                         verticalAlignment: Text.AlignVCenter
+                        leftPadding: 20
                     }
                     highlighted: filterComboBox.highlightedIndex === index
+                    
+                    id: filterComboBoxDelegate
+                    Rectangle {
+                        visible: filterComboBoxDelegate.hovered
+                        anchors.fill: filterComboBoxDelegate
+                        color: "#43fdfdfd"
+                    }
                 }
 
                 contentItem: Text {
@@ -1148,7 +1189,7 @@ Item {
 
                     contentItem: ListView {
                         clip: true
-                        implicitHeight: contentHeight + 40
+                        implicitHeight: contentHeight + 20
                         model: filterComboBox.popup.visible ? filterComboBox.delegateModel : null
                         currentIndex: filterComboBox.highlightedIndex
 

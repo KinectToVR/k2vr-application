@@ -31,3 +31,5 @@ KinectToVR/KinectToVR.pro.user
 driver_KinectToVR/x64/
 
 packages/
+
+*.pdb
