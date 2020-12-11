@@ -9,15 +9,15 @@ repository before posting an issue with building or missing files.
    To build this project you will need:<br>
    - Visual Studio 2019 with v142 build tools
    - Qt plugin for Visual Studio installed
-   - Qt (currently used: 5.15.1) with all needed plugins
+   - Qt 6.0.0 (Current) with all needed plugins
    - Kinect SDK 1.8 and 2.0 installed and visible in PATH
 <br>
 
 2. External dependiences
    - Restore NuGet packages for solution
    - Download opencv 3.4.0 and unpack it to ```external\opencv```,<br> 
-   creating file path similar to ```external\opencv\build\bin\\*.dll```
-   - Clone latest openvr to ```external\openvr```
+   (model path: ```external\opencv\build\include\opencv2\opencv.hpp```)
+   - Clone latest openvr onto ```external\openvr\```
    - You may also update ZMQ library for C++ in ```external\ZMQ\```
 <br>
 
