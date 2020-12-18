@@ -1435,7 +1435,7 @@ Item {
                     }
 
                     Timer {
-                        interval: 12
+                        interval: 35
                         running: true
                         repeat: true
                         onTriggered: {
