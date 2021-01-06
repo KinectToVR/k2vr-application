@@ -171,14 +171,14 @@ OverlayController::OverlayController(bool desktopMode,
 	// Throw Error If over 16k characters in path string
 	if (!pathIsGood)
 	{
-		LOG(ERROR) << u8"VRランタイムパスの検索中にエラーが発生！";
+		LOG(ERROR) << "An error occurred while searching for the VR runtime path!";
 		uint32_t maxLengthRe = requiredLength;
-		LOG(INFO) << u8"希望するパスの長さ："
+		LOG(INFO) << "Maximum runtime path length: "
 			<< maxLengthRe;
 	}
 
 	m_runtimePathUrl = QUrl::fromLocalFile(tempRuntimePath);
-	LOG(INFO) << u8"VRランタイムパス：" << m_runtimePathUrl.toLocalFile().toStdString();
+	LOG(INFO) << "VR runtime path: " << m_runtimePathUrl.toLocalFile().toStdString();
 
 	/*constexpr auto clickSoundURL = "click.wav";
 	const auto activationSoundFile
@@ -192,7 +192,7 @@ OverlayController::OverlayController(bool desktopMode,
 	}
 	else
 	{
-		LOG(ERROR) << u8"活性化音ファイルが見つかりませんでした　"
+		LOG(ERROR) << "Activation sound file not found, "
 			<< clickSoundURL;
 	}
 	constexpr auto focusChangedSoundURL = "focus.wav";
@@ -207,7 +207,7 @@ OverlayController::OverlayController(bool desktopMode,
 	}
 	else
 	{
-		LOG(ERROR) << u8"焦点変更化音ファイルが見つかりませんでした　"
+		LOG(ERROR) << "No focus changed sound file found, "
 			<< focusChangedSoundURL;
 	}
 
@@ -223,7 +223,7 @@ OverlayController::OverlayController(bool desktopMode,
 	}
 	else
 	{
-		LOG(ERROR) << u8"アラーム化音ファイルが見つかりませんでした　" << alarmFileName;
+		LOG(ERROR) << "Alarm sound file not found, " << alarmFileName;
 	}*/
 
 	QSurfaceFormat format;
@@ -278,14 +278,14 @@ OverlayController::~OverlayController()
 void OverlayController::exitApp()
 {
 	kinectSettings.saveSettings();
-	LOG(INFO) << u8"シャットダウンが呼ばれている。";
+	LOG(INFO) << "Shutting down overlay...";
 
 	Kinect.shutdown(); //turn off kinect
 
 	Shutdown();
 	QApplication::exit();
 
-	LOG(INFO) << u8"全システムが終了される！";
+	LOG(INFO) << "Shut down succeeded!";
 	exit(EXIT_SUCCESS);
 }
 
@@ -360,7 +360,7 @@ void OverlayController::SetWidget(QQuickItem* quickItem,
 		}
 		else
 		{
-			LOG(ERROR) << u8"サムネファイルが見つかりませんでした　\""
+			LOG(ERROR) << "Could not find the thumbnail file, \""
 				<< thumbiconFilename << "\"";
 		}
 
@@ -428,10 +428,10 @@ void OverlayController::SetWidget(QQuickItem* quickItem,
 			this,
 			SLOT(OnRenderRequest()));
 
-		LOG(INFO) << u8"オーバーレイのQQuickWindowフラグセットアップを始めた…";
+		LOG(INFO) << "QQuickWindow flag setup for the overlay has started...";
 		m_window.setFlags(Qt::FramelessWindowHint);
 		m_window.setColor(QColorConstants::Transparent);
-		LOG(INFO) << u8"オーバーレイウィジェットセットアップ設定が正常に完了！";
+		LOG(INFO) << "QQuickWindow flag setup for the overlay completed!";
 	}
 
 	connect(&m_pumpEventsTimer,
@@ -704,7 +704,7 @@ void OverlayController::mainEventLoop()
 
 		case vr::VREvent_Quit:
 		{
-			LOG(INFO) << u8"処理済み出口要求。";
+			LOG(INFO) << "Processing VREvent_Quit request...";
 			vr::VRSystem()->AcknowledgeQuit_Exiting(); // Let us buy some
 			// time just in case
 
@@ -716,14 +716,14 @@ void OverlayController::mainEventLoop()
 
 		case vr::VREvent_DashboardActivated:
 		{
-			LOG(DEBUG) << u8"ダッシュボードが作動した！";
+			LOG(DEBUG) << "Dashboard has been opened!";
 			m_dashboardVisible = true;
 		}
 		break;
 
 		case vr::VREvent_DashboardDeactivated:
 		{
-			LOG(DEBUG) << u8"ダッシュボードが不活性化！";
+			LOG(DEBUG) << "Dashboard has been closed!";
 			m_dashboardVisible = false;
 		}
 		break;
@@ -740,7 +740,7 @@ void OverlayController::mainEventLoop()
 
 		case vr::VREvent_SeatedZeroPoseReset:
 		{
-			LOG(INFO) << u8"ポジションリセットを発動した！";
+			LOG(INFO) << "Seated position reset has been triggered!";
 		}
 		break;
 		}

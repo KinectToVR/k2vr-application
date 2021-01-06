@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <openvr.h>
 #include <easylogging++.h>
 
@@ -16,8 +16,8 @@ namespace input
 			auto error = vr::VRInput()->GetActionSetHandle(setName, &handle);
 			if (error != vr::EVRInputError::VRInputError_None)
 			{
-				LOG(ERROR) << u8"ハンドルを取得中にエラーが発生した：「" << setName
-					<< u8"」。OpenVRエラー：" << error;
+				LOG(ERROR) << "Error getting handle for '" << setName
+					<< "'. OpenVR Error: " << error;
 			}
 
 			m_activeActionSet.ulActionSet = handle;
@@ -25,7 +25,6 @@ namespace input
 				= vr::k_ulInvalidInputValueHandle;
 			m_activeActionSet.nPriority = 0;
 		}
-
 		void setPriority(int32_t priority)
 		{
 			m_activeActionSet.nPriority = priority;
@@ -39,4 +38,5 @@ namespace input
 	private:
 		vr::VRActiveActionSet_t m_activeActionSet = {};
 	};
+
 } // namespace input

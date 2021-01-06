@@ -1,4 +1,4 @@
-﻿#include "ivrinput.h"
+#include "ivrinput.h"
 #include "ivrinput_action.h"
 #include <openvr.h>
 #include <iostream>
@@ -9,7 +9,7 @@ namespace input
 {
 	/*!
 	Wrapper around the IVRInput GetDigitalActionData with error handling.
-	
+
 	The struct is created and zero initalized in this function instead of being
 	passed as reference since the size is currently only 28 bytes, and currently
 	only two bools are used from the entire struct.
@@ -30,8 +30,8 @@ namespace input
 
 		if (error != vr::EVRInputError::VRInputError_None)
 		{
-			LOG(ERROR) << u8"IVRInputデジタルアクションデータの取得中にエラーが発生した　"
-				<< action.name() << u8"。SteamVRエラー：" << error;
+			LOG(ERROR) << "Error getting IVRInput Digital Action Data for handle "
+				<< action.name() << ". SteamVR Error: " << error;
 		}
 
 		return handleData;
@@ -39,7 +39,7 @@ namespace input
 
 	/*!
 	Wrapper around the IVRInput GetAnalogActionData with error handling.
-	
+
 	The struct is created and zero initalized in this function instead of being
 	passed as reference since the size is currently only 28 bytes, and currently
 	only two bools are used from the entire struct.
@@ -54,14 +54,14 @@ namespace input
 
 		const auto error
 			= vr::VRInput()->GetAnalogActionData(action.handle(),
-			                                     &handleData,
-			                                     sizeof(handleData),
-			                                     vr::k_ulInvalidInputValueHandle);
+				&handleData,
+				sizeof(handleData),
+				vr::k_ulInvalidInputValueHandle);
 
 		if (error != vr::EVRInputError::VRInputError_None)
 		{
-			LOG(ERROR) << u8"IVRInputデジタルアクションデータの取得中にエラーが発生した　"
-				<< action.name() << u8"。SteamVRエラー：" << error;
+			LOG(ERROR) << "Error getting IVRInput Digital Action Data for handle "
+				<< action.name() << ". SteamVR Error: " << error;
 		}
 
 		return handleData;
@@ -101,69 +101,66 @@ namespace input
 	*/
 	SteamIVRInput::SteamIVRInput()
 		: m_manifest(), m_haptics(action_sets::haptic),
-		  m_music(action_sets::music), m_motion(action_sets::motion),
-		  m_misc(action_sets::misc), m_system(action_sets::system),
-		  m_nextTrack(action_keys::nextTrack),
-		  m_previousTrack(action_keys::previousTrack),
-		  m_pausePlayTrack(action_keys::pausePlayTrack),
-		  m_stopTrack(action_keys::stopTrack),
-		  m_leftHandSpaceTurn(action_keys::leftHandSpaceTurn),
-		  m_rightHandSpaceTurn(action_keys::rightHandSpaceTurn),
-		  m_leftHandSpaceDrag(action_keys::leftHandSpaceDrag),
-		  m_rightHandSpaceDrag(action_keys::rightHandSpaceDrag),
-		  m_optionalOverrideLeftHandSpaceTurn(
-			  action_keys::optionalOverrideLeftHandSpaceTurn),
-		  m_optionalOverrideRightHandSpaceTurn(
-			  action_keys::optionalOverrideRightHandSpaceTurn),
-		  m_optionalOverrideLeftHandSpaceDrag(
-			  action_keys::optionalOverrideLeftHandSpaceDrag),
-		  m_optionalOverrideRightHandSpaceDrag(
-			  action_keys::optionalOverrideRightHandSpaceDrag),
-		  m_swapSpaceDragToLeftHandOverride(
-			  action_keys::swapSpaceDragToLeftHandOverride),
-		  m_swapSpaceDragToRightHandOverride(
-			  action_keys::swapSpaceDragToRightHandOverride),
-		  m_gravityToggle(action_keys::gravityToggle),
-		  m_gravityReverse(action_keys::gravityReverse),
-		  m_heightToggle(action_keys::heightToggle),
-		  m_resetOffsets(action_keys::resetOffsets),
-		  m_snapTurnLeft(action_keys::snapTurnLeft),
-		  m_snapTurnRight(action_keys::snapTurnRight),
-		  m_smoothTurnLeft(action_keys::smoothTurnLeft),
-		  m_smoothTurnRight(action_keys::smoothTurnRight),
-		  m_autoTurnToggle(action_keys::autoTurnToggle),
-		  m_xAxisLockToggle(action_keys::xAxisLockToggle),
-		  m_yAxisLockToggle(action_keys::yAxisLockToggle),
-		  m_zAxisLockToggle(action_keys::zAxisLockToggle),
-		  m_keyboardOne(action_keys::keyboardOne),
-		  m_keyboardTwo(action_keys::keyboardTwo),
-		  m_keyboardThree(action_keys::keyboardThree),
-		  m_keyPressMisc(action_keys::keyPressMisc),
-		  m_keyPressSystem(action_keys::keyPressSystem),
-		  m_chaperoneToggle(action_keys::chaperoneToggle),
-		  m_pushToTalk(action_keys::pushToTalk),
-		  m_exclusiveInputToggle(action_keys::exclusiveInputToggle),
-		  m_leftHaptic(action_keys::hapticsLeft),
-		  m_rightHaptic(action_keys::hapticsRight),
-		  m_addLeftHapticClick(action_keys::addLeftHapticClick),
-		  m_addRightHapticClick(action_keys::addRightHapticClick),
-		  m_proxSensor(action_keys::proxSensor),
-		  m_leftHand(input_keys::leftHand), m_rightHand(input_keys::rightHand),
-		  m_sets({
-			  m_haptics.activeActionSet(),
-			  m_music.activeActionSet(),
-			  m_motion.activeActionSet(),
-			  m_misc.activeActionSet(),
-			  m_system.activeActionSet()
-		  }),
-		  m_systemActionSets(
-			  {m_haptics.activeActionSet(), m_system.activeActionSet()})
+		m_music(action_sets::music), m_motion(action_sets::motion),
+		m_misc(action_sets::misc), m_system(action_sets::system),
+		m_nextTrack(action_keys::nextTrack),
+		m_previousTrack(action_keys::previousTrack),
+		m_pausePlayTrack(action_keys::pausePlayTrack),
+		m_stopTrack(action_keys::stopTrack),
+		m_leftHandSpaceTurn(action_keys::leftHandSpaceTurn),
+		m_rightHandSpaceTurn(action_keys::rightHandSpaceTurn),
+		m_leftHandSpaceDrag(action_keys::leftHandSpaceDrag),
+		m_rightHandSpaceDrag(action_keys::rightHandSpaceDrag),
+		m_optionalOverrideLeftHandSpaceTurn(
+			action_keys::optionalOverrideLeftHandSpaceTurn),
+		m_optionalOverrideRightHandSpaceTurn(
+			action_keys::optionalOverrideRightHandSpaceTurn),
+		m_optionalOverrideLeftHandSpaceDrag(
+			action_keys::optionalOverrideLeftHandSpaceDrag),
+		m_optionalOverrideRightHandSpaceDrag(
+			action_keys::optionalOverrideRightHandSpaceDrag),
+		m_swapSpaceDragToLeftHandOverride(
+			action_keys::swapSpaceDragToLeftHandOverride),
+		m_swapSpaceDragToRightHandOverride(
+			action_keys::swapSpaceDragToRightHandOverride),
+		m_gravityToggle(action_keys::gravityToggle),
+		m_gravityReverse(action_keys::gravityReverse),
+		m_heightToggle(action_keys::heightToggle),
+		m_resetOffsets(action_keys::resetOffsets),
+		m_snapTurnLeft(action_keys::snapTurnLeft),
+		m_snapTurnRight(action_keys::snapTurnRight),
+		m_smoothTurnLeft(action_keys::smoothTurnLeft),
+		m_smoothTurnRight(action_keys::smoothTurnRight),
+		m_autoTurnToggle(action_keys::autoTurnToggle),
+		m_xAxisLockToggle(action_keys::xAxisLockToggle),
+		m_yAxisLockToggle(action_keys::yAxisLockToggle),
+		m_zAxisLockToggle(action_keys::zAxisLockToggle),
+		m_keyboardOne(action_keys::keyboardOne),
+		m_keyboardTwo(action_keys::keyboardTwo),
+		m_keyboardThree(action_keys::keyboardThree),
+		m_keyPressMisc(action_keys::keyPressMisc),
+		m_keyPressSystem(action_keys::keyPressSystem),
+		m_chaperoneToggle(action_keys::chaperoneToggle),
+		m_pushToTalk(action_keys::pushToTalk),
+		m_exclusiveInputToggle(action_keys::exclusiveInputToggle),
+		m_leftHaptic(action_keys::hapticsLeft),
+		m_rightHaptic(action_keys::hapticsRight),
+		m_addLeftHapticClick(action_keys::addLeftHapticClick),
+		m_addRightHapticClick(action_keys::addRightHapticClick),
+		m_proxSensor(action_keys::proxSensor),
+		m_leftHand(input_keys::leftHand), m_rightHand(input_keys::rightHand),
+		m_sets({ m_haptics.activeActionSet(),
+				  m_music.activeActionSet(),
+				  m_motion.activeActionSet(),
+				  m_misc.activeActionSet(),
+				  m_system.activeActionSet() }),
+		m_systemActionSets(
+			{ m_haptics.activeActionSet(), m_system.activeActionSet() })
 	{
 	}
-
 	/*!
 	Returns true if the next media track should be played.
-	
+
 	Will only return true the first time that the button is pressed. Holding the
 	button down will result in false until it has been released and pushed again.
 	*/
@@ -174,7 +171,7 @@ namespace input
 
 	/*!
 	Returns true if the previous media track should be played.
-	
+
 	Will only return true the first time that the button is pressed. Holding the
 	button down will result in false until it has been released and pushed again.
 	*/
@@ -185,7 +182,7 @@ namespace input
 
 	/*!
 	Returns true if media playback should be paused/played.
-	
+
 	Will only return true the first time that the button is pressed. Holding the
 	button down will result in false until it has been released and pushed again.
 	*/
@@ -196,7 +193,7 @@ namespace input
 
 	/*!
 	Returns true if media playback should be stopped.
-	
+
 	Will only return true the first time that the button is pressed. Holding the
 	button down will result in false until it has been released and pushed again.
 	*/
@@ -224,7 +221,6 @@ namespace input
 	{
 		return isDigitalActionActivatedConstant(m_rightHandSpaceDrag);
 	}
-
 	bool SteamIVRInput::optionalOverrideLeftHandSpaceTurn()
 	{
 		return isDigitalActionActivatedConstant(
@@ -300,7 +296,6 @@ namespace input
 	{
 		return isDigitalActionActivatedConstant(m_smoothTurnRight);
 	}
-
 	bool SteamIVRInput::autoTurnToggle()
 	{
 		return isDigitalActionActivatedOnce(m_autoTurnToggle);
@@ -355,27 +350,22 @@ namespace input
 	{
 		return isDigitalActionActivatedOnce(m_keyboardTwo);
 	}
-
 	bool SteamIVRInput::keyboardThree()
 	{
 		return isDigitalActionActivatedOnce(m_keyboardThree);
 	}
-
 	bool SteamIVRInput::keyPressMisc()
 	{
 		return isDigitalActionActivatedConstant(m_keyPressMisc);
 	}
-
 	bool SteamIVRInput::keyPressSystem()
 	{
 		return isDigitalActionActivatedConstant(m_keyPressSystem);
 	}
-
 	bool SteamIVRInput::exclusiveInputToggle()
 	{
 		return isDigitalActionActivatedOnce(m_exclusiveInputToggle);
 	}
-
 	// Controls which action Sets are active, false = all, true = system + haptics
 	// Adjusts in update state call.
 	void SteamIVRInput::systemActionSetOnlyEnabled(bool value)
@@ -463,4 +453,5 @@ namespace input
 				<< error;
 		}
 	}
+
 } // namespace input

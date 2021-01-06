@@ -13,4 +13,5 @@ namespace paths
 	optional<string> settingsDirectory();
 
 	std::optional<std::string> verifyIconFilePath(std::string filename);
+
 } // namespace paths

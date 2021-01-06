@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <openvr.h>
 #include <easylogging++.h>
 
@@ -30,11 +30,10 @@ namespace input
 
 			if (error != vr::EVRInputError::VRInputError_None)
 			{
-				LOG(ERROR) << u8"ハンドルを取得中にエラーが発生した：「" << actionName
-					<< u8"」。OpenVRエラー：" << error;
+				LOG(ERROR) << "Error getting handle for '" << actionName
+					<< "'. OpenVR Error: " << error;
 			}
 		}
-
 		/*!
 		An API internal handle that identifies an action.
 		*/
@@ -42,7 +41,6 @@ namespace input
 		{
 			return m_handle;
 		}
-
 		/*!
 		The actions manfiest name of the action. Used for error reporting.
 		*/
@@ -59,16 +57,13 @@ namespace input
 	class DigitalAction : public Action
 	{
 	public:
-		DigitalAction(const char* const actionName) : Action(actionName)
-		{
-		}
+		DigitalAction(const char* const actionName) : Action(actionName) {}
 	};
 
 	class AnalogAction : public Action
 	{
 	public:
-		AnalogAction(const char* const actionName) : Action(actionName)
-		{
-		}
+		AnalogAction(const char* const actionName) : Action(actionName) {}
 	};
+
 } // namespace input

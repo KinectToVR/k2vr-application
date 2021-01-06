@@ -8,5 +8,6 @@ namespace openvr_init
 		Utility,
 	};
 
-	void initializeOpenVR(OpenVrInitializationType initType);
+	void initializeOpenVR(const OpenVrInitializationType initType);
+
 } // namespace openvr_init

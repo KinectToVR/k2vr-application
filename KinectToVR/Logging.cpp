@@ -25,5 +25,5 @@ KINECTTOVR_LIB void initLogging()
 	conf.setRemainingToDefault();
 	el::Loggers::reconfigureAllLoggers(conf);
 
-	LOG(INFO) << u8"～～～KinectToVR EXのロギングセッションはここからスタート！～～～";
+	LOG(INFO) << u8"～～～KinectToVR EX new logging session begins here!～～～";
 }

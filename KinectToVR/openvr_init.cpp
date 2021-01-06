@@ -1,4 +1,4 @@
-﻿#include <string>
+#include <string>
 #include <openvr.h>
 #include <QMessageBox>
 #include "openvr_init.h"
@@ -20,23 +20,26 @@ namespace openvr_init
 		}
 
 		auto initError = vr::VRInitError_None;
-		VR_Init(&initError, initializationType);
+		vr::VR_Init(&initError, initializationType);
 		if (initError != vr::VRInitError_None)
 		{
 			if (initError == vr::VRInitError_Init_HmdNotFound
 				|| initError == vr::VRInitError_Init_HmdNotFoundPresenceFailed)
 			{
 				QMessageBox::critical(nullptr,
-				                      "KinectToVR Overlay",
-				                      "Could not find HMD!");
+					"OpenVR Advanced Settings Overlay",
+					"Could not find HMD!");
 			}
-			LOG(ERROR) << u8"OpenVR初期化に失敗した！"
+			LOG(ERROR) << "Failed to initialize OpenVR: "
 				+ std::string(
-					VR_GetVRInitErrorAsEnglishDescription(
+					vr::VR_GetVRInitErrorAsEnglishDescription(
 						initError));
 			exit(EXIT_FAILURE);
 		}
-		LOG(INFO) << u8"OpenVR初期化が正常に終了した！";
+		else
+		{
+			LOG(INFO) << "OpenVR initialized successfully.";
+		}
 	}
 
 	void initializeOpenVR(const OpenVrInitializationType initType)
@@ -46,11 +49,10 @@ namespace openvr_init
 		// The function call and error message was the same for all version checks.
 		// Specific error messages are unlikely to be necessary since both the type
 		// and version are in the string and will be output.
-		auto reportVersionError = [](const char* const interfaceAndVersion)
-		{
+		auto reportVersionError = [](const char* const interfaceAndVersion) {
 			QMessageBox::critical(
 				nullptr,
-				"KinectToVR Overlay",
+				"OpenVR Advanced Settings Overlay",
 				"OpenVR version is too outdated. Please update OpenVR.");
 			throw std::runtime_error(
 				std::string("OpenVR version is too outdated: Interface version ")
@@ -96,4 +98,5 @@ namespace openvr_init
 			reportVersionError(vr::IVRInput_Version);
 		}
 	}
+
 } // namespace openvr_init

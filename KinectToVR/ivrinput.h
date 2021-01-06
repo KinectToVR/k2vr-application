@@ -70,6 +70,7 @@ namespace input
 			= "/actions/system/in/AddRightHapticClick";
 
 		constexpr auto chaperoneToggle = "/actions/misc/in/ChaperoneToggle";
+
 	} // namespace action_keys
 
 	/*!
@@ -95,29 +96,29 @@ namespace input
 	} // namespace action_sets
 
 	using ActiveActionSets
-	= std::array<vr::VRActiveActionSet_t, action_sets::numberOfSets>;
+		= std::array<vr::VRActiveActionSet_t, action_sets::numberOfSets>;
 
 	/*!
 	Responsible for controller input.
-	
+
 	UpdateStates should be called every frame.
-	
+
 	Binary actions should only have one function,
 	and they should reflect the expected behaviour. I.e. if a button being pressed
 	and held should only return true the first time, that logic should be in the
 	function.
-	
+
 	An action in the IVRInput API is entered in the actions manifest. This is a
 	.json file that is included with the final binary.
 	Currently an Action is created with a string and a type. The type determines
 	which function should be used for getting information from the API. The type in
 	the actions manifest must match the type in the source code.
-	
+
 	Actions should be added as member objects to SteamIVRInput and initialized in
 	the constructor. They should then make a small number of accessor functions
 	available for outside use. The internal structs of the IVRInput API are not
 	entirely stable, and should not be leaked outside this class.
-	
+
 	The name of the actions manifest must be set in ivrinput_manifest.h.
 	*/
 	class SteamIVRInput
@@ -182,10 +183,7 @@ namespace input
 
 		// Destructor. There are no terminating calls for the IVRInput API, so it
 		// is left blank.
-		~SteamIVRInput()
-		{
-		}
-
+		~SteamIVRInput() {}
 		// These have been explicitly deleted to make sure there are no attempts at
 		// copying the class in weird ways. It is not worth defining what should
 		// happen on copy because it simply shouldn't be done.
@@ -272,4 +270,5 @@ namespace input
 		ActiveActionSets m_sets;
 		ActiveActionSets m_systemActionSets;
 	};
+
 } // namespace input

@@ -12,7 +12,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	//bool noManifest = true;
 
 	/* set app attributes and create basic instance */
-	LOG(INFO) << u8"アプリケーションのイニシャライズ";
+	LOG(INFO) << "Initializing QGuiApplication...";
 	QGuiApplication::setAttribute(Qt::AA_Use96Dpi);
 	QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 	QGuiApplication main(argc, argv);
@@ -32,7 +32,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	}
 	catch (boost::archive::archive_exception const& e)
 	{
-		LOG(ERROR) << u8"アーカイブシリアライズエラー：" << e.what();
+		LOG(ERROR) << "Archive serialization error: " << e.what();
 	}
 
 	/* Initialize OpenVR */
@@ -43,11 +43,11 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	signalHandler cppHandler;
 	getVariable getData;
 	QQmlEngine qmlEngine;
-	LOG(INFO) << u8"QMLコンテキストをオーバーレイコントローラーのために登録ています…";
+	LOG(INFO) << "Initializing QML Context for OpenVR overlay...";
 	qmlEngine.rootContext()->setContextProperty(QStringLiteral("_cppContext"), &cppHandler);
 
 	/* register types for qml - getting variables from program */
-	LOG(INFO) << u8"QMLタイプをオーバーレイコントローラーのために登録ています…";
+	LOG(INFO) << "Registering QML Types for OpenVR overlay...";
 	qmlEngine.rootContext()->setContextProperty(QStringLiteral("_get"), &getData);
 
 	/* Create and initialise overlay controller */
@@ -57,11 +57,11 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	QQmlComponent component(&qmlEngine, QUrl("qrc:/kMainWindow.qml"));
 	auto errors = component.errors();
 	for (auto& e : errors)
-		LOG(ERROR) << "QMLエラー：" << e.toString().toStdString();
+		LOG(ERROR) << "Encountered QML erorr: " << e.toString().toStdString();
 	quickObj = component.create();
 
 	/* Finally, set overlay widget object */
-	LOG(INFO) << u8"オーバーレイウィジェットをセットアップ…";
+	LOG(INFO) << "Setting up OpenVR overlay widget...";
 	controller.SetWidget(qobject_cast<QQuickItem*>(quickObj),
 	                     application_strings::applicationDisplayName,
 	                     application_strings::applicationKey);
@@ -93,7 +93,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	/* Exit if initerror is not NONE, we don't want to get a crash */
 	if (vrError != vr::VRInitError_None)
 	{
-		LOG(ERROR) << u8"クリティカル・エラー！VRSystemにコネクトできませんでした、エラーコード：" + boost::lexical_cast<std::string>(vrError);
+		LOG(FATAL) << "Critical error! Couldn't connect to VRSystem, error code: " + boost::lexical_cast<std::string>(vrError);
 		return -1;
 	}
 
@@ -201,7 +201,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	//Mostly, in case when overlay was 
 	//not loaded but app continues to run
 
-	LOG(INFO) << u8"シャットダウンが呼ばれている。";
+	LOG(INFO) << "Shutting down...";
 	Kinect.shutdown(); //turn off kinect
 	return app_return; //Return qt app exectution as result
 }

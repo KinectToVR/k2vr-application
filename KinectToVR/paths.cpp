@@ -1,4 +1,4 @@
-﻿#include "paths.h"
+#include "paths.h"
 #include <QStandardPaths>
 #include <QCoreApplication>
 #include <QString>
@@ -14,7 +14,7 @@ namespace paths
 
 		if (path == "")
 		{
-			LOG(ERROR) << u8"バイナリディレクトリが見つかりませんでした！";
+			LOG(ERROR) << "Could not find binary directory.";
 			return std::nullopt;
 		}
 
@@ -36,8 +36,8 @@ namespace paths
 
 		if (!file.exists())
 		{
-			LOG(ERROR) << u8"ファイルが見つかりませんでした：「" << fileName.c_str()
-				<< u8"」、バイナリディレクトリで！";
+			LOG(ERROR) << "Could not find file '" << fileName.c_str()
+				<< "' in binary directory.";
 			return std::nullopt;
 		}
 
@@ -50,7 +50,7 @@ namespace paths
 			= QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 		if (path == "")
 		{
-			LOG(ERROR) << u8"セッティングディレクトリが見つかりませんでした！";
+			LOG(ERROR) << "Could not find settings directory.";
 			return std::nullopt;
 		}
 
@@ -59,12 +59,13 @@ namespace paths
 
 	std::optional<std::string> verifyIconFilePath(std::string filename)
 	{
-		const auto notifIconPath = binaryDirectoryFindFile(filename);
+		const auto notifIconPath = paths::binaryDirectoryFindFile(filename);
 		if (!notifIconPath.has_value())
 		{
-			LOG(ERROR) << u8"アイコンが見つかりませんでした：「" << filename << "」";
+			LOG(ERROR) << "Could not find icon \"" << filename << "\"";
 		}
 
 		return notifIconPath;
 	}
+
 } // namespace paths
