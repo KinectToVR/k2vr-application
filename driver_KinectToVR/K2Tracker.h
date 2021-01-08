@@ -20,17 +20,17 @@ public:
 	 * \return Returns tracker's serial in std::string
 	 */
 	[[nodiscard]] std::string get_serial() const;
+	
+	/**
+	 * \brief Get device index in OpenVR
+	 * \return OpenVR device index in uint32_t
+	 */
+	[[nodiscard]] vr::TrackedDeviceIndex_t get_index() const;
 
 	/**
 	 * \brief Virtual update void for server driver
 	 */
 	virtual void update();
-
-	/**
-	 * \brief Get device index in OpenVR
-	 * \return OpenVR device index in uint32_t
-	 */
-	vr::TrackedDeviceIndex_t get_index() const;
 
 	/**
 	 * \brief Function processing OpenVR events
