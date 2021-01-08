@@ -39,9 +39,10 @@ void Settings::saveSettings()
 {
 	std::ofstream output("settings.cfg");
 
-	/* lil hack since i doesn't have full serialization for eigen */
+	/* Data needs to be stored in other class
+	 * 'cause Eigen doesn't have full-time serialization for now */
 	for (int i = 0; i < 3; i++)
-		glOrientationOffsets[i] = pExchangeQG(orientationOffsets[i]);
+		glOrientationOffsets[i] = p_cast_type<glm::quat>(orientationOffsets[i]);
 
 	boost::archive::text_oarchive archive(output);
 	archive << BOOST_SERIALIZATION_NVP(kinectSettings);
@@ -55,7 +56,8 @@ void Settings::readSettings()
 	boost::archive::text_iarchive archive(input);
 	archive >> BOOST_SERIALIZATION_NVP(kinectSettings);
 
-	/* lil hack since i doesn't have full serialization for eigen */
+	/* Data needs to be stored in other class
+	 * 'cause Eigen doesn't have full-time serialization for now */
 	for (int i = 0; i < 3; i++)
-		orientationOffsets[i] = pExchangeQE(glOrientationOffsets[i]);
+		orientationOffsets[i] = p_cast_type<Eigen::Quaternionf>(glOrientationOffsets[i]);
 }

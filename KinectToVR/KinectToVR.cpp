@@ -1,4 +1,4 @@
-#include <KinectToVR.h>
+﻿#include <KinectToVR.h>
 INITIALIZE_EASYLOGGINGPP
 
 /* For interfacing */
@@ -98,7 +98,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	}
 
 	/* Scan for playspace origin that is not 0,0,0,0RAD for more see openvr docs */
-	kinectSettings.playspaceOrigin = pExchangeG(p_VRSystem->GetRawZeroPoseToStandingAbsoluteTrackingPose());
+	kinectSettings.playspaceOrigin = p_cast_type<glm::vec3>(p_VRSystem->GetRawZeroPoseToStandingAbsoluteTrackingPose());
 	double yaw = std::atan2(p_VRSystem->GetRawZeroPoseToStandingAbsoluteTrackingPose().m[0][2],
 	                        p_VRSystem->GetRawZeroPoseToStandingAbsoluteTrackingPose().m[2][2]);
 	if (yaw < 0.0) yaw = 2 * M_PI + yaw;
@@ -153,8 +153,8 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 			                                            vrDevicesPose, vr::k_unMaxTrackedDeviceCount);
 
 			/* Push headset position to runtime variables, will be used then */
-			process.headsetPosition = pExchangeE(vrDevicesPose[0].mDeviceToAbsoluteTracking);
-			process.headsetOrientation = pExchangeQE(vrDevicesPose[0].mDeviceToAbsoluteTracking);
+			process.headsetPosition = p_cast_type<Eigen::Vector3f>(vrDevicesPose[0].mDeviceToAbsoluteTracking);
+			process.headsetOrientation = p_cast_type<Eigen::Quaternionf>(vrDevicesPose[0].mDeviceToAbsoluteTracking);
 
 			/* Process controllers input and position (if they are connected) */
 			for (int id = 0; id < 2; id++)
