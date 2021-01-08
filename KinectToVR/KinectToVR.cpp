@@ -1,4 +1,4 @@
-﻿#include <KinectToVR.h>
+#include <KinectToVR.h>
 INITIALIZE_EASYLOGGINGPP
 
 /* For interfacing */
@@ -232,16 +232,16 @@ void updateQSpinboxes(std::array<Eigen::Vector3f, 3>& pos, std::array<Eigen::Qua
 
 		/* Positional offsets, UXYZ in ui, UXYZ in code, array order: W->L->R */
 		quickObj->findChild<QObject*>("control3W")->setProperty("value", 100 * pos[0].x());
-		quickObj->findChild<QObject*>("control4W")->setProperty("value", 100 * pos[0].z());
-		quickObj->findChild<QObject*>("control5W")->setProperty("value", 100 * pos[0].y());
+		quickObj->findChild<QObject*>("control4W")->setProperty("value", 100 * pos[0].y());
+		quickObj->findChild<QObject*>("control5W")->setProperty("value", 100 * pos[0].z());
 
 		quickObj->findChild<QObject*>("control3L")->setProperty("value", 100 * pos[1].x());
-		quickObj->findChild<QObject*>("control4L")->setProperty("value", 100 * pos[1].z());
-		quickObj->findChild<QObject*>("control5L")->setProperty("value", 100 * pos[1].y());
+		quickObj->findChild<QObject*>("control4L")->setProperty("value", 100 * pos[1].y());
+		quickObj->findChild<QObject*>("control5L")->setProperty("value", 100 * pos[1].z());
 
 		quickObj->findChild<QObject*>("control3R")->setProperty("value", 100 * pos[2].x());
-		quickObj->findChild<QObject*>("control4R")->setProperty("value", 100 * pos[2].z());
-		quickObj->findChild<QObject*>("control5R")->setProperty("value", 100 * pos[2].y());
+		quickObj->findChild<QObject*>("control4R")->setProperty("value", 100 * pos[2].y());
+		quickObj->findChild<QObject*>("control5R")->setProperty("value", 100 * pos[2].z());
 	}
 	else
 	{
