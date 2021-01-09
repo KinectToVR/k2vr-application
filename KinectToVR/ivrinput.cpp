@@ -3,7 +3,7 @@
 #include <openvr.h>
 #include <iostream>
 #include <array>
-#include <easylogging++.h>
+#include <Logging.h>
 
 namespace input
 {

@@ -1,11 +1,13 @@
 ﻿#include <KinectToVR.h>
-INITIALIZE_EASYLOGGINGPP
 
 /* For interfacing */
 QObject* quickObj;
 
 KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 {
+	/* Initialize logging */
+	initLogging();
+	
 	/* Variables for overlay controller */
 	bool desktopMode = false;
 	bool noSound = true;
@@ -66,8 +68,13 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	                     application_strings::applicationDisplayName,
 	                     application_strings::applicationKey);
 
+	/* Update device label (Will be replaced with std::format later) */
+	quickObj->findChild<QObject*>("deviceName")->setProperty("text",
+		Kinect.isPSMS ? "PSMoveService (PSMS)" : 
+		Kinect.kinectVersion == 1 ? "Kinect for Xbox 360 (V1)" : "Kinect for Xbox One (V2)");
 
 	/* Setup ui with saved defines */
+	LOG(INFO) << "Updating overlay's settings with saved ones...";
 	quickObj->findChild<QObject*>("flipCheckBox")->setProperty("checkState",
 	                                                           kinectSettings.flipSkeleton
 		                                                           ? Qt::Checked
@@ -75,6 +82,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	updateQSpinboxes(kinectSettings.positionalOffsets, kinectSettings.orientationOffsets);
 
 	/* combo boxes */
+	LOG(INFO) << "Choosing tracking options...";
 	quickObj->findChild<QObject*>("hipsComboBox")->
 	          setProperty("currentIndex", kinectSettings.waistOrientationTrackingOption);
 	quickObj->findChild<QObject*>("feetComboBox")->
@@ -93,17 +101,19 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	/* Exit if initerror is not NONE, we don't want to get a crash */
 	if (vrError != vr::VRInitError_None)
 	{
-		LOG(FATAL) << "Critical error! Couldn't connect to VRSystem, error code: " + boost::lexical_cast<std::string>(vrError);
+		LOG(ERROR) << "Critical error! Couldn't connect to VRSystem, error code: " + boost::lexical_cast<std::string>(vrError);
 		return -1;
 	}
 
 	/* Scan for playspace origin that is not 0,0,0,0RAD for more see openvr docs */
+	LOG(INFO) << "Scanning for non-default space origin...";
 	kinectSettings.playspaceOrigin = p_cast_type<glm::vec3>(p_VRSystem->GetRawZeroPoseToStandingAbsoluteTrackingPose());
 	double yaw = std::atan2(p_VRSystem->GetRawZeroPoseToStandingAbsoluteTrackingPose().m[0][2],
 	                        p_VRSystem->GetRawZeroPoseToStandingAbsoluteTrackingPose().m[2][2]);
 	if (yaw < 0.0) yaw = 2 * M_PI + yaw;
-
 	kinectSettings.radPlayspaceOffset = yaw;
+
+	LOG_IF(INFO, yaw != 0.0) << "Found space yaw offset: " + std::to_string(yaw);
 
 	/* Scan for controllers and get they're ids, get vr framerate for handling main loop */
 	process.controllerID[0] = p_VRSystem->GetTrackedDeviceIndexForControllerRole(
@@ -121,6 +131,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 
 		/* We have finished setup */
 		process.started = true;
+		LOG(INFO) << "Configuring done, starting up main thread...";
 
 		while (true)
 		{
@@ -203,6 +214,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 
 	LOG(INFO) << "Shutting down...";
 	Kinect.shutdown(); //turn off kinect
+	google::ShutdownGoogleLogging(); //End logging
 	return app_return; //Return qt app exectution as result
 }
 

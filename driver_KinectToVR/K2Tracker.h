@@ -3,6 +3,9 @@
 #include <openvr_driver.h>
 #include <KinectToVR_API.h>
 
+#define GLOG_NO_ABBREVIATED_SEVERITIES
+#include <glog/logging.h>
+
 class K2Tracker : public vr::ITrackedDeviceServerDriver
 {
 public:

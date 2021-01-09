@@ -22,7 +22,8 @@
 #include <iostream>
 #include <cmath>
 #include <openvr.h>
-#include <easylogging++.h>
+
+#include <Logging.h>
 #include <paths.h>
 
 namespace utils
@@ -407,7 +408,7 @@ void OverlayController::SetWidget(QQuickItem* quickItem,
 
 		// Initialize and check for success
 		if (!m_renderControl.initialize())
-			LOG(FATAL) << "Failed to initialize redirected Qt Quick rendering!";
+			LOG(ERROR) << "Failed to initialize redirected Qt Quick rendering!";
 		
 		/*******************************************/
 
@@ -716,14 +717,14 @@ void OverlayController::mainEventLoop()
 
 		case vr::VREvent_DashboardActivated:
 		{
-			LOG(DEBUG) << "Dashboard has been opened!";
+			LOG(INFO) << "Dashboard has been opened!";
 			m_dashboardVisible = true;
 		}
 		break;
 
 		case vr::VREvent_DashboardDeactivated:
 		{
-			LOG(DEBUG) << "Dashboard has been closed!";
+			LOG(INFO) << "Dashboard has been closed!";
 			m_dashboardVisible = false;
 		}
 		break;

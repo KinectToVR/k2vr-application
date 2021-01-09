@@ -3,7 +3,7 @@
 #include <QCoreApplication>
 #include <QString>
 #include <QFileInfo>
-#include <easylogging++.h>
+#include <Logging.h>
 #include <QDir>
 
 namespace paths

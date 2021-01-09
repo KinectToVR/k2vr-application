@@ -3,8 +3,6 @@
 #include <string>
 #include <thread>
 
-#include "easylogging++.h"
-
 K2Tracker::K2Tracker(K2Objects::K2TrackerBase const& tracker_base)
 {
 	_serial = tracker_base.data.serial;

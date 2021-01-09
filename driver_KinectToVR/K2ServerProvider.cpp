@@ -5,8 +5,6 @@
 #include <K2Tracker.h>
 #include <K2ServerDriver.h>
 
-INITIALIZE_EASYLOGGINGPP
-
 namespace k2_driver
 {
 	class K2ServerProvider : public vr::IServerTrackedDeviceProvider
@@ -124,7 +122,15 @@ void K2WatchdogDriver::Cleanup()
 
 extern "C" __declspec(dllexport) void* HmdDriverFactory(const char* pInterfaceName, int* pReturnCode)
 {
-	LOG(INFO) << u8"～～～KinectToVR EX OpenVR Driver new logging session begins here!～～～";
+	/* Initialize logging */
+	google::InitGoogleLogging("driver_KinectToVR");
+	/* Log everything >=INFO to same file */
+	google::SetLogDestination(google::GLOG_INFO, "driver_KinectToVR");
+
+	FLAGS_logbufsecs = 1; //Set max timeout
+	FLAGS_minloglevel = google::GLOG_INFO;
+	
+	LOG(INFO) << "~~~KinectToVR OpenVR Driver new logging session begins here!~~~";
 	LOG(INFO) << "Interface name: " << pInterfaceName;
 
 	static k2_driver::K2ServerProvider k2_server_provider;

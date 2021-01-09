@@ -1,6 +1,6 @@
 #pragma once
 #include <openvr.h>
-#include <easylogging++.h>
+#include <Logging.h>
 
 namespace input
 {
