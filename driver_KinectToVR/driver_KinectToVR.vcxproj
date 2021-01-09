@@ -19,13 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\KinectToVR\easylogging++.cc" />
     <ClCompile Include="K2ServerDriver.cpp" />
     <ClCompile Include="K2ServerProvider.cpp" />
     <ClCompile Include="K2Tracker.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\KinectToVR\easylogging++.h" />
     <ClInclude Include="K2ServerDriver.h" />
     <ClInclude Include="K2Tracker.h" />
   </ItemGroup>
@@ -137,8 +135,8 @@
       <PreprocessorDefinitions>_DEBUG;DRIVERKINECTTOVR_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)external;$(SolutionDir)external\opencv\build\include;$(SolutionDir)external\Kinect;$(SolutionDir)external\openvr\headers;$(SolutionDir)external\ZMQ;$(ProjectDir);$(SolutionDir)KinectToVR;$(SolutionDir)KinectToVR_API;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)external;$(SolutionDir)external\opencv\build\include;$(SolutionDir)external\Kinect;$(SolutionDir)external\openvr\headers;$(SolutionDir)external\ZMQ;$(ProjectDir);$(SolutionDir)KinectToVR;$(SolutionDir)KinectToVR_API;$(SolutionDir)external\eigen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -164,8 +162,8 @@ xcopy /y /d "$(SolutionDir)external\ZMQ\bin\*" "$(SolutionDir)$(Platform)\$(Conf
       <PreprocessorDefinitions>NDEBUG;DRIVERKINECTTOVR_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)external;$(SolutionDir)external\opencv\build\include;$(SolutionDir)external\Kinect;$(SolutionDir)external\openvr\headers;$(SolutionDir)external\ZMQ;$(ProjectDir);$(SolutionDir)KinectToVR;$(SolutionDir)KinectToVR_API;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)external;$(SolutionDir)external\opencv\build\include;$(SolutionDir)external\Kinect;$(SolutionDir)external\openvr\headers;$(SolutionDir)external\ZMQ;$(ProjectDir);$(SolutionDir)KinectToVR;$(SolutionDir)KinectToVR_API;$(SolutionDir)external\eigen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -228,7 +226,6 @@ xcopy /y /d "$(SolutionDir)external\ZMQ\bin\*" "$(SolutionDir)$(Platform)\$(Conf
     <Import Project="..\packages\boost_wserialization-vc142.1.72.0.0\build\boost_wserialization-vc142.targets" Condition="Exists('..\packages\boost_wserialization-vc142.1.72.0.0\build\boost_wserialization-vc142.targets')" />
     <Import Project="..\packages\boost_zlib-vc142.1.72.0.0\build\boost_zlib-vc142.targets" Condition="Exists('..\packages\boost_zlib-vc142.1.72.0.0\build\boost_zlib-vc142.targets')" />
     <Import Project="..\packages\boost-vc142.1.72.0.0\build\boost-vc142.targets" Condition="Exists('..\packages\boost-vc142.1.72.0.0\build\boost-vc142.targets')" />
-    <Import Project="..\packages\Eigen.3.3.3\build\native\Eigen.targets" Condition="Exists('..\packages\Eigen.3.3.3\build\native\Eigen.targets')" />
     <Import Project="..\packages\glm.0.9.9.800\build\native\glm.targets" Condition="Exists('..\packages\glm.0.9.9.800\build\native\glm.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -277,7 +274,6 @@ xcopy /y /d "$(SolutionDir)external\ZMQ\bin\*" "$(SolutionDir)$(Platform)\$(Conf
     <Error Condition="!Exists('..\packages\boost_wserialization-vc142.1.72.0.0\build\boost_wserialization-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost_wserialization-vc142.1.72.0.0\build\boost_wserialization-vc142.targets'))" />
     <Error Condition="!Exists('..\packages\boost_zlib-vc142.1.72.0.0\build\boost_zlib-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost_zlib-vc142.1.72.0.0\build\boost_zlib-vc142.targets'))" />
     <Error Condition="!Exists('..\packages\boost-vc142.1.72.0.0\build\boost-vc142.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost-vc142.1.72.0.0\build\boost-vc142.targets'))" />
-    <Error Condition="!Exists('..\packages\Eigen.3.3.3\build\native\Eigen.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Eigen.3.3.3\build\native\Eigen.targets'))" />
     <Error Condition="!Exists('..\packages\glm.0.9.9.800\build\native\glm.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\glm.0.9.9.800\build\native\glm.targets'))" />
   </Target>
 </Project>
