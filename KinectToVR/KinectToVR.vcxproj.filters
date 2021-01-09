@@ -49,9 +49,6 @@
     <ClCompile Include="buttonHandlers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="easylogging++.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="getVariable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -93,9 +90,6 @@
     <QtMoc Include="buttonHandlers.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <ClInclude Include="easylogging++.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <QtMoc Include="getVariable.h">
       <Filter>Header Files</Filter>
     </QtMoc>

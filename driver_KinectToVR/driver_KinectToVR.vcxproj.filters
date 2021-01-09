@@ -21,9 +21,6 @@
     <ClCompile Include="K2Tracker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\KinectToVR\easylogging++.cc">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="K2ServerDriver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -31,9 +28,6 @@
   <ItemGroup>
     <ClInclude Include="K2Tracker.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\KinectToVR\easylogging++.h">
-      <Filter>Resource Files</Filter>
     </ClInclude>
     <ClInclude Include="K2ServerDriver.h">
       <Filter>Header Files</Filter>
