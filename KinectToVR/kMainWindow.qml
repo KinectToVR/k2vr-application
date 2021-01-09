@@ -1281,13 +1281,14 @@ Item {
 
             Label {
                 id: label6
+                objectName: "deviceName"
                 x: 3240
                 y: 53
                 z: 1
                 width: 612
                 height: 56
                 color: "#8cffffff"
-                text: qsTr("Kinect for Xbox 360 (V1)")
+                text: qsTr("Unknown Device (E_NOT_SET)")
                 font.bold: true
                 font.pointSize: 38
                 font.family: "JostSemi"
