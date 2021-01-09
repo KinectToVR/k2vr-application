@@ -4,8 +4,6 @@
 
 int main(int argc, char* argv[])
 {
-	initLogging();
-
 	KinectV1Handler Kinect;
 	Kinect.initialiseSkeleton();
 
