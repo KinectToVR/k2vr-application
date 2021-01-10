@@ -117,27 +117,30 @@ void KinectV1Handler::updateSkeletalData()
 			if (NUI_SKELETON_TRACKED == trackingState)
 			{
 				isSkeletonTracked = true;
-				for (int j = 0; j < NUI_SKELETON_POSITION_COUNT; ++j)
+				/* Copy joint positions */
+				for (int j = 0; j < Joint_Total; ++j)
 				{
-					jointPositions[j] = skeletonFrame.SkeletonData[i].SkeletonPositions[j];
-					jointStates[j] = skeletonFrame.SkeletonData[i].eSkeletonPositionTrackingState[j];
+					jointPositions[globalIndex[j]] = skeletonFrame.SkeletonData[i].SkeletonPositions[globalIndex[j]];
+					jointStates[globalIndex[j]] = skeletonFrame.SkeletonData[i].eSkeletonPositionTrackingState[globalIndex[j]];
 
-					TrackingDeviceBase::jointPositions[j].w = skeletonFrame.SkeletonData[i].SkeletonPositions[j].w;
-					TrackingDeviceBase::jointPositions[j].x = skeletonFrame.SkeletonData[i].SkeletonPositions[j].x;
-					TrackingDeviceBase::jointPositions[j].y = skeletonFrame.SkeletonData[i].SkeletonPositions[j].y;
-					TrackingDeviceBase::jointPositions[j].z = skeletonFrame.SkeletonData[i].SkeletonPositions[j].z;
+					TrackingDeviceBase::jointPositions[j].w = skeletonFrame.SkeletonData[i].SkeletonPositions[globalIndex[j]].w;
+					TrackingDeviceBase::jointPositions[j].x = skeletonFrame.SkeletonData[i].SkeletonPositions[globalIndex[j]].x;
+					TrackingDeviceBase::jointPositions[j].y = skeletonFrame.SkeletonData[i].SkeletonPositions[globalIndex[j]].y;
+					TrackingDeviceBase::jointPositions[j].z = skeletonFrame.SkeletonData[i].SkeletonPositions[globalIndex[j]].z;
 
-					trackingStates[j] = skeletonFrame.SkeletonData[i].eSkeletonPositionTrackingState[j];
+					TrackingDeviceBase::trackingStates[j] = skeletonFrame.SkeletonData[i].eSkeletonPositionTrackingState[globalIndex[j]];
 				}
+				
 				NuiSkeletonCalculateBoneOrientations(&skeletonFrame.SkeletonData[i], boneOrientations);
-				for (int k = 0; k < NUI_SKELETON_POSITION_COUNT; ++k)
+				/* Copy joint orientations */
+				for (int k = 0; k < Joint_Total; ++k)
 				{
-					TrackingDeviceBase::boneOrientations[k].w = boneOrientations[k].absoluteRotation.rotationQuaternion.w;
-					TrackingDeviceBase::boneOrientations[k].x = boneOrientations[k].absoluteRotation.rotationQuaternion.x;
-					TrackingDeviceBase::boneOrientations[k].y = boneOrientations[k].absoluteRotation.rotationQuaternion.y;
-					TrackingDeviceBase::boneOrientations[k].z = boneOrientations[k].absoluteRotation.rotationQuaternion.z;
+					TrackingDeviceBase::jointOrientations[k].w = boneOrientations[globalIndex[k]].absoluteRotation.rotationQuaternion.w;
+					TrackingDeviceBase::jointOrientations[k].x = boneOrientations[globalIndex[k]].absoluteRotation.rotationQuaternion.x;
+					TrackingDeviceBase::jointOrientations[k].y = boneOrientations[globalIndex[k]].absoluteRotation.rotationQuaternion.y;
+					TrackingDeviceBase::jointOrientations[k].z = boneOrientations[globalIndex[k]].absoluteRotation.rotationQuaternion.z;
 				}
-				break;
+				break; // Only first skeleton
 			}
 			isSkeletonTracked = false;
 		}

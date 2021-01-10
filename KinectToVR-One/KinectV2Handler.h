@@ -48,4 +48,7 @@ private:
 
 	WAITABLE_HANDLE h_bodyFrameEvent;
 	bool newBodyFrameArrived = false;
+
+	/* For translating Kinect joint enumeration to K2 space */
+	int globalIndex[25] = { 3,2,20,4,5,6,7,21,22,8,9,10,11,23,24,1,0,12,13,14,15,16,17,18,19 };
 };

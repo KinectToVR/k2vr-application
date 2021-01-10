@@ -174,8 +174,28 @@ void KinectV2Handler::updateSkeletalFilters()
 			kinectBodies[i]->GetJoints(JointType_Count, joints);
 			kinectBodies[i]->GetJointOrientations(JointType_Count, jointOrientations);
 
+			/* Copy joint positions */
+			for (int j = 0; j < Joint_Total; ++j)
+			{
+				TrackingDeviceBase::jointPositions[j].w = 1.0f;
+				TrackingDeviceBase::jointPositions[j].x = joints[globalIndex[j]].Position.X;
+				TrackingDeviceBase::jointPositions[j].y = joints[globalIndex[j]].Position.Y;
+				TrackingDeviceBase::jointPositions[j].z = joints[globalIndex[j]].Position.Z;
+
+				TrackingDeviceBase::trackingStates[j] = joints[globalIndex[j]].TrackingState;
+			}
+
+			/* Copy joint orientations */
+			for (int k = 0; k < Joint_Total; ++k)
+			{
+				TrackingDeviceBase::jointOrientations[k].w = jointOrientations[globalIndex[k]].Orientation.w;
+				TrackingDeviceBase::jointOrientations[k].x = jointOrientations[globalIndex[k]].Orientation.x;
+				TrackingDeviceBase::jointOrientations[k].y = jointOrientations[globalIndex[k]].Orientation.y;
+				TrackingDeviceBase::jointOrientations[k].z = jointOrientations[globalIndex[k]].Orientation.z;
+			}
+
 			newBodyFrameArrived = false;
-			break;
+			break; // Only first skeleton
 		}
 		isSkeletonTracked = false;
 	}

@@ -196,7 +196,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 
 			std::copy(std::begin(tracking_device.jointPositions), std::end(tracking_device.jointPositions),
 				std::begin(process.jointPositions));
-			std::copy(std::begin(tracking_device.boneOrientations), std::end(tracking_device.boneOrientations),
+			std::copy(std::begin(tracking_device.jointOrientations), std::end(tracking_device.jointOrientations),
 				std::begin(process.boneOrientations));
 			std::copy(std::begin(tracking_device.trackingStates), std::end(tracking_device.trackingStates),
 				std::begin(process.trackingStates));

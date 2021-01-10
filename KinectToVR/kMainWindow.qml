@@ -673,7 +673,7 @@ Item {
                     color: "#43fdfdfd"
                 }
 
-                Component.onCompleted: checked = _get.get(qsTr("FLIPSKELETON"))
+                Component.onCompleted: checked = _get.get(qsTr("FLIP_SKELETON"))
 
                 indicator: Rectangle {
                     implicitWidth: parent.width
@@ -1337,7 +1337,7 @@ Item {
                     visible: true
 
                     onPaint: {
-                        painterCanvas.visible = _get.get(qsTr("SKELETONSTATE"))
+                        painterCanvas.visible = _get.get(qsTr("SKELETON_STATE"))
                                 && skeletonButton.show && _get.get(
                                     qsTr("VISIBLE"))
                         var cx = getContext("2d")
@@ -1347,86 +1347,71 @@ Item {
                         cx.strokeStyle = Qt.rgba(1, 1, 1, 1)
                         cx.beginPath()
 
-                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 3, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 3, 1))
-                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 2, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 2, 1))
-                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 2, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 2, 1))
-                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 4, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 4, 1))
-                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 2, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 2, 1))
-                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 8, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 8, 1))
-                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 2, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 2, 1))
-                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 1, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 1, 1))
-                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 1, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 1, 1))
-                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 0, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 0, 1))
-                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 0, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 0, 1))
-                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 12, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 12, 1))
-                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 0, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 0, 1))
-                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 16, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 16, 1))
+                        // For enumeration please see K2 Joint Enumeration
+                        cx.moveTo(_get.get(qsTr("JOINT_POSE"), 0, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 0, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 1, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 1, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 2, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 2, 1) * -1 + 810)
 
-                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 4, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 4, 1))
-                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 5, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 5, 1))
-                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 5, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 5, 1))
-                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 6, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 6, 1))
-                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 6, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 6, 1))
-                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 7, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 7, 1))
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 3, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 3, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 4, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 4, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 5, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 5, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 6, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 6, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 7, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 7, 1) * -1 + 810)
+                        cx.moveTo(_get.get(qsTr("JOINT_POSE"), 6, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 6, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 8, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 8, 1) * -1 + 810)
 
-                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 8, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 8, 1))
-                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 9, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 9, 1))
-                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 9, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 9, 1))
-                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 10, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 10, 1))
-                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 10, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 10, 1))
-                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 11, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 11, 1))
+                        cx.moveTo(_get.get(qsTr("JOINT_POSE"), 2, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 2, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 9, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 9, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 10, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 10, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 11, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 11, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 12, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 12, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 13, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 13, 1) * -1 + 810)
+                        cx.moveTo(_get.get(qsTr("JOINT_POSE"), 12, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 12, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 14, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 14, 1) * -1 + 810)
 
-                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 12, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 12, 1))
-                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 13, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 13, 1))
-                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 13, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 13, 1))
-                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 14, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 14, 1))
-                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 14, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 14, 1))
-                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 15, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 15, 1))
+                        cx.moveTo(_get.get(qsTr("JOINT_POSE"), 2, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 2, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 15, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 15, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 16, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 16, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 17, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 17, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 18, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 18, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 19, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 19, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 20, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 20, 1) * -1 + 810)
 
-                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 16, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 16, 1))
-                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 17, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 17, 1))
-                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 17, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 17, 1))
-                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 18, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 18, 1))
-                        cx.moveTo(_get.get(qsTr("KINECTPOSE"), 18, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 18, 1))
-                        cx.lineTo(_get.get(qsTr("KINECTPOSE"), 19, 0),
-                                  _get.get(qsTr("KINECTPOSE"), 19, 1))
+                        cx.moveTo(_get.get(qsTr("JOINT_POSE"), 16, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 16, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 21, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 21, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 22, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 22, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 23, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 23, 1) * -1 + 810)
+                        cx.lineTo(_get.get(qsTr("JOINT_POSE"), 24, 0) + 1013,
+                                  _get.get(qsTr("JOINT_POSE"), 24, 1) * -1 + 810)
 
                         cx.moveTo(0, 0)
                         cx.lineTo(0, 0)
@@ -1443,7 +1428,7 @@ Item {
                             if (painterCanvas.run)
                                 painterCanvas.requestPaint()
 
-                            if (_get.get(qsTr("SKELETONSTATE"))
+                            if (_get.get(qsTr("SKELETON_STATE"))
                                     && skeletonButton.show && _get.get(
                                         qsTr("VISIBLE")))
                                 painterCanvas.run = true
