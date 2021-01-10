@@ -3,7 +3,7 @@
 #include <Eigen/Dense>
 #include <glm/glm.hpp>
 #include <glm/detail/type_quat.hpp>
-#include <KinectHandlerBase.h>
+#include <TrackingDeviceBase.h>
 #include <array>
 
 class runtimeConfig
@@ -15,8 +15,7 @@ public:
 	Eigen::Vector3f headsetPosition = Eigen::Vector3f(0, 0, 0);
 	vr::TrackedDevicePose_t controllerPose[2] = {vr::TrackedDevicePose_t(), vr::TrackedDevicePose_t()};
 
-	/* We store data in arrays of kinectOne size, we're getting only 20 if we are using x360
-		and use full array if xOne. Not so memory-saving but rally simplifies works */
+	/* We store data in arrays of KV2 size, although K2 numering (see enumeration) */
 	glm::vec4 jointPositions[25];
 	glm::quat boneOrientations[25];
 	JointTrackingState trackingStates[25];
@@ -27,9 +26,11 @@ public:
 	};
 
 	/* Other variables that are necessary to run program successfully */
-	int kinectVersion, controllerID[2], vrFrameRate;
-	std::string kinectState;
-	bool initialised = false, started = false,
+	TrackingDeviceType k_deviceType;
+	std::string sensorState = "E_UNKNOWN";
+
+	int controllerID[2], vrFrameRate;
+	bool initialized = false, started = false,
 	     controllerTriggerPressed[2] = {false, false},
 	     controllerGripPressed[2] = {false, false},
 	     isSkeletonTracked = false,

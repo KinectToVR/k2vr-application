@@ -6,7 +6,7 @@
 #pragma once
 #include <QApplication>
 #include <overlaycontroller.h>
-#include <KinectHandlerBase.h>
+#include <TrackingDeviceBase.h>
 #include <QApplication>
 #include <QVBoxLayout>
 #include <QQuickView>
@@ -33,10 +33,10 @@
 #if defined MAKE_KINECTTOVR_LIB
 #define KINECTTOVR_LIB Q_DECL_EXPORT
 #else
- #define KINECTTOVR_LIB Q_DECL_IMPORT
+#define KINECTTOVR_LIB Q_DECL_IMPORT
 #endif
 
-extern "C" KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect);
+extern "C" KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_device);
 
 /* Pass quaternion, although spinboxes are using euler angles, should result same */
 void updateQSpinboxes(std::array<Eigen::Vector3f, 3>& pos, std::array<Eigen::Quaternionf, 3>& qrot, bool set = false);

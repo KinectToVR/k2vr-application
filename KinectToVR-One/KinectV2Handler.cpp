@@ -29,24 +29,24 @@ std::string KinectV2Handler::statusResultString(HRESULT stat)
 	}
 }
 
-void KinectV2Handler::initialise()
+void KinectV2Handler::initialize()
 {
 	try
 	{
-		initialised = initKinect();
-		// initialiseColor();
+		initialized = initKinect();
+		// initializeColor();
 		// Commented both image frames out, as most people use the kinect for skeletal data
 		// Updating all of the arrays uses a shit ton of CPU, but then again, it's still WIP
-		// initialiseDepth();
-		initialiseSkeleton();
-		if (!initialised) throw FailedKinectInitialisation;
+		// initializeDepth();
+		initializeSkeleton();
+		if (!initialized) throw FailedKinectInitialisation;
 	}
 	catch (std::exception& e)
 	{
 	}
 }
 
-void KinectV2Handler::initialiseSkeleton()
+void KinectV2Handler::initializeSkeleton()
 {
 	if (bodyFrameReader)
 		bodyFrameReader->Release();
@@ -78,13 +78,9 @@ void KinectV2Handler::terminateSkeleton()
 	}
 }
 
-void KinectV2Handler::initOpenGL()
-{
-}
-
 void KinectV2Handler::update()
 {
-	if (isInitialised())
+	if (isInitialized())
 	{
 		BOOLEAN isAvailable = false;
 		HRESULT kinectStatus = kinectSensor->get_IsAvailable(&isAvailable);

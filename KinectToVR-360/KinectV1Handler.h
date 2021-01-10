@@ -6,16 +6,16 @@
 #include <NuiSensor.h>
 #include <NuiSkeleton.h>
 
-#include "KinectHandlerBase.h"
+#include "TrackingDeviceBase.h"
 
-class KinectV1Handler : public KinectHandlerBase
+class KinectV1Handler : public TrackingDeviceBase
 {
 	// A representation of the Kinect elements for the v1 api
 public:
 	KinectV1Handler()
 	{
-		KinectV1Handler::initialise();
-		kinectVersion = 1;
+		KinectV1Handler::initialize();
+		TrackingDeviceBase::deviceType = K2_KinectV1;
 	}
 
 	HANDLE kinectRGBStream = nullptr;
@@ -27,8 +27,7 @@ public:
 	NUI_SKELETON_BONE_ORIENTATION boneOrientations[NUI_SKELETON_POSITION_COUNT];
 	NUI_SKELETON_POSITION_TRACKING_STATE jointStates[NUI_SKELETON_POSITION_COUNT];
 
-	void initialise() override;
-	void initOpenGL() override;
+	void initialize() override;
 	void update() override;
 	void shutdown() override;
 

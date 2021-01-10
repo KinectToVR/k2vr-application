@@ -16,7 +16,7 @@ void signalHandler::cppSlot(const QString& msg)
 	if (process.started)
 	{
 		if (msg == "TRACKERSCONNECTCHANGED")
-			process.initialised = !process.initialised;
+			process.initialized = !process.initialized;
 
 		if (msg == "FLIPCHANGED")
 			kinectSettings.flipSkeleton = !kinectSettings.flipSkeleton;

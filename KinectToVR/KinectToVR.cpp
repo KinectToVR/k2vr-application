@@ -3,7 +3,7 @@
 /* For interfacing */
 QObject* quickObj;
 
-KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
+KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_device)
 {
 	/* Initialize logging */
 	initLogging();
@@ -52,8 +52,8 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	LOG(INFO) << "Registering QML Types for OpenVR overlay...";
 	qmlEngine.rootContext()->setContextProperty(QStringLiteral("_get"), &getData);
 
-	/* Create and initialise overlay controller */
-	OverlayController controller(desktopMode, noSound, qmlEngine, Kinect);
+	/* Create and initialize overlay controller */
+	OverlayController controller(desktopMode, noSound, qmlEngine, tracking_device);
 
 	/* Create QML component for handling basic gui */
 	QQmlComponent component(&qmlEngine, QUrl("qrc:/kMainWindow.qml"));
@@ -66,12 +66,14 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	LOG(INFO) << "Setting up OpenVR overlay widget...";
 	controller.SetWidget(qobject_cast<QQuickItem*>(quickObj),
 	                     application_strings::applicationDisplayName,
-	                     application_strings::applicationKey);
+		application_strings::applicationKey);
 
 	/* Update device label (Will be replaced with std::format later) */
 	quickObj->findChild<QObject*>("deviceName")->setProperty("text",
-		Kinect.isPSMS ? "PSMoveService (PSMS)" : 
-		Kinect.kinectVersion == 1 ? "Kinect for Xbox 360 (V1)" : "Kinect for Xbox One (V2)");
+		tracking_device.deviceType == K2_PSMoveService ? "PSMoveService (PSMS)" :
+		tracking_device.deviceType == K2_KinectV1 ? "Kinect for Xbox 360 (V1)" :
+		tracking_device.deviceType == K2_KinectV2 ? "Kinect for Xbox One (V2)" :
+		"Unknown Device (E_UNKNOWN)");
 
 	/* Setup ui with saved defines */
 	LOG(INFO) << "Updating overlay's settings with saved ones...";
@@ -89,10 +91,9 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	          setProperty("currentIndex", kinectSettings.feetOrientationTrackingOption);
 	quickObj->findChild<QObject*>("filterComboBox")->
 	          setProperty("currentIndex", kinectSettings.positionalTrackingFilterOption);
-
-
-	/* Set information about whick kinect version are we using */
-	process.kinectVersion = Kinect.kinectVersion;
+	
+	/* Set information about what device are we using */
+	process.k_deviceType = tracking_device.deviceType;
 
 	/* Create error handler and connect with openvr system */
 	vr::EVRInitError vrError = vr::VRInitError_None;
@@ -189,18 +190,16 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 			}
 
 
-			/* Get kinect joint poses, rots and state and push it to runtime variables */
-			if (!Kinect.isPSMS) {
-				Kinect.update();
-				process.isSkeletonTracked = Kinect.isSkeletonTracked;
+			/* Get tracked joint poses, rots and state and push it to runtime variables */
+			tracking_device.update();
+			process.isSkeletonTracked = tracking_device.isSkeletonTracked;
 
-				std::copy(std::begin(Kinect.jointPositions), std::end(Kinect.jointPositions),
-					std::begin(process.jointPositions));
-				std::copy(std::begin(Kinect.boneOrientations), std::end(Kinect.boneOrientations),
-					std::begin(process.boneOrientations));
-				std::copy(std::begin(Kinect.trackingStates), std::end(Kinect.trackingStates),
-					std::begin(process.trackingStates));
-			}
+			std::copy(std::begin(tracking_device.jointPositions), std::end(tracking_device.jointPositions),
+				std::begin(process.jointPositions));
+			std::copy(std::begin(tracking_device.boneOrientations), std::end(tracking_device.boneOrientations),
+				std::begin(process.boneOrientations));
+			std::copy(std::begin(tracking_device.trackingStates), std::end(tracking_device.trackingStates),
+				std::begin(process.trackingStates));
 
 			std::this_thread::sleep_until(next_frame); //Sleep until next frame, if time didn't pass yet
 		}
@@ -213,7 +212,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], KinectHandlerBase& Kinect)
 	//not loaded but app continues to run
 
 	LOG(INFO) << "Shutting down...";
-	Kinect.shutdown(); //turn off kinect
+	tracking_device.shutdown(); //turn off kinect
 	google::ShutdownGoogleLogging(); //End logging
 	return app_return; //Return qt app exectution as result
 }

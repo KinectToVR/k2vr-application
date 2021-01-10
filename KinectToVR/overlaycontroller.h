@@ -21,7 +21,7 @@
 #include <atomic>
 #include <glm/glm.hpp>
 #include <glm/vec4.hpp>
-#include <KinectHandlerBase.h>
+#include <TrackingDeviceBase.h>
 #include <openvr_init.h>
 #include <ivrinput.h>
 //#include <QtMultimedia/QSoundEffect>
@@ -107,7 +107,7 @@ private:
 	bool m_keyPressTwoState = false;
 
 public:
-	OverlayController(bool desktopMode, bool noSound, QQmlEngine& qmlEngine, KinectHandlerBase& Kinect);
+	OverlayController(bool desktopMode, bool noSound, QQmlEngine& qmlEngine, TrackingDeviceBase& tracking_device);
 	virtual ~OverlayController();
 
 	void Shutdown();
@@ -133,7 +133,7 @@ public:
 
 	const vr::VROverlayHandle_t& overlayHandle();
 	const vr::VROverlayHandle_t& overlayThumbnailHandle();
-	KinectHandlerBase& Kinect;
+	TrackingDeviceBase& tracking_device;
 
 	bool pollNextEvent(vr::VROverlayHandle_t ulOverlayHandle,
 	                   vr::VREvent_t* pEvent);

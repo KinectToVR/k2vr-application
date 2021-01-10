@@ -5,7 +5,7 @@
 int main(int argc, char* argv[])
 {
 	KinectV2Handler Kinect;
-	Kinect.initialiseSkeleton();
+	Kinect.initialize();
 
 
 	return run(argc, argv, Kinect);

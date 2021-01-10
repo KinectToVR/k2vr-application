@@ -3,31 +3,28 @@
 #include <vector>
 #include <windows.h>
 
-class IKinectHandler {
-    // Interface base for Kinectv1 and v2
+class ITrackingDevice {
+    // Interface base for K2 Tracking Device
 public:
-    virtual ~IKinectHandler() {}
-
-    virtual void initOpenGL() = 0;
-    virtual void initialise() = 0;
-
+    virtual ~ITrackingDevice() {}
+    
+    virtual void initialize() = 0;
     virtual HRESULT getStatusResult() = 0;
     virtual std::string statusResultString(HRESULT stat) = 0;
 
     virtual void update() = 0;
-
-    bool isInitialised() { return initialised; }
+    bool isInitialized() { return initialized; }
     bool isZeroed() { return zeroed; }
-
     bool zeroed = false;
+
 protected:
-    bool initialised= false;
+    bool initialized= false;
 
     class FailedKinectInitialisation : public std::exception
     {
         virtual const char* what() const throw()
         {
-            return "Failure to initialise the kinect sensor. Is it plugged in and supplied with power?";
+            return "Failure to initialize the Kinect sensor. Is it plugged in and supplied with power?";
         }
     } FailedKinectInitialisation;
 private:

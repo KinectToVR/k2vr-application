@@ -7,10 +7,6 @@ HRESULT KinectV1Handler::getStatusResult()
 	return E_NUI_NOTCONNECTED;
 }
 
-void KinectV1Handler::initOpenGL()
-{
-}
-
 std::string KinectV1Handler::statusResultString(HRESULT stat)
 {
 	switch (stat)
@@ -28,12 +24,12 @@ std::string KinectV1Handler::statusResultString(HRESULT stat)
 	}
 }
 
-void KinectV1Handler::initialise()
+void KinectV1Handler::initialize()
 {
 	try
 	{
-		initialised = initKinect();
-		if (!initialised) throw FailedKinectInitialisation;
+		initialized = initKinect();
+		if (!initialized) throw FailedKinectInitialisation;
 	}
 	catch (std::exception& e)
 	{
@@ -53,7 +49,7 @@ void KinectV1Handler::shutdown()
 
 void KinectV1Handler::update()
 {
-	if (isInitialised())
+	if (isInitialized())
 	{
 		HRESULT kinectStatus = kinectSensor->NuiStatus();
 		if (kinectStatus == S_OK)
@@ -75,7 +71,7 @@ bool KinectV1Handler::initKinect()
 	{
 		return false;
 	}
-	//Initialise Sensor
+	//Initialize Sensor
 	HRESULT hr = kinectSensor->NuiInitialize(NUI_INITIALIZE_FLAG_USES_SKELETON);
 	kinectSensor->NuiSkeletonTrackingEnable(nullptr, 0); //NUI_SKELETON_TRACKING_FLAG_ENABLE_IN_NEAR_RANGE
 
@@ -126,24 +122,20 @@ void KinectV1Handler::updateSkeletalData()
 					jointPositions[j] = skeletonFrame.SkeletonData[i].SkeletonPositions[j];
 					jointStates[j] = skeletonFrame.SkeletonData[i].eSkeletonPositionTrackingState[j];
 
-					KinectHandlerBase::jointPositions[j].w = skeletonFrame.SkeletonData[i].SkeletonPositions[j].w;
-					KinectHandlerBase::jointPositions[j].x = skeletonFrame.SkeletonData[i].SkeletonPositions[j].x;
-					KinectHandlerBase::jointPositions[j].y = skeletonFrame.SkeletonData[i].SkeletonPositions[j].y;
-					KinectHandlerBase::jointPositions[j].z = skeletonFrame.SkeletonData[i].SkeletonPositions[j].z;
+					TrackingDeviceBase::jointPositions[j].w = skeletonFrame.SkeletonData[i].SkeletonPositions[j].w;
+					TrackingDeviceBase::jointPositions[j].x = skeletonFrame.SkeletonData[i].SkeletonPositions[j].x;
+					TrackingDeviceBase::jointPositions[j].y = skeletonFrame.SkeletonData[i].SkeletonPositions[j].y;
+					TrackingDeviceBase::jointPositions[j].z = skeletonFrame.SkeletonData[i].SkeletonPositions[j].z;
 
 					trackingStates[j] = skeletonFrame.SkeletonData[i].eSkeletonPositionTrackingState[j];
 				}
 				NuiSkeletonCalculateBoneOrientations(&skeletonFrame.SkeletonData[i], boneOrientations);
 				for (int k = 0; k < NUI_SKELETON_POSITION_COUNT; ++k)
 				{
-					KinectHandlerBase::boneOrientations[k].w = boneOrientations[k].absoluteRotation.rotationQuaternion.
-						w;
-					KinectHandlerBase::boneOrientations[k].x = boneOrientations[k].absoluteRotation.rotationQuaternion.
-						x;
-					KinectHandlerBase::boneOrientations[k].y = boneOrientations[k].absoluteRotation.rotationQuaternion.
-						y;
-					KinectHandlerBase::boneOrientations[k].z = boneOrientations[k].absoluteRotation.rotationQuaternion.
-						z;
+					TrackingDeviceBase::boneOrientations[k].w = boneOrientations[k].absoluteRotation.rotationQuaternion.w;
+					TrackingDeviceBase::boneOrientations[k].x = boneOrientations[k].absoluteRotation.rotationQuaternion.x;
+					TrackingDeviceBase::boneOrientations[k].y = boneOrientations[k].absoluteRotation.rotationQuaternion.y;
+					TrackingDeviceBase::boneOrientations[k].z = boneOrientations[k].absoluteRotation.rotationQuaternion.z;
 				}
 				break;
 			}

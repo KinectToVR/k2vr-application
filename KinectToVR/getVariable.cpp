@@ -55,7 +55,7 @@ int getVariable::get(const QString& msg, const int& arg, const int& arg1) const
 	}
 
 	if (msg == "SENSORSTATE")
-		return process.kinectState == "S_OK";
+		return process.sensorState == "S_OK";
 
 	if (msg == "SKELETONSTATE")
 		return process.isSkeletonTracked;

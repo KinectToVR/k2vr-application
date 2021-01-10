@@ -1,17 +1,16 @@
 #pragma once
-#include "IKinectHandler.h"
-#include "KinectHandlerBase.h"
+#include "ITrackingDevice.h"
+#include "TrackingDeviceBase.h"
 #include <Kinect.h>
 #include <Windows.h>
 
-class KinectV2Handler : public KinectHandlerBase
+class KinectV2Handler : public TrackingDeviceBase
 {
 public:
 	KinectV2Handler()
 	{
-		KinectV2Handler::initialise();
-		KinectV2Handler::initOpenGL();
-		kinectVersion = 2;
+		KinectV2Handler::initialize();
+		TrackingDeviceBase::deviceType = K2_KinectV2;
 	}
 
 	virtual ~KinectV2Handler()
@@ -33,15 +32,10 @@ public:
 	HRESULT getStatusResult() override;
 	std::string statusResultString(HRESULT stat) override;
 
-	void initialise() override;
-
-	void initialiseSkeleton() override;
-	void terminateSkeleton() override;
-	void initOpenGL() override;
+	void initialize() override;
 	void update() override;
 	void shutdown() override;
-
-
+	
 	bool convertColorToDepthResolution = false;
 	void onBodyFrameArrived(IBodyFrameReader& sender, IBodyFrameArrivedEventArgs& eventArgs);
 	virtual void updateSkeletalData();
@@ -49,6 +43,8 @@ public:
 private:
 	bool initKinect();
 	void updateSkeletalFilters();
+	void initializeSkeleton();
+	void terminateSkeleton();
 
 	WAITABLE_HANDLE h_bodyFrameEvent;
 	bool newBodyFrameArrived = false;

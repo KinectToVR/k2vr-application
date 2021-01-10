@@ -156,9 +156,9 @@ int verifyCustomTickRate(const int tickRate)
 
 OverlayController::OverlayController(bool desktopMode,
 	bool noSound,
-	QQmlEngine& qmlEngine, KinectHandlerBase& Kinect)
+	QQmlEngine& qmlEngine, TrackingDeviceBase& tracking_device)
 	: QObject(), m_desktopMode(desktopMode),
-	m_noSound(noSound), m_actions(), Kinect(Kinect)
+	m_noSound(noSound), m_actions(), tracking_device(tracking_device)
 {
 	// Arbitrarily chosen Max Length of Directory path, should be sufficient for
 	// Any set-up
@@ -281,7 +281,7 @@ void OverlayController::exitApp()
 	kinectSettings.saveSettings();
 	LOG(INFO) << "Shutting down overlay...";
 
-	Kinect.shutdown(); //turn off kinect
+	tracking_device.shutdown(); //turn off
 
 	Shutdown();
 	QApplication::exit();
