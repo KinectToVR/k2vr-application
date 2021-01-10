@@ -1,4 +1,4 @@
-# KinectToVR (Qt5 rewrite)
+# KinectToVR (Qt6 rewrite)
 
 ## Build instructions
 0. Note: Repository may be chaotically updated, please check out<br>
