@@ -11,15 +11,15 @@ int getVariable::get(const QString& msg, const int& arg, const int& arg1) const
 {
 	if (arg < 25)
 	{
-		if (msg == "KINECTPOSE")
+		if (msg == "JOINT_POSE")
 		{
 			switch (arg1)
 			{
 			case 0:
-				return process.jointPositions[arg].x * 1000 + 1013;
+				return process.jointPositions[arg].x * 1000;
 				break;
 			case 1:
-				return -process.jointPositions[arg].y * 1000 + 810;
+				return process.jointPositions[arg].y * 1000;
 				break;
 			case 2:
 				return process.jointPositions[arg].z * 1000;
@@ -29,7 +29,7 @@ int getVariable::get(const QString& msg, const int& arg, const int& arg1) const
 				break;
 			}
 		}
-		if (msg == "KINECTROT")
+		if (msg == "JOINT_ROT")
 		{
 			switch (arg1)
 			{
@@ -50,20 +50,20 @@ int getVariable::get(const QString& msg, const int& arg, const int& arg1) const
 				break;
 			}
 		}
-		if (msg == "JOINTSTAES")
+		if (msg == "JOINT_STATE")
 			return process.trackingStates[arg];
 	}
 
-	if (msg == "SENSORSTATE")
+	if (msg == "SENSOR_STATE")
 		return process.sensorState == "S_OK";
 
-	if (msg == "SKELETONSTATE")
+	if (msg == "SKELETON_STATE")
 		return process.isSkeletonTracked;
 
 	if (msg == "VISIBLE")
 		return process.isOverlayVisible;
 
-	if (msg == "FLIPSKELETON")
+	if (msg == "FLIP_SKELETON")
 		return kinectSettings.flipSkeleton;
 
 	return 0; //If message cound't be processed, return 0
