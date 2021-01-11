@@ -40,11 +40,11 @@ int K2ServerDriver::init_ServerDriver(std::string const& port)
 				zmq::message_t request;
 
 				// receive a request from client
-				socket.recv(&request);
+				socket.recv(std::ref(request), zmq::recv_flags::none);
 				
 				// parse request, send reply and return
 				try {
-					parse_message(request.msg_str());
+					parse_message(request.to_string());
 				}
 				catch(std::exception const &e)
 				{
@@ -247,7 +247,7 @@ void K2ServerDriver::parse_message(std::string message)
 		// send the reply to the client
 		zmq::message_t reply(_reply.size());
 		std::memcpy(reply.data(), _reply.data(), _reply.size());
-		socket.send(reply);
+		socket.send(reply, zmq::send_flags::none);
 	}
 }
 

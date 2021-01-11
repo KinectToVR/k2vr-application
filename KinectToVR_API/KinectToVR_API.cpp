@@ -1,9 +1,5 @@
 #include "pch.h"
 #include "KinectToVR_API.h"
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/serialization/vector.hpp>
-#include <boost/lexical_cast.hpp>
-#include <random>
 
 void replace_all(std::string& str, const std::string& from, const std::string& to) {
 	if (from.empty())
@@ -209,12 +205,12 @@ namespace k2_api
 		// construct new ZMQ message and copy data to it
 		zmq::message_t message(data.size());
 		std::memcpy(message.data(), data.data(), data.size());
-		socket.send(message); // send
-
+		socket.send(message, zmq::send_flags::none); // send
+		
 		// wait for reply from server
 		zmq::message_t reply{};
-		socket.recv(&reply);
+		socket.recv(std::ref(reply), zmq::recv_flags::none);
 
-		return reply.msg_str();
+		return reply.to_string();
 	}
 }
