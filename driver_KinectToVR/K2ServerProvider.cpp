@@ -122,10 +122,17 @@ void K2WatchdogDriver::Cleanup()
 
 extern "C" __declspec(dllexport) void* HmdDriverFactory(const char* pInterfaceName, int* pReturnCode)
 {
+	char path[MAX_PATH];
+	HMODULE hm = NULL;
+
+	/* Get dll's path (not exe which loaded it nor execution location) */
+	GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCWSTR)&HmdDriverFactory, &hm);
+	GetModuleFileNameA(hm, path, sizeof path);
+	
 	/* Initialize logging */
-	google::InitGoogleLogging("driver_KinectToVR");
+	google::InitGoogleLogging(path);
 	/* Log everything >=INFO to same file */
-	google::SetLogDestination(google::GLOG_INFO, "driver_KinectToVR");
+	google::SetLogDestination(google::GLOG_INFO, path);
 
 	FLAGS_logbufsecs = 0; //Set max timeout
 	FLAGS_minloglevel = google::GLOG_INFO;
