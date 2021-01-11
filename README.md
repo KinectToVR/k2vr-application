@@ -5,7 +5,6 @@
 repository before posting an issue with building or missing files.
 
 1. Prerequesties
-   To build this project you will need:<br>
    - Visual Studio 2019 (Personally, I'm on VS2019 Preview, probably latest)
    - Kinect SDK 1.8 and 2.0 installed and visible in PATH<br>
 
