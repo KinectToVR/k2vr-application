@@ -29,6 +29,7 @@
 #include <runtimeConfig.h>
 #include <boost/lexical_cast.hpp>
 #include <array>
+#include <KinectToVR_API.h>
 
 #if defined MAKE_KINECTTOVR_LIB
 #define KINECTTOVR_LIB Q_DECL_EXPORT

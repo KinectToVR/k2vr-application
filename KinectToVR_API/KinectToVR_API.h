@@ -1,6 +1,10 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <random>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/lexical_cast.hpp>
 #include "K2Objects.h"
 #include "zmq.hpp"
 
