@@ -29,7 +29,7 @@ repository before posting an issue with building or missing files.
    ```./vcpkg integrate install```
 
    - Install needed libraries (You should choose one linking method for all packages)<br>
-   ```vcpkg install glm:x64-windows eigen3:x64-windows boost:x64-windows opencv3[world]:x64-windows cppzmq:x64-windows glog:x64-windows```<br>
+   ```vcpkg install glm:x64-windows boost:x64-windows opencv3[world]:x64-windows cppzmq:x64-windows glog:x64-windows```<br>
    (Now you may rest a bit, also please use drive other than ```C:/```, it's gonna be a bit huge)
 
    - Install and setup Qt Visual Studio Tools (If you're planning on building overlay projects)
