@@ -88,6 +88,5 @@
     <QtRcc Include="..\KinectToVR\resources.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-    <None Include="packages.config" />
   </ItemGroup>
 </Project>
