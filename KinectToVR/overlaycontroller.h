@@ -28,6 +28,10 @@
 #include <Settings.h>
 #include <update_rate.h>
 #include <runtimeConfig.h>
+// Curl includes
+#include <curlpp/cURLpp.hpp>
+#include <curlpp/Easy.hpp>
+#include <curlpp/Options.hpp>
 
 namespace application_strings
 {
@@ -36,8 +40,7 @@ namespace application_strings
 	constexpr const char* applicationKey = "KimihikoAkayasaki.KinectToVR"; //temporary!
 	constexpr const char* applicationDisplayName = "KinectToVR";
 	constexpr const char* versionCheckUrl
-		= "https://raw.githubusercontent.com/OpenVR-Advanced-Settings/" //temporary!
-		"OpenVR-AdvancedSettings/master/ver/versioncheck.json";
+		= "https://raw.githubusercontent.com/KimihikoAkayasaki/update-dummy/main/version.json";
 
 	constexpr const char* applicationVersionString = "1.0.0";
 }
@@ -81,7 +84,6 @@ private:
 	int m_localVersionMinor = -1;
 	int m_localVersionPatch = -1;
 	QString m_updateMessage = "";
-	QString m_optionalMessage = "";
 	QString m_versionCheckText = "";
 
 	QUrl m_runtimePathUrl;
@@ -94,6 +96,7 @@ private:
 	int m_vsyncTooLateCounter = 0;
 	int m_customTickRateCounter = 0;
 	int m_verifiedCustomTickRateMs = 0;
+	void checkNewVersion();
 
 	input::SteamIVRInput m_actions;
 	QJsonDocument m_remoteVersionJsonDocument = QJsonDocument();
@@ -138,6 +141,11 @@ public:
 	bool pollNextEvent(vr::VROverlayHandle_t ulOverlayHandle,
 	                   vr::VREvent_t* pEvent);
 	void mainEventLoop();
+	
+	bool newVersionDetected()
+	{
+		return m_newVersionDetected;
+	}
 
 public slots:
 	void renderOverlay();

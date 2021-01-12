@@ -7,7 +7,6 @@
 #include <QApplication>
 #include <overlaycontroller.h>
 #include <TrackingDeviceBase.h>
-#include <QApplication>
 #include <QVBoxLayout>
 #include <QQuickView>
 #include <QWidget>

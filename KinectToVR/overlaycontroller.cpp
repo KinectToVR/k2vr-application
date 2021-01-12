@@ -269,6 +269,9 @@ OverlayController::OverlayController(bool desktopMode,
 	m_localVersionMajor = verMajorMinorPatchString[0].toInt();
 	m_localVersionMinor = verMajorMinorPatchString[1].toInt();
 	m_localVersionPatch = verMajorMinorPatchString[2].toInt();
+
+	// Check for a new version
+	checkNewVersion();
 }
 
 OverlayController::~OverlayController()
@@ -849,6 +852,94 @@ void OverlayController::setKeyboardPos()
 	empty.vTopLeft = emptyvec;
 	empty.vBottomRight = emptyvec;
 	vr::VROverlay()->SetKeyboardPositionForOverlay(m_ulOverlayHandle, empty);
+}
+
+void OverlayController::checkNewVersion()
+{
+	std::string version_data;
+	try
+	{
+		curlpp::Cleanup myCleanup;
+		std::ostringstream os;
+		os << curlpp::options::Url(application_strings::versionCheckUrl);
+		version_data = os.str();
+	}
+	catch (curlpp::RuntimeError& e)
+	{
+		LOG(ERROR) << "Version checking failed: Runtime connection error: " << e.what();
+	}
+	catch (curlpp::LogicError& e)
+	{
+		LOG(ERROR) << "Version checking failed: Logic connection error: " << e.what();
+	}
+	
+	if (!version_data.empty())
+	{
+		QByteArray replyByteData = QByteArray(version_data.c_str(), version_data.length());
+		LOG(INFO) << "Version checking: Recieved data: " << replyByteData;
+		
+		QJsonParseError parseError;
+		m_remoteVersionJsonDocument
+			= QJsonDocument::fromJson(replyByteData, &parseError);
+		if (parseError.error == QJsonParseError::NoError)
+		{
+			m_remoteVersionJsonObject = m_remoteVersionJsonDocument.object();
+			m_remoteVersionMajor
+				= m_remoteVersionJsonObject.value("major").toInt();
+			m_remoteVersionMinor
+				= m_remoteVersionJsonObject.value("minor").toInt();
+			m_remoteVersionPatch
+				= m_remoteVersionJsonObject.value("patch").toInt();
+			m_updateMessage
+				= m_remoteVersionJsonObject.value("message").toString();
+
+			// this is a little convoluted to ensure if our local version is
+			// somehow higher than remote, it doesn't detect an update from
+			// just higher remote "minor" or "patch" values.
+			if ((m_remoteVersionMajor > m_localVersionMajor)
+				|| (m_remoteVersionMajor == m_localVersionMajor
+					&& m_remoteVersionMinor > m_localVersionMinor)
+				|| (m_remoteVersionMajor == m_localVersionMajor
+					&& m_remoteVersionMinor == m_localVersionMinor
+					&& m_remoteVersionPatch > m_localVersionPatch))
+			{
+				m_newVersionDetected = true;
+				if (m_updateMessage.length() > 0)
+				{
+					m_versionCheckText = m_updateMessage;
+				}
+				else
+				{
+					m_versionCheckText =
+						"Newer version ("
+						+ QString::number(m_remoteVersionMajor) + "."
+						+ QString::number(m_remoteVersionMinor) + "."
+						+ QString::number(m_remoteVersionPatch)
+						+ ") available.";
+				}
+				LOG(INFO)
+					<< "Version Check: Newer version ( " << m_remoteVersionMajor
+					<< "." << m_remoteVersionMinor << "."
+					<< m_remoteVersionPatch << " ) available.";
+				LOG(INFO)
+					<< "Version Check: Newer version ( " << m_updateMessage.toStdString() << " ) available.";
+			}
+			else
+			{
+				m_newVersionDetected = false;
+				LOG(INFO) << "Currently installed version is the latest.";
+			}
+		}
+		else
+		{
+			LOG(ERROR)
+				<< "Version checking failed: Global parsing error: " << parseError.error;
+		}
+	}
+	else
+	{
+		LOG(ERROR) << "Version checking failed: Global connection error, request empty!";
+	}
 }
 
 //void OverlayController::playActivationSound()
