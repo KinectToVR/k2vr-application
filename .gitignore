@@ -37,3 +37,5 @@ packages/
 KinectToVR_API/x64/Debug/KinectToVR_API.log
 
 KinectToVR/.qmake.stash
+
+x64/

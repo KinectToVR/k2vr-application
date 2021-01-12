@@ -28,7 +28,7 @@ repository before posting an issue with building or missing files.
    ```./vcpkg integrate install```
 
    - Install needed libraries (You should choose one linking method for all packages)<br>
-   ```vcpkg install glm:x64-windows boost:x64-windows opencv3[world]:x64-windows cppzmq:x64-windows glog:x64-windows```<br>
+   ```vcpkg install glm:x64-windows boost:x64-windows opencv3[world]:x64-windows cppzmq:x64-windows glog:x64-windows curlpp:x64-windows```<br>
    (Now you may rest a bit, also please use drive other than ```C:/```, it's gonna be a bit huge)
 
    - Install and setup Qt Visual Studio Tools (If you're planning on building overlay projects)
@@ -50,16 +50,10 @@ repository before posting an issue with building or missing files.
    - All needed dlls from ```vcpkg``` should be automatically moved to deploy directory<br>
    (For general it's ```x64/Release/``` and for driver ```x64/Release/driver/```<br>
    You can find there KinectToVR driver fully set-up and ready to be registered.)<br>
-   Although, for the overlay app we'll need to copy additional Qt modules.<br>
-   Important! If you didn't build overlay projects, skip the next step.
-
-   - When everything is built, you may deploy the project by running [windeployqt](https://doc.qt.io/qt-5/windows-deployment.html)
-      + Before doing anything, make sure you're in cloned ```k2vr-application``` folder!
-      + ```cd x64/Release```
-      + ```[your qt6 install path]\msvc2019_64\bin\windeployqt.exe --release --qmldir ../../KinectToVR ./```
-      + This should copy all project dependiences from your Qt6 installation path to deploy directory <br>
-      (If you have Anaconda-Qt you may encounter fatal error ```not found```, <br>
-      I'd reccomend removing it or using virtual env next time)
+   For the overlay app we'll need Qt modules - post build command will copy them automatically.<br>
+   (```windeployqt``` command with correct arguments for both ```qml``` and output file will be run,<br>
+   you will be able to find output log in deploy directory - possibly ```x64/Release/```<br>
+   I've also decided to remove ```D3Dcompiler_47.dll```, since all it does for us is increasing CPU usage)
 
 ## Debugging OpenVR driver
 
