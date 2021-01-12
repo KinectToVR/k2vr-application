@@ -4,7 +4,6 @@ import QtQuick.Templates 6.0
 import QtQuick.Layouts 1.11
 
 // 2.15, 2.0, 2.0, 1.11
-
 Item {
     id: main
     width: 3915
@@ -99,7 +98,7 @@ Item {
                 layer.enabled: generalButton.layer_en
                 layer.samplerName: "maskSource"
                 layer.effect: ShaderEffect {
-                    property var colorSource: gradientRect;
+                    property var colorSource: gradientRect
                     fragmentShader: "mask.frag.qsb"
                 }
             }
@@ -149,7 +148,7 @@ Item {
                 layer.enabled: controllersButton.layer_en
                 layer.samplerName: "maskSource"
                 layer.effect: ShaderEffect {
-                    property var colorSource: gradientRect;
+                    property var colorSource: gradientRect
                     fragmentShader: "mask.frag.qsb"
                 }
             }
@@ -198,7 +197,7 @@ Item {
                 layer.enabled: devicesButton.layer_en
                 layer.samplerName: "maskSource"
                 layer.effect: ShaderEffect {
-                    property var colorSource: gradientRect;
+                    property var colorSource: gradientRect
                     fragmentShader: "mask.frag.qsb"
                 }
             }
@@ -246,7 +245,7 @@ Item {
                 layer.enabled: configurationButton.layer_en
                 layer.samplerName: "maskSource"
                 layer.effect: ShaderEffect {
-                    property var colorSource: gradientRect;
+                    property var colorSource: gradientRect
                     fragmentShader: "mask.frag.qsb"
                 }
             }
@@ -824,7 +823,7 @@ Item {
                         leftPadding: 20
                     }
                     highlighted: hipsComboBox.highlightedIndex === index
-                    
+
                     id: hipsComboBoxDelegate
                     Rectangle {
                         visible: hipsComboBoxDelegate.hovered
@@ -980,7 +979,7 @@ Item {
                         leftPadding: 20
                     }
                     highlighted: feetComboBox.highlightedIndex === index
-                    
+
                     id: feetComboBoxDelegate
                     Rectangle {
                         visible: feetComboBoxDelegate.hovered
@@ -1136,7 +1135,7 @@ Item {
                         leftPadding: 20
                     }
                     highlighted: filterComboBox.highlightedIndex === index
-                    
+
                     id: filterComboBoxDelegate
                     Rectangle {
                         visible: filterComboBoxDelegate.hovered
@@ -1375,43 +1374,60 @@ Item {
                         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 9, 0) + 1013,
                                   _get.get(qsTr("JOINT_POSE"), 9, 1) * -1 + 810)
                         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 10, 0) + 1013,
-                                  _get.get(qsTr("JOINT_POSE"), 10, 1) * -1 + 810)
+                                  _get.get(qsTr("JOINT_POSE"), 10,
+                                           1) * -1 + 810)
                         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 11, 0) + 1013,
-                                  _get.get(qsTr("JOINT_POSE"), 11, 1) * -1 + 810)
+                                  _get.get(qsTr("JOINT_POSE"), 11,
+                                           1) * -1 + 810)
                         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 12, 0) + 1013,
-                                  _get.get(qsTr("JOINT_POSE"), 12, 1) * -1 + 810)
+                                  _get.get(qsTr("JOINT_POSE"), 12,
+                                           1) * -1 + 810)
                         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 13, 0) + 1013,
-                                  _get.get(qsTr("JOINT_POSE"), 13, 1) * -1 + 810)
+                                  _get.get(qsTr("JOINT_POSE"), 13,
+                                           1) * -1 + 810)
                         cx.moveTo(_get.get(qsTr("JOINT_POSE"), 12, 0) + 1013,
-                                  _get.get(qsTr("JOINT_POSE"), 12, 1) * -1 + 810)
+                                  _get.get(qsTr("JOINT_POSE"), 12,
+                                           1) * -1 + 810)
                         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 14, 0) + 1013,
-                                  _get.get(qsTr("JOINT_POSE"), 14, 1) * -1 + 810)
+                                  _get.get(qsTr("JOINT_POSE"), 14,
+                                           1) * -1 + 810)
 
                         cx.moveTo(_get.get(qsTr("JOINT_POSE"), 2, 0) + 1013,
                                   _get.get(qsTr("JOINT_POSE"), 2, 1) * -1 + 810)
                         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 15, 0) + 1013,
-                                  _get.get(qsTr("JOINT_POSE"), 15, 1) * -1 + 810)
+                                  _get.get(qsTr("JOINT_POSE"), 15,
+                                           1) * -1 + 810)
                         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 16, 0) + 1013,
-                                  _get.get(qsTr("JOINT_POSE"), 16, 1) * -1 + 810)
+                                  _get.get(qsTr("JOINT_POSE"), 16,
+                                           1) * -1 + 810)
                         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 17, 0) + 1013,
-                                  _get.get(qsTr("JOINT_POSE"), 17, 1) * -1 + 810)
+                                  _get.get(qsTr("JOINT_POSE"), 17,
+                                           1) * -1 + 810)
                         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 18, 0) + 1013,
-                                  _get.get(qsTr("JOINT_POSE"), 18, 1) * -1 + 810)
+                                  _get.get(qsTr("JOINT_POSE"), 18,
+                                           1) * -1 + 810)
                         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 19, 0) + 1013,
-                                  _get.get(qsTr("JOINT_POSE"), 19, 1) * -1 + 810)
+                                  _get.get(qsTr("JOINT_POSE"), 19,
+                                           1) * -1 + 810)
                         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 20, 0) + 1013,
-                                  _get.get(qsTr("JOINT_POSE"), 20, 1) * -1 + 810)
+                                  _get.get(qsTr("JOINT_POSE"), 20,
+                                           1) * -1 + 810)
 
                         cx.moveTo(_get.get(qsTr("JOINT_POSE"), 16, 0) + 1013,
-                                  _get.get(qsTr("JOINT_POSE"), 16, 1) * -1 + 810)
+                                  _get.get(qsTr("JOINT_POSE"), 16,
+                                           1) * -1 + 810)
                         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 21, 0) + 1013,
-                                  _get.get(qsTr("JOINT_POSE"), 21, 1) * -1 + 810)
+                                  _get.get(qsTr("JOINT_POSE"), 21,
+                                           1) * -1 + 810)
                         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 22, 0) + 1013,
-                                  _get.get(qsTr("JOINT_POSE"), 22, 1) * -1 + 810)
+                                  _get.get(qsTr("JOINT_POSE"), 22,
+                                           1) * -1 + 810)
                         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 23, 0) + 1013,
-                                  _get.get(qsTr("JOINT_POSE"), 23, 1) * -1 + 810)
+                                  _get.get(qsTr("JOINT_POSE"), 23,
+                                           1) * -1 + 810)
                         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 24, 0) + 1013,
-                                  _get.get(qsTr("JOINT_POSE"), 24, 1) * -1 + 810)
+                                  _get.get(qsTr("JOINT_POSE"), 24,
+                                           1) * -1 + 810)
 
                         cx.moveTo(0, 0)
                         cx.lineTo(0, 0)
