@@ -77,14 +77,6 @@ private:
 	bool m_desktopMode;
 	bool m_noSound;
 	bool m_newVersionDetected = false;
-	int m_remoteVersionMajor = -1;
-	int m_remoteVersionMinor = -1;
-	int m_remoteVersionPatch = -1;
-	int m_localVersionMajor = -1;
-	int m_localVersionMinor = -1;
-	int m_localVersionPatch = -1;
-	QString m_updateMessage = "";
-	QString m_versionCheckText = "";
 
 	QUrl m_runtimePathUrl;
 	//QSoundEffect m_activationSoundEffect;
@@ -112,6 +104,16 @@ private:
 public:
 	OverlayController(bool desktopMode, bool noSound, QQmlEngine& qmlEngine, TrackingDeviceBase& tracking_device);
 	virtual ~OverlayController();
+	
+	int m_remoteVersionMajor = -1;
+	int m_remoteVersionMinor = -1;
+	int m_remoteVersionPatch = -1;
+	QString m_updateMessage = "";
+	QString m_versionCheckText = "";
+
+	int m_localVersionMajor = -1;
+	int m_localVersionMinor = -1;
+	int m_localVersionPatch = -1;
 
 	void Shutdown();
 	Q_INVOKABLE void exitApp();

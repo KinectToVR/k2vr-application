@@ -65,6 +65,16 @@ void signalHandler::cppSlot(const QString& msg)
 			abortCalibration = true;
 		}
 
+		if (msg == "INSTALL_LATER")
+		{
+			/* Popup is already closed */
+		}
+
+		if (msg == "INSTALL_NOW")
+		{
+			/* Close the window and call the installer */
+		}
+
 		kinectSettings.saveSettings();
 	}
 }

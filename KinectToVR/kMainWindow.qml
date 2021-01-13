@@ -16,6 +16,9 @@ Item {
     property var secondaryColor: "#323232"
     property var tertiaryColor: "#444444"
 
+    property var popupColor: "#414141"
+    property var alertColor: "#FFBD00"
+
     property var gradientStartColor: "#7826CD"
     property var gradientEndColor: "#A6369B"
     property var textColor: "#9E9E9E"
@@ -24,6 +27,223 @@ Item {
     property var sbHighlightColor: "#614487" // For non-fully-rounded buttons (normal)
     property var sbcHighlightColor: "#995DD8" // For non-fully-rounded buttons (brighter)
 
+    Rectangle {
+        id: infoIcon
+        visible: false
+        objectName: "infoIcon"
+        x: newVersionPopup.x + 220
+        y: newVersionPopup.y - 85
+        z: 1001
+        radius: 100
+        height: 50
+        width: 50
+        color: "#8cffffff"
+        Label {
+            visible: true
+            id: infoLabelIcon
+            anchors.fill: parent
+            color: secondaryColor
+            text: "i"
+            font.bold: true
+            font.pointSize: 30
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+        }
+        Rectangle {
+            id: iconInfoBg
+            anchors.fill: parent
+            radius: 100
+            color: "#43fdfdfd"
+        }
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            onClicked: { newVersionPopup.visible = true }
+            onEntered: { iconInfoBg.visible = true }
+            onExited: { iconInfoBg.visible = false }
+        }
+    }
+
+    Item {
+        id: newVersionPopup
+        objectName: "newVersionPopup"
+        visible: false
+        x: 3143 //Change this to adjustable / adjust
+        y: 173
+        width: 731
+        height: childrenRect.height + 20
+        z: 1001
+        
+        Rectangle {
+            x: 210
+            y: -4
+            color: popupColor
+            radius: 0
+            height: 70
+            width: 70
+            rotation: 45
+        }
+        
+        Rectangle {
+            color: popupColor
+            anchors.fill: parent
+            radius: 20
+        }
+        Label {
+            id: updateLabel
+            x: 23
+            y: 25
+            text: "New Update Available"
+            font.pointSize: 38
+            font.family: "JostSemi"
+            font.bold: true
+            color: "white"
+            Rectangle {
+                y: 72
+                width: newVersionPopup.width - 46 //double 23?
+                height: 3
+                color: "white"
+                radius: 5
+            }
+        }
+        Text {
+            id: updateNumberLabel
+            color: "white"
+            x: 23
+            y: updateLabel.y + 98
+            objectName: "updateNumberLabel"
+            text: "KinectToVR v[E_NOT_SET]"
+            font.pointSize: 28
+            font.family: "JostSemi"
+            font.bold: true
+        }
+        Text {
+            id: updateInfoLabel
+            color: "#8cffffff"
+            x: 23
+            y: updateNumberLabel.y + updateNumberLabel.paintedHeight + 20
+            objectName: "updateInfoLabel"
+            text: "[E_NOT_SET]"
+            font.pointSize: 26
+            font.family: "JostSemi"
+            font.bold: true
+            width: 686
+            wrapMode: Text.WordWrap
+        }
+        Text {
+            id: updateAlertLabel
+            color: alertColor
+            x: 23
+            y: updateInfoLabel.y + updateInfoLabel.paintedHeight + 20
+            width: 686
+            objectName: "updateAlertLabel"
+            text: "This is a critical update, please install it as soon as possible."
+            font.pointSize: 26
+            font.family: "JostSemi"
+            font.bold: true
+            wrapMode: Text.WordWrap
+            horizontalAlignment: Text.AlignRight
+        }
+
+        Button {
+            id: installLaterButton
+            y: updateAlertLabel.y + updateAlertLabel.paintedHeight + 20
+            width: 294
+            height: 70
+            visible: true
+            anchors.right: installNowButton.left
+            anchors.rightMargin: 20
+            flat: true
+            
+            background: Rectangle {
+                color: popupColor
+                radius: 15
+                border.color: alertColor
+                border.width: 5
+                anchors.fill: parent
+            }
+            
+            Rectangle {
+                visible: parent.hovered
+                anchors.fill: parent
+                radius: 15
+                color: "#43fdfdfd"
+            }
+            
+            Text {
+                color: alertColor
+                text: qsTr("INSTALL LATER")
+                anchors.bottomMargin: 0
+                anchors.leftMargin: 0
+                font.pointSize: 25
+                anchors.centerIn: parent
+                font.bold: true
+                font.family: "JostSemi"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                anchors.rightMargin: 0
+                anchors.topMargin: 0
+            }
+            highlighted: false
+            hoverEnabled: true
+            onClicked: {
+                _cppContext.cppSlot("INSTALL_LATER")
+                newVersionPopup.visible = false
+            }
+            onHoveredChanged: {
+            }
+        }
+        
+        Button {
+            id: installNowButton
+            anchors.right: parent.right
+            anchors.rightMargin: 23
+            y: updateAlertLabel.y + updateAlertLabel.paintedHeight + 20
+            width: 270
+            height: 70
+            visible: true
+            flat: true
+            
+            background: Rectangle {
+                color: alertColor
+                radius: 15
+                border.color: alertColor
+                border.width: 5
+                anchors.fill: parent
+            }
+            
+            Rectangle {
+                visible: parent.hovered
+                anchors.fill: parent
+                radius: 15
+                color: "#43fdfdfd"
+            }
+            
+            Text {
+                color: "white"
+                text: qsTr("INSTALL NOW")
+                anchors.bottomMargin: 0
+                anchors.leftMargin: 0
+                font.pointSize: 25
+                anchors.centerIn: parent
+                font.bold: true
+                font.family: "JostSemi"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                anchors.rightMargin: 0
+                anchors.topMargin: 0
+            }
+            highlighted: false
+            hoverEnabled: true
+            onClicked: {
+                _cppContext.cppSlot("INSTALL_NOW")
+                newVersionPopup.visible = false
+            }
+            onHoveredChanged: {
+            }
+        }
+        
+    }
 
     /*transform: Scale {
         origin.x: 0; origin.y: 0; xScale: parent.width / 3915; yScale: parent.height / 2292
@@ -282,14 +502,15 @@ Item {
             anchors.left: parent.left
         }
 
-        Label {
-            id: label
+        Text {
+            id: currentVersionLabel
+            objectName: "currentVersionLabel"
             x: 3327
             y: 78
             width: 526
             height: 60
             color: "#8cffffff"
-            text: qsTr("KinectToVR v1.0.0")
+            text: qsTr("KinectToVR v[E_NOT_SET]")
             horizontalAlignment: Text.AlignRight
             font.bold: true
             font.pointSize: 36

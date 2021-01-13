@@ -123,6 +123,28 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 		vr::ETrackedControllerRole::TrackedControllerRole_LeftHand);
 	process.vrFrameRate = p_VRSystem->GetFloatTrackedDeviceProperty(0, vr::Prop_DisplayFrequency_Float);
 
+	/* Update program with potential new version, if detected */
+	if (controller.newVersionDetected())
+	{
+		quickObj->findChild<QObject*>("newVersionPopup")->setProperty("visible", true);
+		quickObj->findChild<QObject*>("infoIcon")->setProperty("visible", true);
+		
+		quickObj->findChild<QObject*>("updateNumberLabel")->setProperty("text",
+			QString("KinectToVR v") +
+			QString::number(controller.m_remoteVersionMajor) + "." +
+			QString::number(controller.m_remoteVersionMinor) + "." +
+			QString::number(controller.m_remoteVersionPatch));
+
+		quickObj->findChild<QObject*>("currentVersionLabel")->setProperty("text",
+			QString("KinectToVR v") +
+			QString::number(controller.m_localVersionMajor) + "." +
+			QString::number(controller.m_localVersionMinor) + "." +
+			QString::number(controller.m_localVersionPatch));
+
+		quickObj->findChild<QObject*>("updateInfoLabel")->
+			setProperty("text", controller.m_updateMessage);
+	}
+
 	/* Main application thread: read kinect and process events */
 	std::thread([&]
 	{
