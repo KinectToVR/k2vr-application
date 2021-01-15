@@ -25,13 +25,13 @@ namespace K2Objects
 	{
 	public:
 
-		glm::quat orientation;
-		glm::vec3 position;
+		glm::quat orientation = glm::quat(1.f, 0.f, 0.f, 0.f);
+		glm::vec3 position = glm::vec3(0.f, 0.f, 0.f);
 
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			ar & orientation & position;
+			ar& orientation& position;
 		}
 
 		K2TrackerPose() = default;
@@ -47,13 +47,13 @@ namespace K2Objects
 	{
 	public:
 
-		std::string serial, role;
+		std::string serial = "", role = "";
 		bool isActive = false;
 
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			ar & serial & role & isActive;
+			ar& serial& role& isActive;
 		}
 
 		K2TrackerData() = default;
@@ -71,10 +71,17 @@ namespace K2Objects
 
 		double millisFromNow = 0;
 
+		K2PosePacket() = default;
+		~K2PosePacket() = default;
+
+		K2PosePacket(K2TrackerPose m_pose) : K2TrackerPose(m_pose)
+		{
+		}
+
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			ar & boost::serialization::base_object<K2TrackerPose>(*this)
+			ar& boost::serialization::base_object<K2TrackerPose>(*this)
 				& millisFromNow;
 		}
 	};
@@ -85,10 +92,17 @@ namespace K2Objects
 
 		double millisFromNow = 0;
 
+		K2DataPacket() = default;
+		~K2DataPacket() = default;
+
+		K2DataPacket(K2TrackerData m_data) : K2TrackerData(m_data)
+		{
+		}
+
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			ar & boost::serialization::base_object<K2TrackerData>(*this)
+			ar& boost::serialization::base_object<K2TrackerData>(*this)
 				& millisFromNow;
 		}
 	};
@@ -97,14 +111,14 @@ namespace K2Objects
 	{
 	public:
 
-		K2TrackerPose pose;
-		K2TrackerData data;
+		K2TrackerPose pose = K2TrackerPose();
+		K2TrackerData data = K2TrackerData();
 		int id = -1;
 
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			ar & pose & data & id;
+			ar& pose& data& id;
 		}
 
 		K2TrackerBase() = default;
