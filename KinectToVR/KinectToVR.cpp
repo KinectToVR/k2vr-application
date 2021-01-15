@@ -1,4 +1,5 @@
 ﻿#include <KinectToVR.h>
+#include <SkeletonImageProvider.h>
 
 /* For interfacing */
 QObject* quickObj;
@@ -52,6 +53,10 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 	LOG(INFO) << "Registering QML Types for OpenVR overlay...";
 	qmlEngine.rootContext()->setContextProperty(QStringLiteral("_get"), &getData);
 
+	/* register types for qml - sending images to qml */
+	LOG(INFO) << "Registering QML Types for imaging...";
+	qmlEngine.addImageProvider(QLatin1String("SkeletonImage"), new SkeletonImageProvider);
+
 	/* Create and initialize overlay controller */
 	OverlayController controller(desktopMode, noSound, qmlEngine, tracking_device);
 
@@ -59,7 +64,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 	QQmlComponent component(&qmlEngine, QUrl("qrc:/kMainWindow.qml"));
 	auto errors = component.errors();
 	for (auto& e : errors)
-		LOG(ERROR) << "Encountered QML erorr: " << e.toString().toStdString();
+		LOG(ERROR) << "Encountered QML error: " << e.toString().toStdString();
 	quickObj = component.create();
 
 	/* Finally, set overlay widget object */

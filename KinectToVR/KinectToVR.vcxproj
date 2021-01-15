@@ -228,6 +228,7 @@ del "$(SolutionDir)$(Platform)\$(Configuration)\D3Dcompiler_47.dll"</Command>
     <ClCompile Include="update_rate.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SkeletonImageProvider.h" />
     <ClInclude Include="ivrinput.h" />
     <ClInclude Include="ivrinput_action.h" />
     <ClInclude Include="ivrinput_action_set.h" />

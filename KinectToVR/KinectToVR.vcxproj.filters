@@ -38,6 +38,9 @@
     <Filter Include="Overlay Files">
       <UniqueIdentifier>{d826b16c-c704-423c-98ae-e0ae377332d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Image Files">
+      <UniqueIdentifier>{bde00eda-be55-4a96-8727-c8eced0bce04}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -119,6 +122,9 @@
     </ClInclude>
     <ClInclude Include="paths.h">
       <Filter>Overlay Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonImageProvider.h">
+      <Filter>Image Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
