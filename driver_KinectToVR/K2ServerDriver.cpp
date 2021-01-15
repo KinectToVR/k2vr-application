@@ -167,6 +167,7 @@ void K2ServerDriver::parse_message(std::string message)
 					// Check if desired tracker exists
 					if (_id < trackerVector.size()) {
 						// Set tracker's state to one gathered from argument
+						if (!trackerVector.at(_id).is_added()) trackerVector.at(_id).spawn(); // spawn if needed
 						trackerVector.at(_id).set_state(_state);
 						_reply = "1"; // If success, return true
 						LOG(INFO) << "Tracker id: " + std::to_string(_id) + " state has been set to: " + std::to_string(_state);
