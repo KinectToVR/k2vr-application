@@ -94,6 +94,7 @@ bool K2Tracker::spawn()
 		{
 			// Add device to OpenVR devices list
 			vr::VRServerDriverHost()->TrackedDeviceAdded(_serial.c_str(), vr::TrackedDeviceClass_GenericTracker, this);
+			_added = true;
 
 			// Force tracker to update at 120fps until exit
 			std::thread([&]()
