@@ -226,21 +226,29 @@ void K2ServerDriver::parse_message(std::string message)
 					K2Objects::K2DataPacket _data_packet;
 					ia >> _data_packet;
 
-					// Check if desired tracker exists
-					if (_id < trackerVector.size()) {
-						// Update tracker pose (with time offset)
-						if (int(_data_packet.millisFromNow) != 0)
-						{
-							trackerVector.at(_id).set_data(_data_packet, _data_packet.millisFromNow);
+					// Check for tracker with same serial
+					bool exists_yet = false;
+					for (K2Tracker& t : trackerVector)
+						if (_data_packet.serial == t.get_serial())exists_yet = true;
+
+					if (!exists_yet) {
+						// Check if desired tracker exists
+						if (_id < trackerVector.size()) {
+							// Update tracker pose (with time offset)
+							if (int(_data_packet.millisFromNow) != 0)
+							{
+								trackerVector.at(_id).set_data(_data_packet, _data_packet.millisFromNow);
+							}
+							else
+							{
+								// If there is no time offset, just update
+								trackerVector.at(_id).set_data(_data_packet);
+							}
+							_reply = std::to_string(_id); // If success, return tracker id
 						}
-						else
-						{
-							// If there is no time offset, just update
-							trackerVector.at(_id).set_data(_data_packet);
-						}
-						_reply = std::to_string(_id); // If success, return tracker id
+						else LOG(ERROR) << "Couldn't set tracker id: " + std::to_string(_id) + " data. Index out of bounds.";
 					}
-					else LOG(ERROR) << "Couldn't set tracker id: " + std::to_string(_id) + " data. Index out of bounds.";
+					else LOG(ERROR) << "Couldn't set tracker id: " + std::to_string(_id) + " data. Serial already present.";
 				}
 			}
 		}
