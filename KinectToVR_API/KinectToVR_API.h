@@ -27,6 +27,12 @@ namespace k2_api
 	KINECTTOVR_API int init_socket(int port) noexcept;
 
 	/**
+	 * \brief Disonnects socket object from port
+	 * \return Returns 0 for success and -1 for failure
+	 */
+	KINECTTOVR_API int close_socket() noexcept;
+
+	/**
 	 * \brief Add tracker to driver's trackers list
 	 * \param tracker Tracker base that should be used for device creation
 	 * \return Returns new tracker's id or -1 for failure

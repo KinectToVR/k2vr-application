@@ -26,6 +26,20 @@ namespace k2_api
 		return 0;
 	}
 
+	int close_socket() noexcept
+	{
+		try
+		{
+			socket.close();
+			context.close();
+		}
+		catch (std::exception const& e)
+		{
+			return -1;
+		}
+		return 0;
+	}
+
 	int add_tracker(K2Objects::K2TrackerBase const& tracker) noexcept
 	{
 		try
