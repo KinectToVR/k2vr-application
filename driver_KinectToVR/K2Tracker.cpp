@@ -33,6 +33,7 @@ std::string K2Tracker::get_serial() const
 	return _serial;
 }
 
+
 void K2Tracker::update()
 {
 	_pose.poseIsValid = _active;
@@ -189,12 +190,9 @@ vr::EVRInitError K2Tracker::Activate(vr::TrackedDeviceIndex_t index)
 	std::string l_registeredType("htc/vive_tracker");
 	l_registeredType.append(_serial);
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_RegisteredDeviceType_String, l_registeredType.c_str());
-	vr::VRProperties()->SetStringProperty(_props, vr::Prop_InputProfilePath_String,
-	                                      "{htc}/input/vive_tracker_profile.json");
 	vr::VRProperties()->SetBoolProperty(_props, vr::Prop_Identifiable_Bool, false);
 	vr::VRProperties()->SetBoolProperty(_props, vr::Prop_Firmware_RemindUpdate_Bool, false);
 	vr::VRProperties()->SetInt32Property(_props, vr::Prop_ControllerRoleHint_Int32, vr::TrackedControllerRole_Invalid);
-	vr::VRProperties()->SetStringProperty(_props, vr::Prop_ControllerType_String, "vive_tracker_handed");
 	vr::VRProperties()->SetInt32Property(_props, vr::Prop_ControllerHandSelectionPriority_Int32, -1);
 
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_NamedIconPathDeviceOff_String,
@@ -218,6 +216,68 @@ vr::EVRInitError K2Tracker::Activate(vr::TrackedDeviceIndex_t index)
 	vr::VRProperties()->SetBoolProperty(_props, vr::Prop_HasCameraComponent_Bool, false);
 	vr::VRProperties()->SetBoolProperty(_props, vr::Prop_HasDriverDirectModeComponent_Bool, false);
 	vr::VRProperties()->SetBoolProperty(_props, vr::Prop_HasVirtualDisplayComponent_Bool, false);
+
+	/*Update controller type and input path*/
+	std::string role_name, input_path;
+	if (this->_role == "TrackerRole_Handed")
+	{
+		input_path = "{htc}/input/tracker/vive_tracker_handed_profile,json";
+		role_name = "vive_tracker_handed";
+	}
+	else if (this->_role == "TrackerRole_LeftFoot")
+	{
+		input_path = "{htc}/input/tracker/vive_tracker_left_foot_profile,json";
+		role_name = "vive_tracker_left_foot";
+	}
+	else if (this->_role == "TrackerRole_RightFoot")
+	{
+		input_path = "{htc}/input/tracker/vive_tracker_right_foot_profile,json";
+		role_name = "vive_tracker_right_foot";
+	}
+	else if (this->_role == "TrackerRole_LeftShoulder")
+	{
+		input_path = "{htc}/input/tracker/vive_tracker_left_shoulder_profile,json";
+		role_name = "vive_tracker_left_shoulder";
+	}
+	else if (this->_role == "TrackerRole_RightShoulder") {
+		input_path = "{htc}/input/tracker/vive_tracker_right_shoulder_profile,json";
+		role_name = "vive_tracker_right_shoulder";
+	}
+	else if (this->_role == "TrackerRole_LeftElbow") {
+		input_path = "{htc}/input/tracker/vive_tracker_left_elbow_profile,json";
+		role_name = "vive_tracker_left_elbow";
+	}
+	else if (this->_role == "TrackerRole_RightElbow") {
+		input_path = "{htc}/input/tracker/vive_tracker_right_elbow_profile,json";
+		role_name = "vive_tracker_right_elbow";
+	}
+	else if (this->_role == "TrackerRole_LeftKnee") {
+		input_path = "{htc}/input/tracker/vive_tracker_left_knee_profile,json";
+		role_name = "vive_tracker_left_knee";
+	}
+	else if (this->_role == "TrackerRole_RightKnee") {
+		input_path = "{htc}/input/tracker/vive_tracker_right_knee_profile,json";
+		role_name = "vive_tracker_right_knee";
+	}
+	else if (this->_role == "TrackerRole_Waist") {
+		input_path = "{htc}/input/tracker/vive_tracker_waist_profile,json";
+		role_name = "vive_tracker_waist";
+	}
+	else if (this->_role == "TrackerRole_Chest") {
+		input_path = "{htc}/input/tracker/vive_tracker_chest_profile,json";
+		role_name = "vive_tracker_chest";
+	}
+	else if (this->_role == "TrackerRole_Camera") {
+		input_path = "{htc}/input/tracker/vive_tracker_camera_profile,json";
+		role_name = "vive_tracker_camera";
+	}
+	else if (this->_role == "TrackerRole_Keyboard") {
+		input_path = "{htc}/input/tracker/vive_tracker_keyboard_profile,json";
+		role_name = "vive_tracker_keyboard";
+	}
+
+	vr::VRProperties()->SetStringProperty(_props, vr::Prop_InputProfilePath_String, input_path.c_str());
+	vr::VRProperties()->SetStringProperty(_props, vr::Prop_ControllerType_String, role_name.c_str());
 
 	return vr::VRInitError_None;
 }
