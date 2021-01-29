@@ -221,59 +221,63 @@ vr::EVRInitError K2Tracker::Activate(vr::TrackedDeviceIndex_t index)
 	std::string role_name, input_path;
 	if (this->_role == "TrackerRole_Handed")
 	{
-		input_path = "{htc}/input/tracker/vive_tracker_handed_profile,json";
+		input_path = "{htc}/input/tracker/vive_tracker_handed_profile.json";
 		role_name = "vive_tracker_handed";
 	}
 	else if (this->_role == "TrackerRole_LeftFoot")
 	{
-		input_path = "{htc}/input/tracker/vive_tracker_left_foot_profile,json";
+		input_path = "{htc}/input/tracker/vive_tracker_left_foot_profile.json";
 		role_name = "vive_tracker_left_foot";
 	}
 	else if (this->_role == "TrackerRole_RightFoot")
 	{
-		input_path = "{htc}/input/tracker/vive_tracker_right_foot_profile,json";
+		input_path = "{htc}/input/tracker/vive_tracker_right_foot_profile.json";
 		role_name = "vive_tracker_right_foot";
 	}
 	else if (this->_role == "TrackerRole_LeftShoulder")
 	{
-		input_path = "{htc}/input/tracker/vive_tracker_left_shoulder_profile,json";
+		input_path = "{htc}/input/tracker/vive_tracker_left_shoulder_profile.json";
 		role_name = "vive_tracker_left_shoulder";
 	}
 	else if (this->_role == "TrackerRole_RightShoulder") {
-		input_path = "{htc}/input/tracker/vive_tracker_right_shoulder_profile,json";
+		input_path = "{htc}/input/tracker/vive_tracker_right_shoulder_profile.json";
 		role_name = "vive_tracker_right_shoulder";
 	}
 	else if (this->_role == "TrackerRole_LeftElbow") {
-		input_path = "{htc}/input/tracker/vive_tracker_left_elbow_profile,json";
+		input_path = "{htc}/input/tracker/vive_tracker_left_elbow_profile.json";
 		role_name = "vive_tracker_left_elbow";
 	}
 	else if (this->_role == "TrackerRole_RightElbow") {
-		input_path = "{htc}/input/tracker/vive_tracker_right_elbow_profile,json";
+		input_path = "{htc}/input/tracker/vive_tracker_right_elbow_profile.json";
 		role_name = "vive_tracker_right_elbow";
 	}
 	else if (this->_role == "TrackerRole_LeftKnee") {
-		input_path = "{htc}/input/tracker/vive_tracker_left_knee_profile,json";
+		input_path = "{htc}/input/tracker/vive_tracker_left_knee_profile.json";
 		role_name = "vive_tracker_left_knee";
 	}
 	else if (this->_role == "TrackerRole_RightKnee") {
-		input_path = "{htc}/input/tracker/vive_tracker_right_knee_profile,json";
+		input_path = "{htc}/input/tracker/vive_tracker_right_knee_profile.json";
 		role_name = "vive_tracker_right_knee";
 	}
 	else if (this->_role == "TrackerRole_Waist") {
-		input_path = "{htc}/input/tracker/vive_tracker_waist_profile,json";
+		input_path = "{htc}/input/tracker/vive_tracker_waist_profile.json";
 		role_name = "vive_tracker_waist";
 	}
 	else if (this->_role == "TrackerRole_Chest") {
-		input_path = "{htc}/input/tracker/vive_tracker_chest_profile,json";
+		input_path = "{htc}/input/tracker/vive_tracker_chest_profile.json";
 		role_name = "vive_tracker_chest";
 	}
 	else if (this->_role == "TrackerRole_Camera") {
-		input_path = "{htc}/input/tracker/vive_tracker_camera_profile,json";
+		input_path = "{htc}/input/tracker/vive_tracker_camera_profile.json";
 		role_name = "vive_tracker_camera";
 	}
 	else if (this->_role == "TrackerRole_Keyboard") {
-		input_path = "{htc}/input/tracker/vive_tracker_keyboard_profile,json";
+		input_path = "{htc}/input/tracker/vive_tracker_keyboard_profile.json";
 		role_name = "vive_tracker_keyboard";
+	}
+	else {
+		input_path = "{htc}/input/tracker/vive_tracker_handed_profile.json";
+		role_name = "vive_tracker_handed";
 	}
 
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_InputProfilePath_String, input_path.c_str());
