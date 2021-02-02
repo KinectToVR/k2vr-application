@@ -115,7 +115,7 @@ void K2ServerDriver::parse_message(std::string message)
 				_reply = std::to_string(trackerVector.size() - 1);
 
 				LOG(INFO) << "New tracker added! Serial: " + _tracker.data.serial +
-					" Role: " + std::to_string(_tracker.data.role);
+					" Role: " + ITrackerType_Role_String.at(static_cast<ITrackerType>(_tracker.data.role));
 			}
 			else LOG(ERROR) << "Couldn't add new tracker. Serial already present.";
 			oneParamCompleted = true; // At least 1 command done
