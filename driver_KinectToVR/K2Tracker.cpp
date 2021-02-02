@@ -10,7 +10,7 @@ K2Tracker::K2Tracker(K2Objects::K2TrackerBase const& tracker_base)
 	_role = tracker_base.data.role;
 	_active = tracker_base.data.isActive;
 
-	_pose = {0};
+	_pose = { 0 };
 	_pose.poseIsValid = true;
 	_pose.result = vr::TrackingResult_Running_OK;
 	_pose.deviceIsConnected = tracker_base.data.isActive;
@@ -57,10 +57,10 @@ void K2Tracker::set_pose(K2Objects::K2TrackerPose const& pose)
 void K2Tracker::set_pose(K2Objects::K2TrackerPose const& pose, const double _millisFromNow)
 {
 	std::thread([&]()
-	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(_millisFromNow)));
-		set_pose(pose);
-	}).detach();
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(_millisFromNow)));
+			set_pose(pose);
+		}).detach();
 }
 
 void K2Tracker::set_data(K2Objects::K2TrackerData const& data)
@@ -78,10 +78,10 @@ void K2Tracker::set_data(K2Objects::K2TrackerData const& data)
 void K2Tracker::set_data(K2Objects::K2TrackerData const& data, const double _millisFromNow)
 {
 	std::thread([&]()
-	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(_millisFromNow)));
-		set_data(data);
-	}).detach();
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(_millisFromNow)));
+			set_data(data);
+		}).detach();
 }
 
 void K2Tracker::set_state(bool state)
@@ -104,7 +104,7 @@ bool K2Tracker::spawn()
 					// For limiting loop's iterations/s
 					using clock = std::chrono::steady_clock;
 					auto next_frame = clock::now();
-				
+
 					while (true)
 					{
 						// Add time to wait
@@ -155,24 +155,24 @@ vr::EVRInitError K2Tracker::Activate(vr::TrackedDeviceIndex_t index)
 	vr::VRProperties()->SetBoolProperty(_props, vr::Prop_WillDriftInYaw_Bool, false);
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_ManufacturerName_String, "HTC");
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_TrackingFirmwareVersion_String,
-	                                      "1541800000 RUNNER-WATCHMAN$runner-watchman@runner-watchman 2018-01-01 FPGA 512(2.56/0/0) BL 0 VRC 1541800000 Radio 1518800000");
+		"1541800000 RUNNER-WATCHMAN$runner-watchman@runner-watchman 2018-01-01 FPGA 512(2.56/0/0) BL 0 VRC 1541800000 Radio 1518800000");
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_HardwareRevision_String,
-	                                      "product 128 rev 2.5.6 lot 2000/0/0 0");
+		"product 128 rev 2.5.6 lot 2000/0/0 0");
 
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_ConnectedWirelessDongle_String, "D0000BE000");
 	vr::VRProperties()->SetBoolProperty(_props, vr::Prop_DeviceIsWireless_Bool, true);
 	vr::VRProperties()->SetBoolProperty(_props, vr::Prop_DeviceIsCharging_Bool, false);
 	vr::VRProperties()->SetFloatProperty(_props, vr::Prop_DeviceBatteryPercentage_Float, 1.f);
 
-	vr::HmdMatrix34_t l_transform = {-1.f, 0.f, 0.f, 0.f, 0.f, 0.f, -1.f, 0.f, 0.f, -1.f, 0.f, 0.f};
+	vr::HmdMatrix34_t l_transform = { -1.f, 0.f, 0.f, 0.f, 0.f, 0.f, -1.f, 0.f, 0.f, -1.f, 0.f, 0.f };
 	vr::VRProperties()->SetProperty(_props, vr::Prop_StatusDisplayTransform_Matrix34, &l_transform,
-	                                sizeof(vr::HmdMatrix34_t),
-	                                vr::k_unHmdMatrix34PropertyTag);
+		sizeof(vr::HmdMatrix34_t),
+		vr::k_unHmdMatrix34PropertyTag);
 
 	vr::VRProperties()->SetBoolProperty(_props, vr::Prop_Firmware_UpdateAvailable_Bool, false);
 	vr::VRProperties()->SetBoolProperty(_props, vr::Prop_Firmware_ManualUpdate_Bool, false);
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_Firmware_ManualUpdateURL_String,
-	                                      "https://developer.valvesoftware.com/wiki/SteamVR/HowTo_Update_Firmware");
+		"https://developer.valvesoftware.com/wiki/SteamVR/HowTo_Update_Firmware");
 	vr::VRProperties()->SetUint64Property(_props, vr::Prop_HardwareRevision_Uint64, 2214720000);
 	vr::VRProperties()->SetUint64Property(_props, vr::Prop_FirmwareVersion_Uint64, 1541800000);
 	vr::VRProperties()->SetUint64Property(_props, vr::Prop_FPGAVersion_Uint64, 512);
@@ -197,21 +197,21 @@ vr::EVRInitError K2Tracker::Activate(vr::TrackedDeviceIndex_t index)
 	vr::VRProperties()->SetInt32Property(_props, vr::Prop_ControllerHandSelectionPriority_Int32, -1);
 
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_NamedIconPathDeviceOff_String,
-	                                      "{htc}/icons/tracker_status_off.png");
+		"{htc}/icons/tracker_status_off.png");
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_NamedIconPathDeviceSearching_String,
-	                                      "{htc}/icons/tracker_status_searching.gif");
+		"{htc}/icons/tracker_status_searching.gif");
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_NamedIconPathDeviceSearchingAlert_String,
-	                                      "{htc}/icons/tracker_status_searching_alert.gif");
+		"{htc}/icons/tracker_status_searching_alert.gif");
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_NamedIconPathDeviceReady_String,
-	                                      "{htc}/icons/tracker_status_ready.png");
+		"{htc}/icons/tracker_status_ready.png");
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_NamedIconPathDeviceReadyAlert_String,
-	                                      "{htc}/icons/tracker_status_ready_alert.png");
+		"{htc}/icons/tracker_status_ready_alert.png");
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_NamedIconPathDeviceNotReady_String,
-	                                      "{htc}/icons/tracker_status_error.png");
+		"{htc}/icons/tracker_status_error.png");
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_NamedIconPathDeviceStandby_String,
-	                                      "{htc}/icons/tracker_status_standby.png");
+		"{htc}/icons/tracker_status_standby.png");
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_NamedIconPathDeviceAlertLow_String,
-	                                      "{htc}/icons/tracker_status_ready_low.png");
+		"{htc}/icons/tracker_status_ready_low.png");
 
 	vr::VRProperties()->SetBoolProperty(_props, vr::Prop_HasDisplayComponent_Bool, false);
 	vr::VRProperties()->SetBoolProperty(_props, vr::Prop_HasCameraComponent_Bool, false);
@@ -219,73 +219,20 @@ vr::EVRInitError K2Tracker::Activate(vr::TrackedDeviceIndex_t index)
 	vr::VRProperties()->SetBoolProperty(_props, vr::Prop_HasVirtualDisplayComponent_Bool, false);
 
 	/*Get tracker role*/
-	std::string role_enum = ITrackerType_String.at(static_cast<ITrackerType>(_role));
-	
-	/*Update controller type and input path*/
-	std::string role_name, input_path;
-	if (role_enum == "TrackerRole_Handed")
-	{
-		input_path = "{htc}/input/tracker/vive_tracker_handed_profile.json";
-		role_name = "vive_tracker_handed";
-	}
-	else if (role_enum == "TrackerRole_LeftFoot")
-	{
-		input_path = "{htc}/input/tracker/vive_tracker_left_foot_profile.json";
-		role_name = "vive_tracker_left_foot";
-	}
-	else if (role_enum == "TrackerRole_RightFoot")
-	{
-		input_path = "{htc}/input/tracker/vive_tracker_right_foot_profile.json";
-		role_name = "vive_tracker_right_foot";
-	}
-	else if (role_enum == "TrackerRole_LeftShoulder")
-	{
-		input_path = "{htc}/input/tracker/vive_tracker_left_shoulder_profile.json";
-		role_name = "vive_tracker_left_shoulder";
-	}
-	else if (role_enum == "TrackerRole_RightShoulder") {
-		input_path = "{htc}/input/tracker/vive_tracker_right_shoulder_profile.json";
-		role_name = "vive_tracker_right_shoulder";
-	}
-	else if (role_enum == "TrackerRole_LeftElbow") {
-		input_path = "{htc}/input/tracker/vive_tracker_left_elbow_profile.json";
-		role_name = "vive_tracker_left_elbow";
-	}
-	else if (role_enum == "TrackerRole_RightElbow") {
-		input_path = "{htc}/input/tracker/vive_tracker_right_elbow_profile.json";
-		role_name = "vive_tracker_right_elbow";
-	}
-	else if (role_enum == "TrackerRole_LeftKnee") {
-		input_path = "{htc}/input/tracker/vive_tracker_left_knee_profile.json";
-		role_name = "vive_tracker_left_knee";
-	}
-	else if (role_enum == "TrackerRole_RightKnee") {
-		input_path = "{htc}/input/tracker/vive_tracker_right_knee_profile.json";
-		role_name = "vive_tracker_right_knee";
-	}
-	else if (role_enum == "TrackerRole_Waist") {
-		input_path = "{htc}/input/tracker/vive_tracker_waist_profile.json";
-		role_name = "vive_tracker_waist";
-	}
-	else if (role_enum == "TrackerRole_Chest") {
-		input_path = "{htc}/input/tracker/vive_tracker_chest_profile.json";
-		role_name = "vive_tracker_chest";
-	}
-	else if (role_enum == "TrackerRole_Camera") {
-		input_path = "{htc}/input/tracker/vive_tracker_camera_profile.json";
-		role_name = "vive_tracker_camera";
-	}
-	else if (role_enum == "TrackerRole_Keyboard") {
-		input_path = "{htc}/input/tracker/vive_tracker_keyboard_profile.json";
-		role_name = "vive_tracker_keyboard";
-	}
-	else {
-		input_path = "{htc}/input/tracker/vive_tracker_handed_profile.json";
-		role_name = "vive_tracker_handed";
-	}
+	const std::string role_enum_string = ITrackerType_String.at(static_cast<ITrackerType>(_role));
 
-	vr::VRProperties()->SetStringProperty(_props, vr::Prop_InputProfilePath_String, input_path.c_str());
-	vr::VRProperties()->SetStringProperty(_props, vr::Prop_ControllerType_String, role_name.c_str());
+	/*Update controller type and input path*/
+	const std::string input_path =
+		"{htc}/input/tracker/" + role_enum_string + "_profile.json";
+
+	vr::VRProperties()->SetStringProperty(_props,
+		vr::Prop_InputProfilePath_String, input_path.c_str());
+	vr::VRProperties()->SetStringProperty(_props,
+		vr::Prop_ControllerType_String, role_enum_string.c_str());
+
+	/*Update tracker's role in menu*/
+	vr::VRSettings()->SetString(vr::k_pch_Trackers_Section, _serial.c_str(), 
+		ITrackerType_Role_String.at(static_cast<ITrackerType>(_role)));
 
 	return vr::VRInitError_None;
 }

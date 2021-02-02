@@ -2,6 +2,7 @@
 #include <iostream>
 #include <zmq.hpp>
 #include "K2Tracker.h"
+#include <KinectToVR_API.h>
 
 class K2ServerDriver
 {
