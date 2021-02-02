@@ -159,11 +159,11 @@
     <PostBuildEvent>
       <Command>xcopy /y /d "$(SolutionDir)external\driver_resources\*" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\"
 xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
-xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\boost_serialization-vc142-mt-x64-1_75.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
-xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\gflags.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
+xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\boost_serialization-vc142-mt-gd-x64-1_75.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
+xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\gflags_debug.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
 xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\glog.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
 xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\KinectToVR_API.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
-xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\libzmq-mt-4_3_3.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
+xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\libzmq-mt-gd-4_3_3.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
