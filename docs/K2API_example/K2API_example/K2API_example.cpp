@@ -53,7 +53,7 @@ int main()
 		// Class conversion if we don't want to use K2DataPacket
 		const auto result_data = k2_api::update_tracker_data(id,
 			K2Objects::K2TrackerData("/devices/KinectToVR/YunYunTrack", // Your funny serial
-				"TrackerRole_LeftFoot")); // As described, left foot
+				Tracker_LeftFoot)); // As described, left foot
 
 		/*
 		 * Now, we're going to check operations results

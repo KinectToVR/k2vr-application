@@ -47,8 +47,9 @@ namespace K2Objects
 	{
 	public:
 
-		std::string serial = "", role = "";
+		std::string serial = "";
 		bool isActive = false;
+		int role = 0; // Handed Tracker
 
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
@@ -59,7 +60,7 @@ namespace K2Objects
 		K2TrackerData() = default;
 		~K2TrackerData() = default;
 
-		K2TrackerData(std::string m_serial, std::string m_role, bool m_isActive = false) :
+		K2TrackerData(std::string m_serial, int m_role, bool m_isActive = false) :
 			serial(std::move(m_serial)), role(std::move(m_role)), isActive(m_isActive)
 		{
 		}

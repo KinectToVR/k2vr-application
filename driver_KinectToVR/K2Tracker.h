@@ -115,5 +115,6 @@ private:
 	};
 
 	TrackerComponents _components;
-	std::string _serial, _role;
+	std::string _serial;
+	int _role;
 };

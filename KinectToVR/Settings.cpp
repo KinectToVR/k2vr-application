@@ -1,24 +1,9 @@
 #include "Settings.h"
 
 Settings kinectSettings = Settings();
+// glm serialization realized in K2API
 
-/* Addons to serialize types not supported natively by boost */
-namespace boost::serialization
-{
-	template <typename Ar>
-	void serialize(Ar& ar, glm::vec3& v, unsigned)
-	{
-		ar & make_nvp("x", v.x) & make_nvp("y", v.y) & make_nvp("z", v.z);
-	}
-
-	template <typename Ar>
-	void serialize(Ar& ar, glm::quat& q, unsigned)
-	{
-		ar & make_nvp("w", q.w) & make_nvp("x", q.x) & make_nvp("y", q.y) & make_nvp("z", q.z);
-	}
-}
-
-/* Serialize all variables from kinectsettings class */
+/* Serialize all variables from kinectSettings class */
 template <class Archive>
 void Settings::serialize(Archive& archive, const unsigned int version)
 {

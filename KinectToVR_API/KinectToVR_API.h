@@ -2,9 +2,13 @@
 #include <iostream>
 #include <vector>
 #include <random>
+
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/assign/list_of.hpp>
+#include <boost/unordered_map.hpp>
+
 #include "K2Objects.h"
 #include "zmq.hpp"
 
@@ -103,3 +107,76 @@ namespace k2_api
 	 */
 	std::string send_message(std::string data) noexcept(false);
 }
+
+enum ITrackingDeviceType
+{
+	K2_KinectV1,
+	K2_KinectV2,
+	K2_PSMoveService,
+	K2_Other,
+	K2_Unknown
+};
+
+enum ITrackedJointType
+{
+	Joint_Head,
+	Joint_Neck,
+	Joint_SpineShoulder,
+	Joint_ShoulderLeft,
+	Joint_ElbowLeft,
+	Joint_WristLeft,
+	Joint_HandLeft,
+	Joint_HandTipLeft,
+	Joint_ThumbLeft,
+	Joint_ShoulderRight,
+	Joint_ElbowRight,
+	Joint_WristRight,
+	Joint_HandRight,
+	Joint_HandTipRight,
+	Joint_ThumbRight,
+	Joint_SpineMiddle,
+	Joint_SpineWaist,
+	Joint_HipLeft,
+	Joint_KneeLeft,
+	Joint_AnkleLeft,
+	Joint_FootLeft,
+	Joint_HipRight,
+	Joint_KneeRight,
+	Joint_AnkleRight,
+	Joint_FootRight,
+	Joint_Total
+};
+
+enum ITrackerType
+{
+	Tracker_Handed,
+	Tracker_LeftFoot,
+	Tracker_RightFoot,
+	Tracker_LeftShoulder,
+	Tracker_RightShoulder,
+	Tracker_LeftElbow,
+	Tracker_RightElbow,
+	Tracker_LeftKnee,
+	Tracker_RightKnee,
+	Tracker_Waist,
+	Tracker_Chest,
+	Tracker_Camera,
+	Tracker_Keyboard
+};
+
+typedef int JointTrackingState, TrackingDeviceType;
+
+const boost::unordered_map<ITrackerType, const char*>ITrackerType_String = boost::assign::map_list_of
+(Tracker_Handed, "TrackerRole_Handed")
+(Tracker_LeftFoot, "TrackerRole_LeftFoot")
+(Tracker_RightFoot, "TrackerRole_RightFoot")
+(Tracker_LeftShoulder, "TrackerRole_LeftShoulder")
+(Tracker_RightShoulder, "TrackerRole_RightShoulder")
+(Tracker_LeftElbow, "TrackerRole_LeftElbow")
+(Tracker_RightElbow, "TrackerRole_RightElbow")
+(Tracker_LeftKnee, "TrackerRole_LeftKnee")
+(Tracker_RightKnee, "TrackerRole_RightKnee")
+(Tracker_Waist, "TrackerRole_Waist")
+(Tracker_Chest, "TrackerRole_Chest")
+(Tracker_Camera, "TrackerRole_Camera")
+(Tracker_Keyboard, "TrackerRole_Keyboard");

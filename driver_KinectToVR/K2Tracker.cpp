@@ -2,6 +2,7 @@
 #include <openvr_driver.h>
 #include <string>
 #include <thread>
+#include <KinectToVR_API.h>
 
 K2Tracker::K2Tracker(K2Objects::K2TrackerBase const& tracker_base)
 {
@@ -217,61 +218,64 @@ vr::EVRInitError K2Tracker::Activate(vr::TrackedDeviceIndex_t index)
 	vr::VRProperties()->SetBoolProperty(_props, vr::Prop_HasDriverDirectModeComponent_Bool, false);
 	vr::VRProperties()->SetBoolProperty(_props, vr::Prop_HasVirtualDisplayComponent_Bool, false);
 
+	/*Get tracker role*/
+	std::string role_enum = ITrackerType_String.at(static_cast<ITrackerType>(_role));
+	
 	/*Update controller type and input path*/
 	std::string role_name, input_path;
-	if (this->_role == "TrackerRole_Handed")
+	if (role_enum == "TrackerRole_Handed")
 	{
 		input_path = "{htc}/input/tracker/vive_tracker_handed_profile.json";
 		role_name = "vive_tracker_handed";
 	}
-	else if (this->_role == "TrackerRole_LeftFoot")
+	else if (role_enum == "TrackerRole_LeftFoot")
 	{
 		input_path = "{htc}/input/tracker/vive_tracker_left_foot_profile.json";
 		role_name = "vive_tracker_left_foot";
 	}
-	else if (this->_role == "TrackerRole_RightFoot")
+	else if (role_enum == "TrackerRole_RightFoot")
 	{
 		input_path = "{htc}/input/tracker/vive_tracker_right_foot_profile.json";
 		role_name = "vive_tracker_right_foot";
 	}
-	else if (this->_role == "TrackerRole_LeftShoulder")
+	else if (role_enum == "TrackerRole_LeftShoulder")
 	{
 		input_path = "{htc}/input/tracker/vive_tracker_left_shoulder_profile.json";
 		role_name = "vive_tracker_left_shoulder";
 	}
-	else if (this->_role == "TrackerRole_RightShoulder") {
+	else if (role_enum == "TrackerRole_RightShoulder") {
 		input_path = "{htc}/input/tracker/vive_tracker_right_shoulder_profile.json";
 		role_name = "vive_tracker_right_shoulder";
 	}
-	else if (this->_role == "TrackerRole_LeftElbow") {
+	else if (role_enum == "TrackerRole_LeftElbow") {
 		input_path = "{htc}/input/tracker/vive_tracker_left_elbow_profile.json";
 		role_name = "vive_tracker_left_elbow";
 	}
-	else if (this->_role == "TrackerRole_RightElbow") {
+	else if (role_enum == "TrackerRole_RightElbow") {
 		input_path = "{htc}/input/tracker/vive_tracker_right_elbow_profile.json";
 		role_name = "vive_tracker_right_elbow";
 	}
-	else if (this->_role == "TrackerRole_LeftKnee") {
+	else if (role_enum == "TrackerRole_LeftKnee") {
 		input_path = "{htc}/input/tracker/vive_tracker_left_knee_profile.json";
 		role_name = "vive_tracker_left_knee";
 	}
-	else if (this->_role == "TrackerRole_RightKnee") {
+	else if (role_enum == "TrackerRole_RightKnee") {
 		input_path = "{htc}/input/tracker/vive_tracker_right_knee_profile.json";
 		role_name = "vive_tracker_right_knee";
 	}
-	else if (this->_role == "TrackerRole_Waist") {
+	else if (role_enum == "TrackerRole_Waist") {
 		input_path = "{htc}/input/tracker/vive_tracker_waist_profile.json";
 		role_name = "vive_tracker_waist";
 	}
-	else if (this->_role == "TrackerRole_Chest") {
+	else if (role_enum == "TrackerRole_Chest") {
 		input_path = "{htc}/input/tracker/vive_tracker_chest_profile.json";
 		role_name = "vive_tracker_chest";
 	}
-	else if (this->_role == "TrackerRole_Camera") {
+	else if (role_enum == "TrackerRole_Camera") {
 		input_path = "{htc}/input/tracker/vive_tracker_camera_profile.json";
 		role_name = "vive_tracker_camera";
 	}
-	else if (this->_role == "TrackerRole_Keyboard") {
+	else if (role_enum == "TrackerRole_Keyboard") {
 		input_path = "{htc}/input/tracker/vive_tracker_keyboard_profile.json";
 		role_name = "vive_tracker_keyboard";
 	}
