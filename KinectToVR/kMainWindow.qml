@@ -1540,22 +1540,17 @@ Item {
                 }
 
                 Item {
-                    x: -301
-                    y: -728
+                    property int s_reduce: 3
+                    width: 2200 / s_reduce
+                    height: 2068 / s_reduce
+                    scale: s_reduce
+                    
+                    // Some fine tuning
+                    x: 480
+                    y: -35
                     z: 0
-                    width: 2028
-                    height: 2068
 
-                    anchors.bottomMargin: 0
-                    anchors.bottom: rectangle3.bottom
-                    anchors.rightMargin: -279
-                    anchors.right: parent.right
-                    anchors.top: rectangle3.top
-                    anchors.left: rectangle3.left
                     visible: true
-
-                    //TODO: somehow make image smaller to reduce %CPU
-
                     Image { 
                         id: skeletonImage
                         property bool painted: false
@@ -1581,143 +1576,7 @@ Item {
                         }
                     }
                 }
-
-                // Canvas {
-                //     id: painterCanvas
-                //     property bool painted: false
-                //     property bool run: true
-                //     objectName: "painterCanvas"
-                //     x: -301
-                //     y: -728
-                //     width: 2028
-                //     height: 2068
-                //     anchors.bottomMargin: 0
-                //     anchors.bottom: rectangle3.bottom
-                //     anchors.rightMargin: -279
-                //     anchors.right: parent.right
-                //     anchors.top: rectangle3.top
-                //     anchors.left: rectangle3.left
-                //     visible: true
-
-                //     onPaint: {
-                //         painterCanvas.visible = _get.get(qsTr("SKELETON_STATE"))
-                //                 && skeletonButton.show && _get.get(
-                //                     qsTr("VISIBLE"))
-                //         var cx = getContext("2d")
-                //         cx.reset()
-
-                //         cx.lineWidth = 12
-                //         cx.strokeStyle = Qt.rgba(1, 1, 1, 1)
-                //         cx.beginPath()
-
-                //         // For enumeration please see K2 Joint Enumeration
-                //         cx.moveTo(_get.get(qsTr("JOINT_POSE"), 0, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 0, 1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 1, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 1, 1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 2, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 2, 1) * -1 + 810)
-
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 3, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 3, 1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 4, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 4, 1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 5, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 5, 1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 6, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 6, 1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 7, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 7, 1) * -1 + 810)
-                //         cx.moveTo(_get.get(qsTr("JOINT_POSE"), 6, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 6, 1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 8, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 8, 1) * -1 + 810)
-
-                //         cx.moveTo(_get.get(qsTr("JOINT_POSE"), 2, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 2, 1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 9, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 9, 1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 10, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 10,
-                //                            1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 11, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 11,
-                //                            1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 12, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 12,
-                //                            1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 13, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 13,
-                //                            1) * -1 + 810)
-                //         cx.moveTo(_get.get(qsTr("JOINT_POSE"), 12, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 12,
-                //                            1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 14, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 14,
-                //                            1) * -1 + 810)
-
-                //         cx.moveTo(_get.get(qsTr("JOINT_POSE"), 2, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 2, 1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 15, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 15,
-                //                            1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 16, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 16,
-                //                            1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 17, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 17,
-                //                            1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 18, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 18,
-                //                            1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 19, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 19,
-                //                            1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 20, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 20,
-                //                            1) * -1 + 810)
-
-                //         cx.moveTo(_get.get(qsTr("JOINT_POSE"), 16, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 16,
-                //                            1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 21, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 21,
-                //                            1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 22, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 22,
-                //                            1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 23, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 23,
-                //                            1) * -1 + 810)
-                //         cx.lineTo(_get.get(qsTr("JOINT_POSE"), 24, 0) + 1013,
-                //                   _get.get(qsTr("JOINT_POSE"), 24,
-                //                            1) * -1 + 810)
-
-                //         cx.moveTo(0, 0)
-                //         cx.lineTo(0, 0)
-
-                //         cx.closePath()
-                //         cx.stroke()
-                //     }
-
-                //     Timer {
-                //         interval: 35
-                //         running: true
-                //         repeat: true
-                //         onTriggered: {
-                //             if (painterCanvas.run)
-                //                 painterCanvas.requestPaint()
-
-                //             if (_get.get(qsTr("SKELETON_STATE"))
-                //                     && skeletonButton.show && _get.get(
-                //                         qsTr("VISIBLE")))
-                //                 painterCanvas.run = true
-                //             else
-                //                 painterCanvas.run = false
-                //         }
-                //     }
-                // }
-
+                
                 Item {
                     visible: skeletonButton.show && !skeletonImage.visible
 

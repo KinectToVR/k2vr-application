@@ -8,20 +8,22 @@
 #include "runtimeConfig.h"
 #include "TrackingDeviceBase.h"
 
-//TODO: somehow make image smaller to reduce %CPU
-constexpr int s_mat_width = 2028;
-constexpr int  s_mat_height = 2068;
+// We're reducing render by 3 times to lower CPU usage
+constexpr int s_reduce = 3; // By how much will we reduce image (qml:1542)
+constexpr int s_mat_width = 2200 / s_reduce,
+	s_mat_height = 2068 / s_reduce;
 
 inline void s_line(cv::Mat& input, ITrackedJointType from, ITrackedJointType to)
 {
+	// Center the skeleton properly
 	cv::line(input,
 		cv::Point(
-			process.jointPositions[from].x * 1000 + s_mat_width / 2,
-			process.jointPositions[from].y * -1000 + 810),
+			process.jointPositions[from].x * 1000 / s_reduce + s_mat_width / 2,
+			process.jointPositions[from].y * -1000 / s_reduce + 810 / s_reduce),
 		cv::Point(
-			process.jointPositions[to].x * 1000 + s_mat_width / 2,
-			process.jointPositions[to].y * -1000 + 810),
-		cv::Scalar(255, 255, 255), 15);
+			process.jointPositions[to].x * 1000 / s_reduce + s_mat_width / 2,
+			process.jointPositions[to].y * -1000 / s_reduce + 810 / s_reduce),
+		cv::Scalar(255, 255, 255), 9 / s_reduce);
 }
 
 class SkeletonImageProvider : public QQuickImageProvider
@@ -36,8 +38,12 @@ public:
     {
     	// Create skeleton mat
         cv::Mat skeletonMat(s_mat_height, s_mat_width, CV_8UC1);
+    	// Fill with black
+    	skeletonMat.setTo(cv::Scalar(0, 0, 0));
 
 		// Draw skeleton
+    	// TODO: Either stage-tracking or perspective projection
+    	
         s_line(skeletonMat, Joint_Head, Joint_Neck);
         s_line(skeletonMat, Joint_Neck, Joint_SpineShoulder);
     	
