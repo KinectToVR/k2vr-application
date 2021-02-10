@@ -129,10 +129,18 @@ extern "C" __declspec(dllexport) void* HmdDriverFactory(const char* pInterfaceNa
 	GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCWSTR)&HmdDriverFactory, &hm);
 	GetModuleFileNameA(hm, path, sizeof path);
 	
+	/* Log to logs/ directory */
+	std::string _path(path);
+	_path.insert(_path.find("driver_KinectToVR.dll"), "logs\\");
+
+	/* Create logs/ directory */
+	CreateDirectoryA(
+		_path.substr(0, _path.find("\\driver_KinectToVR.dll")).c_str(), NULL);
+	
 	/* Initialize logging */
-	google::InitGoogleLogging(path);
+	google::InitGoogleLogging(_path.c_str());
 	/* Log everything >=INFO to same file */
-	google::SetLogDestination(google::GLOG_INFO, path);
+	google::SetLogDestination(google::GLOG_INFO, _path.c_str());
 
 	FLAGS_logbufsecs = 0; //Set max timeout
 	FLAGS_minloglevel = google::GLOG_INFO;
