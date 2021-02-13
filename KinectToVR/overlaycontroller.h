@@ -35,9 +35,9 @@
 
 namespace application_strings
 {
-	constexpr auto applicationOrganizationName = "KimihikoAkayasaki";
+	constexpr auto applicationOrganizationName = "KinectToVR";
 	constexpr auto applicationName = "KinectToVR";
-	constexpr const char* applicationKey = "KimihikoAkayasaki.KinectToVR"; //temporary!
+	constexpr const char* applicationKey = "KinectToVR.KinectToVR";
 	constexpr const char* applicationDisplayName = "KinectToVR";
 	constexpr const char* versionCheckUrl
 		= "https://raw.githubusercontent.com/KimihikoAkayasaki/update-dummy/main/version.json";
