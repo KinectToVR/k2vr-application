@@ -12,6 +12,13 @@ enum ITrackingDeviceType
 	K2_Unknown
 };
 
+enum ITrackedJointState
+{
+	State_NotTracked,
+	State_Inferred,
+	State_Tracked
+};
+
 enum ITrackedJointType
 {
 	Joint_Head,
