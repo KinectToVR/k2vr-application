@@ -25,51 +25,50 @@ inline void s_line(cv::Mat& input, ITrackedJointType from, ITrackedJointType to)
 {
     // Choose a color for the line if joint isn't tracked properly
     const cv::Scalar s_color = 
-        process.trackingStates[from] != State_Tracked || process.trackingStates[to] != State_Tracked ? 
-        cv::Scalar(255, 189, 0) : cv::Scalar(255, 255, 255);
-    
+		process.trackingStates[from] != State_Tracked || process.trackingStates[to] != State_Tracked ?
+		cv::Scalar(255, 189, 0) : cv::Scalar(255, 255, 255);
+
+	cv::Point p_from = cv::Point(
+		process.jointPositions[from].x * 1000 / s_reduce,
+		process.jointPositions[from].y * -1000 / s_reduce),
+		p_to = cv::Point(
+			process.jointPositions[to].x * 1000 / s_reduce,
+			process.jointPositions[to].y * -1000 / s_reduce);
+
 	//Draw a line from - to a skeleton joint
 #if defined(SKELETON_PROJECTED)
 	// Compose perspective constants, make it 70%
     const double s_from_multiply = .7 * (s_normal_distance / process.jointPositions[from].z),
         s_to_multiply = .7 * (s_normal_distance / process.jointPositions[to].z);
 	
-    // Draw normally, in perspective projection
-    cv::line(input,
-        cv::Point(
-            process.jointPositions[from].x * s_from_multiply * 1000 / s_reduce + s_mat_width / 2,
-            process.jointPositions[from].y * s_from_multiply * -1000 / s_reduce + 810 / s_reduce),
-        cv::Point(
-            process.jointPositions[to].x * s_to_multiply * 1000 / s_reduce + s_mat_width / 2,
-            process.jointPositions[to].y * s_to_multiply * -1000 / s_reduce + 810 / s_reduce),
-        s_color, 9 / s_reduce);
+    // Draw normally, in "perspective" projection
+    p_from.x *= s_from_multiply;
+    p_from.y *= s_from_multiply;
+	
+    p_to.x *= s_to_multiply;
+    p_to.y *= s_to_multiply;
 
 #elif defined(SKELETON_CENTERED)
 	// Center all the drawing to hips
-    cv::line(input,
-        cv::Point(
-            (process.jointPositions[from].x - 
-                process.jointPositions[Joint_SpineMiddle].x) * 1000 / s_reduce + s_mat_width / 2,
-            (process.jointPositions[from].y - 
-                process.jointPositions[Joint_SpineMiddle].y) * -1000 / s_reduce + 810 / s_reduce),
-        cv::Point(
-            (process.jointPositions[to].x - 
-                process.jointPositions[Joint_SpineMiddle].x) * 1000 / s_reduce + s_mat_width / 2,
-            (process.jointPositions[to].y - 
-                process.jointPositions[Joint_SpineMiddle].y) * -1000 / s_reduce + 810 / s_reduce),
-        s_color, 9 / s_reduce);
+    p_from.x -= process.jointPositions[Joint_SpineMiddle].x * 1000 / s_reduce;
+    p_from.y -= process.jointPositions[Joint_SpineMiddle].y * 1000 / s_reduce;
+
+    p_to.x -= process.jointPositions[Joint_SpineMiddle].x * 1000 / s_reduce;
+    p_to.y -= process.jointPositions[Joint_SpineMiddle].y * 1000 / s_reduce;
 	
-#else
-	// Draw normally, in orthographic projection
-	cv::line(input,
-		cv::Point(
-			process.jointPositions[from].x * 1000 / s_reduce + s_mat_width / 2,
-			process.jointPositions[from].y * -1000 / s_reduce + 810 / s_reduce),
-		cv::Point(
-			process.jointPositions[to].x * 1000 / s_reduce + s_mat_width / 2,
-			process.jointPositions[to].y * -1000 / s_reduce + 810 / s_reduce),
-		s_color, 9 / s_reduce);
 #endif
+	// Draw normally, in orthographic projection
+
+	// Offset to center
+    p_from.x += s_mat_width / 2;
+    p_to.x += s_mat_width / 2;
+
+    p_from.y += 810 / s_reduce;
+    p_to.y += 810 / s_reduce;
+
+	// Draw the line
+	cv::line(input, p_from, p_to,
+        s_color, 9 / s_reduce);
 }
 
 class SkeletonImageProvider : public QQuickImageProvider
