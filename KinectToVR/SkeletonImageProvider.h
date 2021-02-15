@@ -28,6 +28,7 @@ inline void s_line(cv::Mat& input, ITrackedJointType from, ITrackedJointType to)
 		process.trackingStates[from] != State_Tracked || process.trackingStates[to] != State_Tracked ?
 		cv::Scalar(255, 189, 0) : cv::Scalar(255, 255, 255);
 
+    // Create a line in ortho mode
 	cv::Point p_from = cv::Point(
 		process.jointPositions[from].x * 1000 / s_reduce,
 		process.jointPositions[from].y * -1000 / s_reduce),
@@ -35,7 +36,6 @@ inline void s_line(cv::Mat& input, ITrackedJointType from, ITrackedJointType to)
 			process.jointPositions[to].x * 1000 / s_reduce,
 			process.jointPositions[to].y * -1000 / s_reduce);
 
-	//Draw a line from - to a skeleton joint
 #if defined(SKELETON_PROJECTED)
 	// Compose perspective constants, make it 70%
     const double s_from_multiply = .7 * (s_normal_distance / process.jointPositions[from].z),
@@ -57,9 +57,8 @@ inline void s_line(cv::Mat& input, ITrackedJointType from, ITrackedJointType to)
     p_to.y -= process.jointPositions[Joint_SpineMiddle].y * 1000 / s_reduce;
 	
 #endif
-	// Draw normally, in orthographic projection
 
-	// Offset to center
+	// Offset line to center
     p_from.x += s_mat_width / 2;
     p_to.x += s_mat_width / 2;
 

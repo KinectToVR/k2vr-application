@@ -7,7 +7,7 @@
 #include <iostream>
 #include <sstream>
 
-/* For priniting debug info to VS */
+/* For printing debug info to VS */
 #define VSDebug( s )            \
 {                             \
    std::wostringstream os_;    \
@@ -26,8 +26,8 @@ signals:
 
 	/* one for click and two for click with arguments */
 public slots:
-	void cppSlot(const QString& msg);
-	void multiCpp(const QString& msg, const QString& arg);
+	void cppSlot(const QString& msg); // One message
+	void multiCpp(const QString& msg, const QString& arg); // 2 arguments
 };
 
 #endif

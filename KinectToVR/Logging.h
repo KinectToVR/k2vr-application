@@ -4,9 +4,6 @@
 #include <QApplication>
 #include <Windows.h>
 
-extern const char* logConfigFileName;
-extern const char* logConfigDefault;
-
 #if defined MAKE_KINECTTOVR_LIB
 #define KINECTTOVR_LIB Q_DECL_EXPORT
 #else

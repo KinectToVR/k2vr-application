@@ -27,7 +27,7 @@ KINECTTOVR_LIB void initLogging()
 	google::SetLogDestination(google::GLOG_INFO, _path.c_str());
 	
 	FLAGS_logbufsecs = 0; //Set max timeout
-	FLAGS_minloglevel = google::GLOG_INFO;
+	FLAGS_minloglevel = google::GLOG_INFO; // Log everything
 	
 	LOG(INFO) << "~~~KinectToVR new logging session begins here!~~~";
 }

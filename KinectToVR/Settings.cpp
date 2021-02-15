@@ -7,6 +7,7 @@ Settings kinectSettings = Settings();
 template <class Archive>
 void Settings::serialize(Archive& archive, const unsigned int version)
 {
+	// Archive all the data (needs to be added manually)
 	archive & BOOST_SERIALIZATION_NVP(waistOrientationTrackingOption)
 		& BOOST_SERIALIZATION_NVP(feetOrientationTrackingOption)
 		& BOOST_SERIALIZATION_NVP(positionalTrackingFilterOption)

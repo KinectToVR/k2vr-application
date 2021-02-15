@@ -36,6 +36,7 @@
 #define KINECTTOVR_LIB Q_DECL_IMPORT
 #endif
 
+// The only exported function, rest should not be called externally
 extern "C" KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_device);
 
 /* Pass quaternion, although spinboxes are using euler angles, should result same */

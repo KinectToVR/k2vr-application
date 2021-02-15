@@ -290,7 +290,7 @@ void updateQSpinboxes(std::array<Eigen::Vector3f, 3>& pos, std::array<Eigen::Qua
 			Eigen::Vector3f()
 		};
 
-		/* Read offsets from qml, remember that they are XZY */
+		/* Read offsets from qml, remember that they are XZY, might be as well a for loop */
 		rot[0].x() = static_cast<float>(quickObj->findChild<QObject*>("controlW")->property("value").toInt()) / 100.f;
 		rot[0].z() = static_cast<float>(quickObj->findChild<QObject*>("control1W")->property("value").toInt()) / 100.f;
 		rot[0].y() = static_cast<float>(quickObj->findChild<QObject*>("control2W")->property("value").toInt()) / 100.f;
@@ -309,7 +309,7 @@ void updateQSpinboxes(std::array<Eigen::Vector3f, 3>& pos, std::array<Eigen::Qua
 				* Eigen::AngleAxisf(rot[i].y(), Eigen::Vector3f::UnitY())
 				* Eigen::AngleAxisf(rot[i].z(), Eigen::Vector3f::UnitZ());
 
-		/* Get positional offsets onto given arrays */
+		/* Get positional offsets onto given arrays, might be as well a for loop */
 		pos[0].x() = static_cast<float>(quickObj->findChild<QObject*>("control3W")->property("value").toInt()) / 100.f;
 		pos[0].y() = static_cast<float>(quickObj->findChild<QObject*>("control4W")->property("value").toInt()) / 100.f;
 		pos[0].z() = static_cast<float>(quickObj->findChild<QObject*>("control5W")->property("value").toInt()) / 100.f;
