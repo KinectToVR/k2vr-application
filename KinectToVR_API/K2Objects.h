@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
+// Device types for K2app
 enum ITrackingDeviceType
 {
 	K2_KinectV1,
@@ -12,6 +13,7 @@ enum ITrackingDeviceType
 	K2_Unknown
 };
 
+// Global joint states
 enum ITrackedJointState
 {
 	State_NotTracked,
@@ -19,6 +21,8 @@ enum ITrackedJointState
 	State_Tracked
 };
 
+// Global Joint Types,
+// see enumeration in external/Kinect
 enum ITrackedJointType
 {
 	Joint_Head,
@@ -49,6 +53,7 @@ enum ITrackedJointType
 	Joint_Total
 };
 
+// OpenVR Tracker types
 enum ITrackerType
 {
 	Tracker_Handed,
@@ -66,8 +71,10 @@ enum ITrackerType
 	Tracker_Keyboard
 };
 
+// Alias for code readability
 typedef int JointTrackingState, TrackingDeviceType;
 
+// Mapping enum to string for eliminating if-else loop
 const boost::unordered_map<ITrackerType, const char*>ITrackerType_String = boost::assign::map_list_of
 (Tracker_Handed, "vive_tracker_handed")
 (Tracker_LeftFoot, "vive_tracker_left_foot")
@@ -99,6 +106,7 @@ ITrackerType_Role_String = boost::assign::map_list_of
 (Tracker_Keyboard, "TrackerRole_Keyboard");
 
 // GLM serialization
+// Just the 2 types we need
 namespace boost::serialization
 {
 	template <typename Ar>
@@ -120,6 +128,7 @@ namespace K2Objects
 	{
 	public:
 
+		// Tracker should be centered automatically
 		glm::quat orientation = glm::quat(1.f, 0.f, 0.f, 0.f);
 		glm::vec3 position = glm::vec3(0.f, 0.f, 0.f);
 
@@ -132,6 +141,7 @@ namespace K2Objects
 		K2TrackerPose() = default;
 		~K2TrackerPose() = default;
 
+		// Quick constructor
 		K2TrackerPose(glm::quat m_orientation, glm::vec3 m_position) :
 			orientation(m_orientation), position(m_position)
 		{
@@ -142,7 +152,7 @@ namespace K2Objects
 	{
 	public:
 
-		std::string serial;
+		std::string serial; // Must be set manually
 		int role = 0; // Handed Tracker
 		bool isActive = false;
 
@@ -155,6 +165,7 @@ namespace K2Objects
 		K2TrackerData() = default;
 		~K2TrackerData() = default;
 
+		// Quick constructor
 		K2TrackerData(std::string m_serial, ITrackerType m_role, bool m_isActive = false) :
 			serial(std::move(m_serial)), role(m_role), isActive(m_isActive)
 		{
@@ -165,7 +176,7 @@ namespace K2Objects
 	{
 	public:
 
-		double millisFromNow = 0;
+		double millisFromNow = 0; // Time offset after sending
 
 		K2PosePacket() = default;
 		~K2PosePacket() = default;
@@ -178,7 +189,7 @@ namespace K2Objects
 		void serialize(Archive& ar, const unsigned int version)
 		{
 			ar& boost::serialization::base_object<K2TrackerPose>(*this)
-				& millisFromNow;
+				& millisFromNow; // Serialize via base class
 		}
 	};
 
@@ -186,7 +197,7 @@ namespace K2Objects
 	{
 	public:
 
-		double millisFromNow = 0;
+		double millisFromNow = 0; // Time offset after sending
 
 		K2DataPacket() = default;
 		~K2DataPacket() = default;
@@ -199,7 +210,7 @@ namespace K2Objects
 		void serialize(Archive& ar, const unsigned int version)
 		{
 			ar& boost::serialization::base_object<K2TrackerData>(*this)
-				& millisFromNow;
+				& millisFromNow; // Serialize via base class
 		}
 	};
 
@@ -209,7 +220,7 @@ namespace K2Objects
 
 		K2TrackerPose pose = K2TrackerPose();
 		K2TrackerData data = K2TrackerData();
-		int id = -1;
+		int id = -1; // For error case
 
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)

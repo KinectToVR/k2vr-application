@@ -24,14 +24,14 @@ namespace k2_api
 	inline zmq::socket_t socket{context, zmq::socket_type::req};
 
 	/**
-	 * \brief Connects socket object to selected port
+	 * \brief Connects socket object to selected port, K2 uses 7135
 	 * \param port TCP port on which should be all calls created
 	 * \return Returns 0 for success and -1 for failure
 	 */
 	KINECTTOVR_API int init_socket(int port) noexcept;
 
 	/**
-	 * \brief Disonnects socket object from port
+	 * \brief Disconnects socket object from port
 	 * \return Returns 0 for success and -1 for failure
 	 */
 	KINECTTOVR_API int close_socket() noexcept;

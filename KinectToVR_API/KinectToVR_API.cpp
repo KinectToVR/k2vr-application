@@ -17,6 +17,7 @@ namespace k2_api
 	{
 		try
 		{
+			// Connect to the desired port via tcp, on localhost (127.0.0.1 should be working too)
 			socket.connect("tcp://localhost:" + std::to_string(port));
 		}
 		catch (std::exception const& e)
@@ -30,7 +31,7 @@ namespace k2_api
 	{
 		try
 		{
-			socket.close();
+			socket.close(); // Otherwise we'll get WSASTARTUP errors
 			context.close();
 		}
 		catch (std::exception const& e)
@@ -65,9 +66,9 @@ namespace k2_api
 	{
 		try
 		{
-			int ret = -1;
+			int ret = -1; // Assume fail
 			for (const K2Objects::K2TrackerBase tracker : tracker_vector)
-				ret = add_tracker(tracker);
+				ret = add_tracker(tracker); // Add all objects
 			return ret;
 		}
 		catch (std::exception const& e)
@@ -80,6 +81,7 @@ namespace k2_api
 	{
 		try
 		{
+			// Just wrap 2 commands
 			add_tracker(tracker);
 			return connect_tracker(tracker.id);
 		}
@@ -93,6 +95,7 @@ namespace k2_api
 	{
 		try
 		{
+			// Just wrap 2 commands + vector
 			add_tracker(tracker_vector);
 			int ret = -1;
 			for (const K2Objects::K2TrackerBase tracker : tracker_vector)
@@ -225,6 +228,6 @@ namespace k2_api
 		zmq::message_t reply{};
 		socket.recv(std::ref(reply), zmq::recv_flags::none);
 
-		return reply.to_string();
+		return reply.to_string(); // Return only the reply
 	}
 }
