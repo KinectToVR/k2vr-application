@@ -23,8 +23,8 @@ repository before posting an issue with building or missing files.
 
 2. Set up the project
    - Take a deep breath and make yourself some coffee, <br>
-   it's gonna take some time to set up all ```vcpkg``` packages, really.<br>
-   (Although, you'll have a bunch of free time, ~~you may start learning japanese~~)
+   it's gonna take some time to set up all ```vcpkg``` packages.<br>
+   (About 1-1.5 hour if you have 300-500mbps internet and a hdd)
 
    - Clone the latest OpenVR and Eigen3 into ```external/```:<br>
    ```git clone https://github.com/ValveSoftware/openvr external/openvr```<br>
@@ -38,7 +38,7 @@ repository before posting an issue with building or missing files.
 
    - Install needed libraries (You should choose one linking method for all packages)<br>
    ```vcpkg install glm:x64-windows boost:x64-windows opencv3[world]:x64-windows cppzmq:x64-windows glog:x64-windows curlpp:x64-windows```<br>
-   (Now you may rest a bit, also please use a drive other than ```C:/```, it's gonna be a bit huge)
+   (Now you may rest a bit, also consider using a drive other than ```C:/```, it'll be about 6-7GB)
 
    - Install and setup Qt Visual Studio Tools (If you're planning on building overlay projects)
       + Download and install [for VS2019](https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2019)
