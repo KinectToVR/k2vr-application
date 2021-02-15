@@ -9,6 +9,7 @@ HRESULT KinectV1Handler::getStatusResult()
 
 std::string KinectV1Handler::statusResultString(HRESULT stat)
 {
+	// Wrap status to string for readability
 	switch (stat)
 	{
 	case S_OK: return "S_OK";
@@ -17,7 +18,7 @@ std::string KinectV1Handler::statusResultString(HRESULT stat)
 	case E_NUI_NOTGENUINE: return "E_NUI_NOTGENUINE The device is not a valid Kinect.";
 	case E_NUI_NOTSUPPORTED: return "E_NUI_NOTSUPPORTED The device is an unsupported model.";
 	case E_NUI_INSUFFICIENTBANDWIDTH: return
-			"E_NUI_INSUFFICIENTBANDWIDTH The device is connected to a hub without the necessary bandwidth requirements.";
+		"E_NUI_INSUFFICIENTBANDWIDTH The device is connected to a hub without the necessary bandwidth requirements.";
 	case E_NUI_NOTPOWERED: return "E_NUI_NOTPOWERED The device is connected, but unpowered.";
 	case E_NUI_NOTREADY: return "E_NUI_NOTREADY There was some other unspecified error.";
 	default: return "Uh Oh undefined kinect error! " + std::to_string(stat);
@@ -40,6 +41,7 @@ void KinectV1Handler::shutdown()
 {
 	try
 	{
+		// Shut down the sensor (Only NUI API)
 		kinectSensor->NuiShutdown();
 	}
 	catch (std::exception& e)
@@ -52,7 +54,7 @@ void KinectV1Handler::update()
 	if (isInitialized())
 	{
 		HRESULT kinectStatus = kinectSensor->NuiStatus();
-		if (kinectStatus == S_OK)
+		if (kinectStatus == S_OK) // Update only if sensor works
 		{
 			updateSkeletalData();
 		}
@@ -92,6 +94,10 @@ void KinectV1Handler::updateSkeletalData()
 {
 	if (kinectSensor->NuiSkeletonGetNextFrame(0, &skeletonFrame) >= 0)
 	{
+		// Parameters for ms' filter.
+		// There may be a need to experiment with it,
+		// Since it's the first filter happening
+		
 		NUI_TRANSFORM_SMOOTH_PARAMETERS params;
 		/*
 		params.fCorrection = .25f;
@@ -116,10 +122,11 @@ void KinectV1Handler::updateSkeletalData()
 
 			if (NUI_SKELETON_TRACKED == trackingState)
 			{
-				isSkeletonTracked = true;
+				isSkeletonTracked = true; // We've got it!
 				/* Copy joint positions */
 				for (int j = 0; j < Joint_Total; ++j)
 				{
+					// Joints are aliased via global indexing array, found in header
 					jointPositions[globalIndex[j]] = skeletonFrame.SkeletonData[i].SkeletonPositions[globalIndex[j]];
 					jointStates[globalIndex[j]] = skeletonFrame.SkeletonData[i].eSkeletonPositionTrackingState[globalIndex[j]];
 
@@ -130,8 +137,10 @@ void KinectV1Handler::updateSkeletalData()
 
 					TrackingDeviceBase::trackingStates[j] = skeletonFrame.SkeletonData[i].eSkeletonPositionTrackingState[globalIndex[j]];
 				}
-				
+
+				// Calculate bone orientations (deprecated, may be replaced later)
 				NuiSkeletonCalculateBoneOrientations(&skeletonFrame.SkeletonData[i], boneOrientations);
+				
 				/* Copy joint orientations */
 				for (int k = 0; k < Joint_Total; ++k)
 				{
@@ -149,5 +158,6 @@ void KinectV1Handler::updateSkeletalData()
 
 Vector4 KinectV1Handler::zeroKinectPosition(int trackedSkeletonIndex)
 {
+	// Since head is the thing we can relate to, return its position
 	return jointPositions[NUI_SKELETON_POSITION_HEAD];
 }
