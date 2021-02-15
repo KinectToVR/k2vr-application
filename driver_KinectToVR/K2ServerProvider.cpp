@@ -20,10 +20,11 @@ namespace k2_driver
 
 		vr::EVRInitError Init(vr::IVRDriverContext* pDriverContext) override
 		{
-			// NOTE 1: use the driver context.  Sets up a big set of globals
+			// NOTE 1: use the driver context. Sets up a big set of globals
 			VR_INIT_SERVER_DRIVER_CONTEXT(pDriverContext);
 			LOG(INFO) << "Driver context init success";
 
+			// Initialize communication with K2API
 			const int initCode = m_ServerDriver.init_ServerDriver("tcp://127.0.0.1:" + std::to_string(port));
 			LOG(INFO) << "Driver's networking server init code: " + 
 				std::to_string(initCode);

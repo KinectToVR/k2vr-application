@@ -11,7 +11,7 @@ K2Tracker::K2Tracker(K2Objects::K2TrackerBase const& tracker_base)
 	_active = tracker_base.data.isActive;
 
 	_pose = { 0 };
-	_pose.poseIsValid = true;
+	_pose.poseIsValid = true; // Otherwise tracker may disappear
 	_pose.result = vr::TrackingResult_Running_OK;
 	_pose.deviceIsConnected = tracker_base.data.isActive;
 
@@ -37,6 +37,7 @@ std::string K2Tracker::get_serial() const
 
 void K2Tracker::update()
 {
+	// If _active is false, then disconnect the tracker
 	_pose.poseIsValid = _active;
 	_pose.deviceIsConnected = _active;
 	vr::VRServerDriverHost()->TrackedDevicePoseUpdated(_index, _pose, sizeof _pose);
@@ -44,6 +45,7 @@ void K2Tracker::update()
 
 void K2Tracker::set_pose(K2Objects::K2TrackerPose const& pose)
 {
+	// Just copy the values
 	_pose.vecPosition[0] = pose.position.x;
 	_pose.vecPosition[1] = pose.position.y;
 	_pose.vecPosition[2] = pose.position.z;
@@ -56,6 +58,7 @@ void K2Tracker::set_pose(K2Objects::K2TrackerPose const& pose)
 
 void K2Tracker::set_pose(K2Objects::K2TrackerPose const& pose, const double _millisFromNow)
 {
+	// For handling PosePacket's time offset
 	std::thread([&]()
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(_millisFromNow)));
@@ -65,6 +68,7 @@ void K2Tracker::set_pose(K2Objects::K2TrackerPose const& pose, const double _mil
 
 void K2Tracker::set_data(K2Objects::K2TrackerData const& data)
 {
+	// Data may only change if the tracker isn't spawned
 	if (!_added)
 	{
 		_serial = data.serial;
@@ -146,7 +150,7 @@ vr::EVRInitError K2Tracker::Activate(vr::TrackedDeviceIndex_t index)
 	vr::VRDriverInput()->CreateBooleanComponent(_props, "/input/system/click", &_components._system_click);
 	vr::VRDriverInput()->CreateHapticComponent(_props, "/output/haptic", &_components._haptic);
 
-	// Register all properties
+	// Register all properties, dumped by sdraw originally
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_TrackingSystemName_String, "lighthouse");
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_ModelNumber_String, "Vive Tracker Pro MV");
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_SerialNumber_String, _serial.c_str());
