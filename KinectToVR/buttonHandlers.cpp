@@ -10,7 +10,8 @@ signalHandler::signalHandler(QObject* parent) : QObject(parent)
 void signalHandler::cppSlot(const QString& msg)
 {
 	std::string str = "Called the C++ slot with message: " + msg.toStdString() + '\n';
-	VSDebug(str.c_str());
+	//VSDebug(str.c_str());
+	LOG(INFO) << str;
 
 	/* Parse only if we finished set-up to omit dummy messages */
 	if (process.started)
@@ -84,7 +85,8 @@ void signalHandler::multiCpp(const QString& msg, const QString& arg)
 {
 	std::string str = "Called the C++ slot with message: " + msg.toStdString() + ", with arguments: " + arg.
 		toStdString() + '\n';
-	VSDebug(str.c_str());
+	//VSDebug(str.c_str());
+	LOG(INFO) << str;
 
 	/* Parse only if we finished set-up to omit dummy messages */
 	if (process.started)
