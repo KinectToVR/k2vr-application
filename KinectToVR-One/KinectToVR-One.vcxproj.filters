@@ -25,6 +25,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{da47c9ae-488a-4a67-aa61-c5dc5fd3463f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KinectV2Handler.cpp">
@@ -46,5 +49,39 @@
     <CustomBuild Include="release\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\KinectToVR\Group-2.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\KinectToVR\Group-15.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\KinectToVR\Group-16.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\KinectToVR\icons8_lock_2.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\KinectToVR\icons8_lock_21.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\KinectToVR\JostSemi-Regular.otf">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\KinectToVR\k2vr-logo.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\KinectToVR\kMainWindow.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\KinectToVR\Vector-Union-2.png">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="..\KinectToVR\resources.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
   </ItemGroup>
 </Project>

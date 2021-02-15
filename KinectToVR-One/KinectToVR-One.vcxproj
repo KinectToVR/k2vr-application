@@ -209,6 +209,19 @@ del "$(SolutionDir)$(Platform)\$(Configuration)\D3Dcompiler_47.dll"</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\KinectToVR\Group-15.png" />
+    <None Include="..\KinectToVR\Group-16.png" />
+    <None Include="..\KinectToVR\Group-2.png" />
+    <None Include="..\KinectToVR\JostSemi-Regular.otf" />
+    <None Include="..\KinectToVR\Vector-Union-2.png" />
+    <None Include="..\KinectToVR\icons8_lock_2.png" />
+    <None Include="..\KinectToVR\icons8_lock_21.png" />
+    <None Include="..\KinectToVR\k2vr-logo.png" />
+    <None Include="..\KinectToVR\kMainWindow.qml" />
+    <QtRcc Include="..\KinectToVR\resources.qrc">
+    </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\KinectToVR\KinectToVR.vcxproj">
       <Project>{6aae9d3b-fdfb-3af6-aa19-54b42cd72d2d}</Project>
     </ProjectReference>
