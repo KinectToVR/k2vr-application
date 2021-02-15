@@ -158,6 +158,7 @@ void KinectV2Handler::updateSkeletalData()
 		newBodyFrameArrived = true;
 		if (bodyFrame) bodyFrame->Release();
 
+		// We have the frame, now parse it
 		updateSkeletalFilters();
 	}
 }
@@ -235,6 +236,8 @@ void KinectV2Handler::shutdown()
 {
 	try
 	{
+		// Release the Kinect sensor, called form k2vr
+		// OR from the crash handler
 		kinectSensor->Release();
 	}
 	catch (std::exception& e)
