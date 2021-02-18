@@ -753,8 +753,8 @@ Item {
             }
 
             Button {
-                property bool connected: true
-                property var textL: "Disconnect Trackers"
+                property bool connected: false
+                property var textL: "Connect Trackers"
                 id: disconnectTrackersButton
                 x: 50
                 y: 390
