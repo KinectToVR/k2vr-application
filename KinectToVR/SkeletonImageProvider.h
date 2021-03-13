@@ -4,7 +4,7 @@
 #include <QQuickImageProvider>
 #include <QImage>
 #include <QPainter>
-#include <opencv/cv.hpp>
+#include <opencv2/opencv.hpp>
 #include "runtimeConfig.h"
 #include "TrackingDeviceBase.h"
 
@@ -21,11 +21,11 @@ constexpr int s_reduce = 3, // By how much will we reduce image (qml:1542)
 constexpr double s_normal_distance = 3;
 
 // Draw a skeleton line
-inline void s_line(cv::Mat& input, ITrackedJointType from, ITrackedJointType to)
+inline void s_line(cv::Mat& input, ktvr::ITrackedJointType from, ktvr::ITrackedJointType to)
 {
     // Choose a color for the line if joint isn't tracked properly
     const cv::Scalar s_color = 
-		process.trackingStates[from] != State_Tracked || process.trackingStates[to] != State_Tracked ?
+		process.trackingStates[from] != ktvr::State_Tracked || process.trackingStates[to] != ktvr::State_Tracked ?
 		cv::Scalar(255, 189, 0) : cv::Scalar(255, 255, 255);
 
     // Create a line in ortho mode
@@ -88,40 +88,40 @@ public:
 
 		// Draw the skeleton with from-to lines
     	// Head
-        s_line(skeletonMat, Joint_Head, Joint_Neck);
-        s_line(skeletonMat, Joint_Neck, Joint_SpineShoulder);
+        s_line(skeletonMat, ktvr::Joint_Head, ktvr::Joint_Neck);
+        s_line(skeletonMat, ktvr::Joint_Neck, ktvr::Joint_SpineShoulder);
 
     	// Upper left limb
-        s_line(skeletonMat, Joint_SpineShoulder, Joint_ShoulderLeft);
-        s_line(skeletonMat, Joint_ShoulderLeft, Joint_ElbowLeft);
-        s_line(skeletonMat, Joint_ElbowLeft, Joint_WristLeft);
-        s_line(skeletonMat, Joint_WristLeft, Joint_HandLeft);
-        s_line(skeletonMat, Joint_HandLeft, Joint_HandTipLeft);
-        s_line(skeletonMat, Joint_HandLeft, Joint_ThumbLeft);
+        s_line(skeletonMat, ktvr::Joint_SpineShoulder, ktvr::Joint_ShoulderLeft);
+        s_line(skeletonMat, ktvr::Joint_ShoulderLeft, ktvr::Joint_ElbowLeft);
+        s_line(skeletonMat, ktvr::Joint_ElbowLeft, ktvr::Joint_WristLeft);
+        s_line(skeletonMat, ktvr::Joint_WristLeft, ktvr::Joint_HandLeft);
+        s_line(skeletonMat, ktvr::Joint_HandLeft, ktvr::Joint_HandTipLeft);
+        s_line(skeletonMat, ktvr::Joint_HandLeft, ktvr::Joint_ThumbLeft);
 
     	// Upper right limb
-        s_line(skeletonMat, Joint_SpineShoulder, Joint_ShoulderRight);
-        s_line(skeletonMat, Joint_ShoulderRight, Joint_ElbowRight);
-        s_line(skeletonMat, Joint_ElbowRight, Joint_WristRight);
-        s_line(skeletonMat, Joint_WristRight, Joint_HandRight);
-        s_line(skeletonMat, Joint_HandRight, Joint_HandTipRight);
-        s_line(skeletonMat, Joint_HandRight, Joint_ThumbRight);
+        s_line(skeletonMat, ktvr::Joint_SpineShoulder, ktvr::Joint_ShoulderRight);
+        s_line(skeletonMat, ktvr::Joint_ShoulderRight, ktvr::Joint_ElbowRight);
+        s_line(skeletonMat, ktvr::Joint_ElbowRight, ktvr::Joint_WristRight);
+        s_line(skeletonMat, ktvr::Joint_WristRight, ktvr::Joint_HandRight);
+        s_line(skeletonMat, ktvr::Joint_HandRight, ktvr::Joint_HandTipRight);
+        s_line(skeletonMat, ktvr::Joint_HandRight, ktvr::Joint_ThumbRight);
 
     	// Spine
-        s_line(skeletonMat, Joint_SpineShoulder, Joint_SpineMiddle);
-        s_line(skeletonMat, Joint_SpineMiddle, Joint_SpineWaist);
+        s_line(skeletonMat, ktvr::Joint_SpineShoulder, ktvr::Joint_SpineMiddle);
+        s_line(skeletonMat, ktvr::Joint_SpineMiddle, ktvr::Joint_SpineWaist);
 
     	// Lower left limb
-        s_line(skeletonMat, Joint_SpineWaist, Joint_HipLeft);
-        s_line(skeletonMat, Joint_HipLeft, Joint_KneeLeft);
-        s_line(skeletonMat, Joint_KneeLeft, Joint_AnkleLeft);
-        s_line(skeletonMat, Joint_AnkleLeft, Joint_FootLeft);
+        s_line(skeletonMat, ktvr::Joint_SpineWaist, ktvr::Joint_HipLeft);
+        s_line(skeletonMat, ktvr::Joint_HipLeft, ktvr::Joint_KneeLeft);
+        s_line(skeletonMat, ktvr::Joint_KneeLeft, ktvr::Joint_AnkleLeft);
+        s_line(skeletonMat, ktvr::Joint_AnkleLeft, ktvr::Joint_FootLeft);
 
         // Lower right limb
-        s_line(skeletonMat, Joint_SpineWaist, Joint_HipRight);
-        s_line(skeletonMat, Joint_HipRight, Joint_KneeRight);
-        s_line(skeletonMat, Joint_KneeRight, Joint_AnkleRight);
-        s_line(skeletonMat, Joint_AnkleRight, Joint_FootRight);
+        s_line(skeletonMat, ktvr::Joint_SpineWaist, ktvr::Joint_HipRight);
+        s_line(skeletonMat, ktvr::Joint_HipRight, ktvr::Joint_KneeRight);
+        s_line(skeletonMat, ktvr::Joint_KneeRight, ktvr::Joint_AnkleRight);
+        s_line(skeletonMat, ktvr::Joint_AnkleRight, ktvr::Joint_FootRight);
         
 		// Return a composed pixel map
 		return QPixmap::fromImage(

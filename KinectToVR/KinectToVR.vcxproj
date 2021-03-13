@@ -66,12 +66,12 @@
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <QtInstall>Qt-6.0.0</QtInstall>
+    <QtInstall>Qt6-1</QtInstall>
     <QtModules>core;gui;network;opengl;qml;quick;quickcontrols2;quickwidgets;widgets</QtModules>
     <QtQMLDebugEnable>true</QtQMLDebugEnable>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <QtInstall>Qt-6.0.0</QtInstall>
+    <QtInstall>Qt6-1</QtInstall>
     <QtModules>core;gui;network;opengl;qml;quick;quickcontrols2;quickwidgets;widgets</QtModules>
     <QtQMLDebugEnable>true</QtQMLDebugEnable>
     <QtDeploy>false</QtDeploy>
@@ -81,9 +81,11 @@
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <VcpkgUseStatic>false</VcpkgUseStatic>
+    <VcpkgTriplet>x64-windows</VcpkgTriplet>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <VcpkgUseStatic>false</VcpkgUseStatic>
+    <VcpkgTriplet>x64-windows</VcpkgTriplet>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
     <Import Project="$(QtMsBuild)\qt.props" />

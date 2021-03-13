@@ -75,9 +75,9 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 
 	/* Update device label (Will be replaced with std::format later) */
 	quickObj->findChild<QObject*>("deviceName")->setProperty("text",
-		tracking_device.deviceType == K2_PSMoveService ? "PSMoveService (PSMS)" :
-		tracking_device.deviceType == K2_KinectV1 ? "Kinect for Xbox 360 (V1)" :
-		tracking_device.deviceType == K2_KinectV2 ? "Kinect for Xbox One (V2)" :
+		tracking_device.deviceType == ktvr::K2_PSMoveService ? "PSMoveService (PSMS)" :
+		tracking_device.deviceType == ktvr::K2_KinectV1 ? "Kinect for Xbox 360 (V1)" :
+		tracking_device.deviceType == ktvr::K2_KinectV2 ? "Kinect for Xbox One (V2)" :
 		"Unknown Device (E_UNKNOWN)");
 
 	/* Setup ui with saved defines */

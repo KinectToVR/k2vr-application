@@ -18,7 +18,7 @@ public:
 	/* We store data in arrays of KV2 size, although K2 numering (see enumeration) */
 	glm::vec4 jointPositions[25];
 	glm::quat boneOrientations[25];
-	JointTrackingState trackingStates[25];
+	ktvr::JointTrackingState trackingStates[25];
 
 	std::array<Eigen::Vector3f, 3> positionalOffsetsBackup{{Eigen::Vector3f(), Eigen::Vector3f(), Eigen::Vector3f()}};
 	std::array<Eigen::Quaternionf, 3> orientationOffsetsBackup{
@@ -26,7 +26,7 @@ public:
 	};
 
 	/* Other variables that are necessary to run program successfully */
-	TrackingDeviceType k_deviceType;
+	ktvr::TrackingDeviceType k_deviceType;
 	std::string sensorState = "E_UNKNOWN";
 
 	int controllerID[2], vrFrameRate;
