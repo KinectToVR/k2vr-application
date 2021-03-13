@@ -176,7 +176,7 @@ void KinectV2Handler::updateSkeletalFilters()
 			kinectBodies[i]->GetJointOrientations(JointType_Count, jointOrientations);
 
 			/* Copy joint positions */
-			for (int j = 0; j < Joint_Total; ++j)
+			for (int j = 0; j < ktvr::Joint_Total; ++j)
 			{
 				TrackingDeviceBase::jointPositions[j].w = 1.0f;
 				TrackingDeviceBase::jointPositions[j].x = joints[globalIndex[j]].Position.X;
@@ -187,7 +187,7 @@ void KinectV2Handler::updateSkeletalFilters()
 			}
 
 			/* Copy joint orientations */
-			for (int k = 0; k < Joint_Total; ++k)
+			for (int k = 0; k < ktvr::Joint_Total; ++k)
 			{
 				TrackingDeviceBase::jointOrientations[k].w = jointOrientations[globalIndex[k]].Orientation.w;
 				TrackingDeviceBase::jointOrientations[k].x = jointOrientations[globalIndex[k]].Orientation.x;

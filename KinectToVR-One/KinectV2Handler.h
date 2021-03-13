@@ -10,7 +10,7 @@ public:
 	KinectV2Handler()
 	{
 		KinectV2Handler::initialize();
-		TrackingDeviceBase::deviceType = K2_KinectV2;
+		TrackingDeviceBase::deviceType = ktvr::K2_KinectV2;
 	}
 
 	virtual ~KinectV2Handler()
