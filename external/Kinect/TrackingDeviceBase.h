@@ -31,10 +31,10 @@ public:
 	 */
 	glm::vec4 jointPositions[25] = { glm::vec4() };
 	glm::quat jointOrientations[25] = { glm::quat() };
-	JointTrackingState trackingStates[25] = { 0 };
+	ktvr::JointTrackingState trackingStates[25] = { 0 };
 
 	// Device type, specified in K2API
-	TrackingDeviceType deviceType = K2_Unknown;
+	ktvr::TrackingDeviceType deviceType = ktvr::K2_Unknown;
 
 	// Helper bool for knowing if skeleton't tracked
 	bool isSkeletonTracked = false;
