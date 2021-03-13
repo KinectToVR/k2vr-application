@@ -1540,6 +1540,7 @@ Item {
                 }
 
                 Item {
+                    id: skeletonImageCanvas
                     property int s_reduce: 3
                     width: 2200 / s_reduce
                     height: 2068 / s_reduce
@@ -1567,18 +1568,19 @@ Item {
                             repeat: true
                             onTriggered: {
                                 if (_get.get(qsTr("SKELETON_STATE")) && skeletonButton.show && _get.get(qsTr("VISIBLE"))) {
-                                    skeletonImage.visible = true
+                                    skeletonImageCanvas.visible = true
                                     skeletonImage.source = "image://SkeletonImage/" + Math.random()
                                 }
-                               else
-                                    skeletonImage.visible = false
+                                else {
+                                    skeletonImageCanvas.visible = false
+                                }
                             }
                         }
                     }
                 }
                 
                 Item {
-                    visible: skeletonButton.show && !skeletonImage.visible
+                    visible: skeletonButton.show && !skeletonImageCanvas.visible
 
                     Label {
                         id: label7
