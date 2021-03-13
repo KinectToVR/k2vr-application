@@ -4,10 +4,9 @@
 KinectToVR provides simple to use driver and bindings for operating it, later called K2API.<br>
 Thanks to it you can easily add and manage virtual trackers without writing your own OpenVR driver.<br>
 For the quick (although descriptive) sample please see [this sample project](https://github.com/KinectToVR/k2vr-application/tree/master/docs/K2API_example).<br>
-Everything is documented in ```KinectToVR_API.h``` header file, <br>
-but for the larger description of what each function does and how to use it, please see [the wiki](https://github.com/KinectToVR/k2vr-application/wiki).<br>
+Everything is documented in ```KinectToVR_API.h``` header file, and [the wiki](https://github.com/KinectToVR/k2vr-application/wiki).<br>
 Everything there, related to or connected with K2API has a ```K2API:``` prefix.<br>
-If you're working in Unity/C#, rather than C++ ~~(or just hate KinectToVR)~~, please see [the VMT Project](https://github.com/gpsnmeajp/VirtualMotionTracker).
+If you're working in Unity/C#, ~~(or just hate KinectToVR)~~, please see [the VMT Project](https://github.com/gpsnmeajp/VirtualMotionTracker).
 
 ## Build instructions
 0. Note: Repository may be chaotically updated, please check out<br>
@@ -70,12 +69,12 @@ repository before posting an issue with building or missing files.
 (Must be the path to vrserver.exe file in current SteamVR installation directory) <br><br>
 ![](https://imgur.com/QAvogtW.png)
 
-2. Remove driver dll from ```[K2Driver]/driver/KinectToVR/bin/win64``` and create a hard link:<br>
-(```K2Driver``` stands for driver's deployment directory, possibly in ```k2vr-application/x64/Release/driver```)
+1. Remove driver dll from ```[K2Driver]/bin/win64``` and create a hard link:<br>
+(```[K2Driver]``` stands for driver's deployment directory, it possibly is ```k2vr-application/x64/Release/driver/KinectToVR```)
    - Open cmd and navigate to ```OutDir``` <br>
    (Where you've built your binaries, possibly in ```x64/Release```)
-   - Delete ```driver_KinectToVR.dll``` and keep the rest
-   - Create a hard link: ```mklink /h driver/KinectToVR/bin/win64/driver_KinectToVR.dll driver_KinectToVR.dll```
+   - Delete ```driver_KinectToVR.dll``` from ```[K2Driver]/bin/win64``` and keep the rest
+   - Create a hard link: ```New-Item -ItemType HardLink -Name "[K2Driver]/bin/win64\driver_KinectToVR.dll" -Value driver_KinectToVR.dll``` where ```[K2Driver]``` possibly stands for ```./driver/KinectToVR```
 
-3. Click on ```driver_KinectToVR``` project and select ```Debug→Start New Instance```<br>
+1. Click on ```driver_KinectToVR``` project and select ```Debug→Start New Instance```<br>
 You may turn on profiling tools (mostly for CPU) and experiment with the debugger right after.
