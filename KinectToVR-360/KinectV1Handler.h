@@ -15,7 +15,7 @@ public:
 	KinectV1Handler()
 	{
 		KinectV1Handler::initialize();
-		TrackingDeviceBase::deviceType = K2_KinectV1;
+		TrackingDeviceBase::deviceType = ktvr::K2_KinectV1;
 	}
 
 	HANDLE kinectRGBStream = nullptr;

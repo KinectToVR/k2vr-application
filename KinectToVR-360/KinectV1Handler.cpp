@@ -124,7 +124,7 @@ void KinectV1Handler::updateSkeletalData()
 			{
 				isSkeletonTracked = true; // We've got it!
 				/* Copy joint positions */
-				for (int j = 0; j < Joint_Total; ++j)
+				for (int j = 0; j < ktvr::Joint_Total; ++j)
 				{
 					// Joints are aliased via global indexing array, found in header
 					jointPositions[globalIndex[j]] = skeletonFrame.SkeletonData[i].SkeletonPositions[globalIndex[j]];
@@ -142,7 +142,7 @@ void KinectV1Handler::updateSkeletalData()
 				NuiSkeletonCalculateBoneOrientations(&skeletonFrame.SkeletonData[i], boneOrientations);
 				
 				/* Copy joint orientations */
-				for (int k = 0; k < Joint_Total; ++k)
+				for (int k = 0; k < ktvr::Joint_Total; ++k)
 				{
 					TrackingDeviceBase::jointOrientations[k].w = boneOrientations[globalIndex[k]].absoluteRotation.rotationQuaternion.w;
 					TrackingDeviceBase::jointOrientations[k].x = boneOrientations[globalIndex[k]].absoluteRotation.rotationQuaternion.x;
