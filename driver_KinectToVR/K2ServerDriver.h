@@ -6,16 +6,16 @@
 
 class K2ServerDriver
 {
-	// Parse a message from K2API
-	void parse_message(std::string message);
-	bool _isActive = false; // Server status
-
-	// ZMQ things to work properly
-	zmq::context_t context{1};
-	zmq::socket_t socket{context, zmq::socket_type::rep};
-
 public:
-	int init_ServerDriver(std::string const& port);
+	// Parse a message from K2API
+	void parse_message(const ktvr::K2Message& message);
+	bool _isActive = false; // Server status
+	
+	// ZMQ things to work properly
+	zmq::context_t context{ 1 };
+	zmq::socket_t socket{ context, zmq::socket_type::rep };
+	
+	[[nodiscard]] int init_ServerDriver(std::string const& port);
 	void setActive(bool m_isActive) { _isActive = m_isActive; }
 
 	// Value should not be discarded, it'd be useless
