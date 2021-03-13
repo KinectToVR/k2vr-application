@@ -4,7 +4,7 @@
 #include <thread>
 #include <KinectToVR_API.h>
 
-K2Tracker::K2Tracker(K2Objects::K2TrackerBase const& tracker_base)
+K2Tracker::K2Tracker(ktvr::K2TrackerBase const& tracker_base)
 {
 	_serial = tracker_base.data.serial;
 	_role = tracker_base.data.role;
@@ -34,58 +34,86 @@ std::string K2Tracker::get_serial() const
 	return _serial;
 }
 
-
 void K2Tracker::update()
 {
-	// If _active is false, then disconnect the tracker
-	_pose.poseIsValid = _active;
-	_pose.deviceIsConnected = _active;
-	vr::VRServerDriverHost()->TrackedDevicePoseUpdated(_index, _pose, sizeof _pose);
-}
-
-void K2Tracker::set_pose(K2Objects::K2TrackerPose const& pose)
-{
-	// Just copy the values
-	_pose.vecPosition[0] = pose.position.x;
-	_pose.vecPosition[1] = pose.position.y;
-	_pose.vecPosition[2] = pose.position.z;
-
-	_pose.qRotation.w = pose.orientation.w;
-	_pose.qRotation.x = pose.orientation.x;
-	_pose.qRotation.y = pose.orientation.y;
-	_pose.qRotation.z = pose.orientation.z;
-}
-
-void K2Tracker::set_pose(K2Objects::K2TrackerPose const& pose, const double _millisFromNow)
-{
-	// For handling PosePacket's time offset
-	std::thread([&]()
-		{
-			std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(_millisFromNow)));
-			set_pose(pose);
-		}).detach();
-}
-
-void K2Tracker::set_data(K2Objects::K2TrackerData const& data)
-{
-	// Data may only change if the tracker isn't spawned
-	if (!_added)
-	{
-		_serial = data.serial;
-		_role = data.role;
-
-		// Not spawning, just pose validity
-		_active = data.isActive;
+	if (_index != vr::k_unTrackedDeviceIndexInvalid) {
+		// If _active is false, then disconnect the tracker
+		_pose.poseIsValid = _active;
+		_pose.deviceIsConnected = _active;
+		vr::VRServerDriverHost()->TrackedDevicePoseUpdated(_index, _pose, sizeof _pose);
 	}
 }
 
-void K2Tracker::set_data(K2Objects::K2TrackerData const& data, const double _millisFromNow)
+void K2Tracker::set_pose(ktvr::K2PosePacket const& pose)
 {
-	std::thread([&]()
-		{
-			std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(_millisFromNow)));
-			set_data(data);
-		}).detach();
+	try {
+		// For handling PosePacket's time offset
+		std::thread([&, pose]()
+			{
+				// Wait the specified time
+				std::this_thread::sleep_for(std::chrono::milliseconds(
+					static_cast<int>(pose.millisFromNow)));
+
+				// Just copy the values
+				_pose.vecPosition[0] = pose.position.x;
+				_pose.vecPosition[1] = pose.position.y;
+				_pose.vecPosition[2] = pose.position.z;
+
+				_pose.qRotation.w = pose.orientation.w;
+				_pose.qRotation.x = pose.orientation.x;
+				_pose.qRotation.y = pose.orientation.y;
+				_pose.qRotation.z = pose.orientation.z;
+			}).detach();
+	}
+	catch (...) {
+		LOG(ERROR) << "Couldn't set tracker pose. An exception occurred.";
+	}
+}
+
+void K2Tracker::set_data(ktvr::K2DataPacket const& data)
+{
+	try {
+		// For handling PosePacket's time offset
+		std::thread([&, data]()
+			{
+				// Wait the specified time
+				std::this_thread::sleep_for(std::chrono::milliseconds(
+					static_cast<int>(data.millisFromNow)));
+
+				// Not spawning, just pose validity
+				_active = data.isActive;
+
+				// Data may only change if the tracker isn't spawned
+				if (!_added)
+				{
+					LOG(INFO) << "Updating tracker's role: " << 
+						ktvr::ITrackerType_Role_String.at(static_cast<ktvr::ITrackerType>(_role)) << 
+						" to: " << 
+						ktvr::ITrackerType_Role_String.at(static_cast<ktvr::ITrackerType>(data.role));
+					
+					_role = data.role;
+					if(!data.serial.empty())
+					{
+						LOG(INFO) << "Updating tracker's serial: " << _serial << " to: " << data.serial;
+						_serial = data.serial;
+					}
+					else LOG(ERROR) << "Couldn't set tracker data. The provided serial was empty.";
+
+					// Spawn automatically
+					if (_active)
+					{
+						// Spawn and set the state
+						spawn();
+						LOG(INFO) << "Tracker autospawned! Serial: " + get_serial() +
+							" Role: " + ktvr::ITrackerType_Role_String.at(static_cast<ktvr::ITrackerType>(_role));
+					}
+				}
+				else LOG(ERROR) << "Couldn't set tracker data. It has been already added.";
+			}).detach();
+	}
+	catch (...) {
+		LOG(ERROR) << "Couldn't set tracker data. An exception occurred.";
+	}
 }
 
 void K2Tracker::set_state(bool state)
@@ -101,25 +129,7 @@ bool K2Tracker::spawn()
 			// Add device to OpenVR devices list
 			vr::VRServerDriverHost()->TrackedDeviceAdded(_serial.c_str(), vr::TrackedDeviceClass_GenericTracker, this);
 			_added = true;
-
-			// Force tracker to update at 120fps until exit
-			std::thread([&]()
-				{
-					// For limiting loop's iterations/s
-					using clock = std::chrono::steady_clock;
-					auto next_frame = clock::now();
-
-					while (true)
-					{
-						// Add time to wait
-						next_frame += std::chrono::milliseconds(1000 / 120);
-						// Update tracker's pose
-						update();
-						//Sleep until next frame
-						std::this_thread::sleep_until(next_frame);
-					}
-				}).detach();
-				return true;
+			return true;
 		}
 	}
 	catch (...) {}
@@ -223,7 +233,7 @@ vr::EVRInitError K2Tracker::Activate(vr::TrackedDeviceIndex_t index)
 	vr::VRProperties()->SetBoolProperty(_props, vr::Prop_HasVirtualDisplayComponent_Bool, false);
 
 	/*Get tracker role*/
-	const std::string role_enum_string = ITrackerType_String.at(static_cast<ITrackerType>(_role));
+	const std::string role_enum_string = ktvr::ITrackerType_String.at(static_cast<ktvr::ITrackerType>(_role));
 
 	/*Update controller type and input path*/
 	const std::string input_path =
@@ -235,8 +245,8 @@ vr::EVRInitError K2Tracker::Activate(vr::TrackedDeviceIndex_t index)
 		vr::Prop_ControllerType_String, role_enum_string.c_str());
 
 	/*Update tracker's role in menu*/
-	vr::VRSettings()->SetString(vr::k_pch_Trackers_Section, _serial.c_str(), 
-		ITrackerType_Role_String.at(static_cast<ITrackerType>(_role)));
+	vr::VRSettings()->SetString(vr::k_pch_Trackers_Section, _serial.c_str(),
+		ktvr::ITrackerType_Role_String.at(static_cast<ktvr::ITrackerType>(_role)));
 
 	return vr::VRInitError_None;
 }
@@ -268,4 +278,25 @@ void K2Tracker::EnterStandby()
 vr::DriverPose_t K2Tracker::GetPose()
 {
 	return _pose;
+}
+
+ktvr::K2TrackerBase K2Tracker::getTrackerBase() {
+	// Copy the data
+	_trackerBase.data.serial = _serial;
+	_trackerBase.data.role = _role;
+	_trackerBase.data.isActive = _active;
+
+	// Copy the position
+	_trackerBase.pose.position.x = _pose.vecPosition[0];
+	_trackerBase.pose.position.y = _pose.vecPosition[1];
+	_trackerBase.pose.position.z = _pose.vecPosition[2];
+
+	// Copy the orientation
+	_trackerBase.pose.orientation.w = _pose.qRotation.w;
+	_trackerBase.pose.orientation.x = _pose.qRotation.x;
+	_trackerBase.pose.orientation.y = _pose.qRotation.y;
+	_trackerBase.pose.orientation.z = _pose.qRotation.z;
+
+	// Return the base object
+	return _trackerBase;
 }

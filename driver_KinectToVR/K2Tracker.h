@@ -31,9 +31,9 @@ public:
 	[[nodiscard]] vr::TrackedDeviceIndex_t get_index() const;
 
 	/**
-	 * \brief Virtual update void for server driver
+	 * \brief Update void for server driver
 	 */
-	virtual void update();
+	void update();
 
 	/**
 	 * \brief Function processing OpenVR events
@@ -74,15 +74,13 @@ public:
 	/**
 	 * \brief Construct new tracker from given tracker base
 	 */
-	K2Tracker(K2Objects::K2TrackerBase const& tracker_base);
+	K2Tracker(ktvr::K2TrackerBase const& tracker_base);
 
 	// Update pose
-	void set_pose(K2Objects::K2TrackerPose const& pose);
-	void set_pose(K2Objects::K2TrackerPose const& pose, double _millisFromNow);
+	void set_pose(ktvr::K2PosePacket const& pose);
 
 	// Update data (only if uninitialized)
-	void set_data(K2Objects::K2TrackerData const& data);
-	void set_data(K2Objects::K2TrackerData const& data, double _millisFromNow);
+	void set_data(ktvr::K2DataPacket const& data);
 
 	void set_state(bool state);
 	bool spawn(); // TrackedDeviceAdded
@@ -92,8 +90,14 @@ public:
 	// Get to know if tracker is active (connected)
 	[[nodiscard]] bool is_active() const { return _active; }
 
+	// Get the base object
+	[[nodiscard]] ktvr::K2TrackerBase getTrackerBase();
+
 private:
 
+	// Tracker base to be returned
+	ktvr::K2TrackerBase _trackerBase;
+	
 	// Is tracker added/active
 	bool _added = false, _active = false;
 
