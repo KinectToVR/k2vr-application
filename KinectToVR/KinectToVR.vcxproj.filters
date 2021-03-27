@@ -41,6 +41,9 @@
     <Filter Include="Image Files">
       <UniqueIdentifier>{bde00eda-be55-4a96-8727-c8eced0bce04}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Filter Files">
+      <UniqueIdentifier>{1f1b3f96-8e80-4c79-a13b-e38577edd4a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -76,6 +79,9 @@
     <ClCompile Include="paths.cpp">
       <Filter>Overlay Files</Filter>
     </ClCompile>
+    <ClCompile Include="K2STracker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KinectToVR.h">
@@ -85,9 +91,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Settings.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="boost_serialization_eigen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <QtMoc Include="buttonHandlers.h">
@@ -125,6 +128,15 @@
     </ClInclude>
     <ClInclude Include="SkeletonImageProvider.h">
       <Filter>Image Files</Filter>
+    </ClInclude>
+    <ClInclude Include="K2STracker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LowPassFilter.h">
+      <Filter>Filter Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KalmanFilter.h">
+      <Filter>Filter Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

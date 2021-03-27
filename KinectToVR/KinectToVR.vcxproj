@@ -218,6 +218,7 @@ del "$(SolutionDir)$(Platform)\$(Configuration)\D3Dcompiler_47.dll"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ivrinput.cpp" />
+    <ClCompile Include="K2STracker.cpp" />
     <ClCompile Include="KinectToVR.cpp" />
     <ClCompile Include="Logging.cpp" />
     <ClCompile Include="openvr_init.cpp" />
@@ -230,6 +231,9 @@ del "$(SolutionDir)$(Platform)\$(Configuration)\D3Dcompiler_47.dll"</Command>
     <ClCompile Include="update_rate.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="K2STracker.h" />
+    <ClInclude Include="KalmanFilter.h" />
+    <ClInclude Include="LowPassFilter.h" />
     <ClInclude Include="SkeletonImageProvider.h" />
     <ClInclude Include="ivrinput.h" />
     <ClInclude Include="ivrinput_action.h" />
@@ -241,7 +245,6 @@ del "$(SolutionDir)$(Platform)\$(Configuration)\D3Dcompiler_47.dll"</Command>
     <ClInclude Include="openvr_init.h" />
     <ClInclude Include="paths.h" />
     <ClInclude Include="Settings.h" />
-    <ClInclude Include="boost_serialization_eigen.h" />
     <ClInclude Include="update_rate.h" />
     <QtMoc Include="buttonHandlers.h">
     </QtMoc>
