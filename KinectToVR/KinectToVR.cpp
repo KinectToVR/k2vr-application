@@ -1,4 +1,4 @@
-﻿#include <KinectToVR.h>
+#include <KinectToVR.h>
 #include <SkeletonImageProvider.h>
 
 /* For interfacing */
@@ -8,10 +8,10 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 {
 	/* Initialize logging */
 	initLogging();
-	
+
 	/* Variables for overlay controller */
-	bool desktopMode = false;
-	bool noSound = true;
+	const bool desktopMode = false,
+		noSound = true;
 	//bool noManifest = true;
 
 	/* set app attributes and create basic instance */
