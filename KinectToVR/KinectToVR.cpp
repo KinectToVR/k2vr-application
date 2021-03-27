@@ -370,22 +370,37 @@ void startCalibration(bool automatic)
 					for (int j = 3; j >= 0; j--)
 					{
 						quickObj->findChild<QObject*>("Autocalib_seconds")->setProperty("text", j);
-						for (int j = 0; j < 2; j++) {
+						for (int k = 0; k < 2; k++) {
 							std::this_thread::sleep_for(std::chrono::milliseconds(500));
 							if (abortCalibration) break; // Check more frequently
 						}
 						if (abortCalibration) break; // Exit second loop
 					}
+					// TODO Capture hmd & head positions here to a variable TODO //
 					if (abortCalibration) break; // Exit
 				}
 
+				/* Look at Kinect part */
+				quickObj->findChild<QObject*>("Autocalib_move")->setProperty("text", "Look at the Kinect!");
+				for (int j = 3; j >= 0; j--)
+				{
+					quickObj->findChild<QObject*>("Autocalib_seconds")->setProperty("text", j);
+					for (int j = 0; j < 2; j++) {
+						std::this_thread::sleep_for(std::chrono::milliseconds(500));
+						if (abortCalibration) break; // Check more frequently
+					}
+					if (abortCalibration) break; // Exit second loop
+				}
+				// TODO Capture hmd orientation here to a variable TODO //
+			
 				/* Compose translations */
-
+				// TODO Compose translation and rotation here TODO //
+				// TODO Save all gathered data TODO //
 
 				/* Reset labels */
 				quickObj->findChild<QObject*>("Autocalib_seconds")->setProperty("text", "~");
 				quickObj->findChild<QObject*>("Autocalib_move")->setProperty("text", "");
-			
+
 				/* Notify that we're done */
 				if (!abortCalibration) {
 					quickObj->findChild<QObject*>("Autocalib_title")->setProperty("text", "Calibration done!");
