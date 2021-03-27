@@ -212,7 +212,8 @@ namespace ktvr
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			ar& orientation& position;
+			ar& BOOST_SERIALIZATION_NVP(orientation)
+				& BOOST_SERIALIZATION_NVP(position);
 		}
 
 		// Default constructors
@@ -226,7 +227,7 @@ namespace ktvr
 		// Move operators
 		K2TrackerPose(K2TrackerPose&&) = default;
 		K2TrackerPose& operator=(K2TrackerPose&&) = default;
-		
+
 		// Quick constructor
 		K2TrackerPose(glm::quat m_orientation, glm::vec3 m_position) :
 			orientation(m_orientation), position(m_position)
@@ -248,7 +249,9 @@ namespace ktvr
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			ar& serial& role& isActive;
+			ar& BOOST_SERIALIZATION_NVP(serial)
+				& BOOST_SERIALIZATION_NVP(role)
+				& BOOST_SERIALIZATION_NVP(isActive);
 		}
 
 		// Default constructors
@@ -305,14 +308,11 @@ namespace ktvr
 		{
 		}
 
-		// Clone function
-		K2PosePacket* clone() const { return new K2PosePacket(*this); }
-		
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			ar& boost::serialization::base_object<K2TrackerPose>(*this)
-				& millisFromNow; // Serialize via base class
+			ar& BOOST_SERIALIZATION_NVP(boost::serialization::base_object<K2TrackerPose>(*this))
+				& BOOST_SERIALIZATION_NVP(millisFromNow); // Serialize via base class
 		}
 	};
 
@@ -352,14 +352,11 @@ namespace ktvr
 		{
 		}
 
-		// Clone function
-		K2DataPacket* clone() { return new K2DataPacket(*this); }
-		
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			ar& boost::serialization::base_object<K2TrackerData>(*this)
-				& millisFromNow; // Serialize via base class
+			ar& BOOST_SERIALIZATION_NVP(boost::serialization::base_object<K2TrackerData>(*this))
+				& BOOST_SERIALIZATION_NVP(millisFromNow); // Serialize via base class
 		}
 	};
 
@@ -374,7 +371,9 @@ namespace ktvr
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			ar& pose& data& id;
+			ar& BOOST_SERIALIZATION_NVP(pose)
+				& BOOST_SERIALIZATION_NVP(data)
+				& BOOST_SERIALIZATION_NVP(id);
 		}
 
 		// Default constructors
@@ -418,12 +417,12 @@ namespace ktvr
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			ar& messageType
-				& tracker_base
-				& tracker_pose
-				& tracker_data
-				& id
-				& state;
+			ar& BOOST_SERIALIZATION_NVP(messageType)
+				& BOOST_SERIALIZATION_NVP(tracker_base)
+				& BOOST_SERIALIZATION_NVP(tracker_pose)
+				& BOOST_SERIALIZATION_NVP(tracker_data)
+				& BOOST_SERIALIZATION_NVP(id)
+				& BOOST_SERIALIZATION_NVP(state);
 		}
 
 		// Serialize as string
@@ -542,11 +541,11 @@ namespace ktvr
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			ar& messageType
-				& tracker_base
-				& id
-				& result
-				& success;
+			ar& BOOST_SERIALIZATION_NVP(messageType)
+				& BOOST_SERIALIZATION_NVP(tracker_base)
+				& BOOST_SERIALIZATION_NVP(id)
+				& BOOST_SERIALIZATION_NVP(result)
+				& BOOST_SERIALIZATION_NVP(success);
 		}
 
 		// Serialize as string
