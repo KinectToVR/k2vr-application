@@ -53,7 +53,7 @@ private:
 	void serialize(Archive& archive, unsigned int version);
 
 public:
-	void saveSettings(), readSettings();
+	static void saveSettings(), readSettings();
 	waistRotationOption waistOrientationTrackingOption = k_EnableWaistOrientationFilter;
 	feetRotationOption feetOrientationTrackingOption = k_EnableFeetOrientationFilter;
 	trackingFilterOption globalPositionTrackingFilterOption = k_EnableTrackingFilter_LERP;
