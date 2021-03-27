@@ -29,6 +29,7 @@
 #include <boost/lexical_cast.hpp>
 #include <array>
 #include <KinectToVR_API.h>
+#include <K2STracker.h>
 
 #if defined MAKE_KINECTTOVR_LIB
 #define KINECTTOVR_LIB Q_DECL_EXPORT
@@ -40,6 +41,12 @@
 extern "C" KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_device);
 
 /* Pass quaternion, although spinboxes are using euler angles, should result same */
-void updateQSpinboxes(std::array<Eigen::Vector3f, 3>& pos, std::array<Eigen::Quaternionf, 3>& qrot, bool set = false);
+void updateQSpinboxes(
+	K2STracker& tracker_waist,
+	K2STracker& tracker_lfoot,
+	K2STracker& tracker_rfoot,
+	bool set = false);
+
+/* Start the calibration, lower is the bool for aborting */
 void startCalibration(bool automatic = true);
 inline bool abortCalibration = false;
