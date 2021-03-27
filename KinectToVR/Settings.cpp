@@ -8,14 +8,12 @@ template <class Archive>
 void Settings::serialize(Archive& archive, const unsigned int version)
 {
 	// Archive all the data (needs to be added manually)
-	archive & BOOST_SERIALIZATION_NVP(waistOrientationTrackingOption)
+	archive& BOOST_SERIALIZATION_NVP(waistOrientationTrackingOption)
 		& BOOST_SERIALIZATION_NVP(feetOrientationTrackingOption)
-		& BOOST_SERIALIZATION_NVP(positionalTrackingFilterOption)
+		& BOOST_SERIALIZATION_NVP(globalPositionTrackingFilterOption)
 		& BOOST_SERIALIZATION_NVP(playspaceOrigin)
 		& BOOST_SERIALIZATION_NVP(rotationMatrix)
 		& BOOST_SERIALIZATION_NVP(translationVector)
-		& BOOST_SERIALIZATION_NVP(positionalOffsets)
-		& BOOST_SERIALIZATION_NVP(glOrientationOffsets)
 		& BOOST_SERIALIZATION_NVP(radPlayspaceOffset)
 		& BOOST_SERIALIZATION_NVP(flipSkeleton);
 }
