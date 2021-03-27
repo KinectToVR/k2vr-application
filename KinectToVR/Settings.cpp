@@ -15,6 +15,7 @@ void Settings::serialize(Archive& archive, const unsigned int version)
 		& BOOST_SERIALIZATION_NVP(rotationMatrix)
 		& BOOST_SERIALIZATION_NVP(translationVector)
 		& BOOST_SERIALIZATION_NVP(radPlayspaceOffset)
+		& BOOST_SERIALIZATION_NVP(trackerVector)
 		& BOOST_SERIALIZATION_NVP(flipSkeleton);
 }
 
