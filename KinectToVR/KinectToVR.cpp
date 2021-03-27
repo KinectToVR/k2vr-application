@@ -27,15 +27,31 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 		application_strings::applicationDisplayName);
 	main.setApplicationVersion(
 		application_strings::applicationVersionString);
+	
+	/* read saved settings from file,
+	 * trycatch already implemented */
+	kinectSettings.readSettings();
 
-	/* read saved settings from file */
-	try
+	/* update 3 default trackers <Settings.h> */
+	for (int i = 0; i < 3; i++)
 	{
-		kinectSettings.readSettings();
-	}
-	catch (boost::archive::archive_exception const& e)
-	{
-		LOG(ERROR) << "Archive serialization error: " << e.what();
+		// Update the serial if we're not overwriting
+		if (!kinectSettings.trackerVector.at(i).overwriteDefaultSerial)
+			kinectSettings.trackerVector.at(i).data.serial = "/devices/KinectToVR/LHR-CB9AD1T" + std::to_string(i);
+
+		// Switch the rest
+		switch (i)
+		{
+		case 0: // Waist
+			kinectSettings.trackerVector.at(i).data.role = ktvr::Tracker_Waist;
+			break;
+		case 1: // LFoot
+			kinectSettings.trackerVector.at(i).data.role = ktvr::Tracker_LeftFoot;
+			break;
+		case 2: // RFoot
+			kinectSettings.trackerVector.at(i).data.role = ktvr::Tracker_RightFoot;
+			break;
+		}
 	}
 
 	/* Initialize OpenVR */
