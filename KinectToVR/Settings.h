@@ -64,8 +64,13 @@ public:
 	Eigen::Matrix<float, 3, 3> rotationMatrix = Eigen::Matrix3f::Zero();
 	Eigen::Matrix<float, 3, 1> translationVector = Eigen::Vector3f::Zero();
 
-	double radPlayspaceOffset = 0.f;
-	bool flipSkeleton = true;
+	/* All trackers which should be added: W,L,R */
+	std::vector<K2STracker> trackerVector{
+		K2STracker(), K2STracker(), K2STracker()
+	}; // This way we're gonna auto-init filters
+
+	double radPlayspaceOffset = 0.f; // LookAt Kinect in radians
+	bool flipSkeleton = true; // If skelton should be flipped
 };
 
 extern Settings kinectSettings;
