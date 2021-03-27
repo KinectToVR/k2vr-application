@@ -21,27 +21,32 @@ void Settings::serialize(Archive& archive, const unsigned int version)
 /* Save settings with boost and output file stream */
 void Settings::saveSettings()
 {
-	std::ofstream output("settings.cfg");
+	try
+	{
+		std::ofstream output("KinectToVR_settings.xml");
 
-	/* Data needs to be stored in other class
-	 * 'cause Eigen doesn't have full-time serialization for now */
-	for (int i = 0; i < 3; i++)
-		glOrientationOffsets[i] = p_cast_type<glm::quat>(orientationOffsets[i]);
-
-	boost::archive::text_oarchive archive(output);
-	archive << BOOST_SERIALIZATION_NVP(kinectSettings);
+		boost::archive::xml_oarchive archive(output);
+		archive << BOOST_SERIALIZATION_NVP(kinectSettings);
+		LOG(INFO) << "Settings have been saved to file \"KinectToVR_settings.xml\"";
+	}
+	catch (boost::archive::archive_exception const& e)
+	{
+		LOG(ERROR) << "Archive serialization error: " << e.what();
+	}
 }
 
 /* Read class from input file stream */
 void Settings::readSettings()
 {
-	std::ifstream input("settings.cfg");
+	try {
+		std::ifstream input("KinectToVR_settings.xml");
 
-	boost::archive::text_iarchive archive(input);
-	archive >> BOOST_SERIALIZATION_NVP(kinectSettings);
-
-	/* Data needs to be stored in other class
-	 * 'cause Eigen doesn't have full-time serialization for now */
-	for (int i = 0; i < 3; i++)
-		orientationOffsets[i] = p_cast_type<Eigen::Quaternionf>(glOrientationOffsets[i]);
+		boost::archive::xml_iarchive archive(input);
+		archive >> BOOST_SERIALIZATION_NVP(kinectSettings);
+		LOG(INFO) << "Settings have been saved to file \"KinectToVR_settings.xml\"";
+	}
+	catch (boost::archive::archive_exception const& e)
+	{
+		LOG(ERROR) << "Archive serialization error: " << e.what();
+	}
 }
