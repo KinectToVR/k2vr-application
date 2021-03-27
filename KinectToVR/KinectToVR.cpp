@@ -70,7 +70,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 	/* Finally, set overlay widget object */
 	LOG(INFO) << "Setting up OpenVR overlay widget...";
 	controller.SetWidget(qobject_cast<QQuickItem*>(quickObj),
-	                     application_strings::applicationDisplayName,
+		application_strings::applicationDisplayName,
 		application_strings::applicationKey);
 
 	/* Update device label (Will be replaced with std::format later) */
@@ -83,20 +83,26 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 	/* Setup ui with saved defines */
 	LOG(INFO) << "Updating overlay's settings with saved ones...";
 	quickObj->findChild<QObject*>("flipCheckBox")->setProperty("checkState",
-	                                                           kinectSettings.flipSkeleton
-		                                                           ? Qt::Checked
-		                                                           : Qt::Unchecked);
-	updateQSpinboxes(kinectSettings.positionalOffsets, kinectSettings.orientationOffsets);
+		kinectSettings.flipSkeleton
+		? Qt::Checked
+		: Qt::Unchecked);
+
+	// Update spinboxes with trackers
+	updateQSpinboxes(
+		kinectSettings.trackerVector.at(0),
+		kinectSettings.trackerVector.at(1),
+		kinectSettings.trackerVector.at(2)
+	);
 
 	/* combo boxes */
 	LOG(INFO) << "Choosing tracking options...";
 	quickObj->findChild<QObject*>("hipsComboBox")->
-	          setProperty("currentIndex", kinectSettings.waistOrientationTrackingOption);
+		setProperty("currentIndex", kinectSettings.waistOrientationTrackingOption);
 	quickObj->findChild<QObject*>("feetComboBox")->
-	          setProperty("currentIndex", kinectSettings.feetOrientationTrackingOption);
+		setProperty("currentIndex", kinectSettings.feetOrientationTrackingOption);
 	quickObj->findChild<QObject*>("filterComboBox")->
-	          setProperty("currentIndex", kinectSettings.positionalTrackingFilterOption);
-	
+		setProperty("currentIndex", kinectSettings.globalPositionTrackingFilterOption);
+
 	/* Set information about what device are we using */
 	process.k_deviceType = tracking_device.deviceType;
 
@@ -115,7 +121,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 	LOG(INFO) << "Scanning for non-default space origin...";
 	kinectSettings.playspaceOrigin = p_cast_type<glm::vec3>(p_VRSystem->GetRawZeroPoseToStandingAbsoluteTrackingPose());
 	double yaw = std::atan2(p_VRSystem->GetRawZeroPoseToStandingAbsoluteTrackingPose().m[0][2],
-	                        p_VRSystem->GetRawZeroPoseToStandingAbsoluteTrackingPose().m[2][2]);
+		p_VRSystem->GetRawZeroPoseToStandingAbsoluteTrackingPose().m[2][2]);
 	if (yaw < 0.0) yaw = 2 * M_PI + yaw;
 	kinectSettings.radPlayspaceOffset = yaw;
 
@@ -133,7 +139,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 	{
 		quickObj->findChild<QObject*>("newVersionPopup")->setProperty("visible", true);
 		quickObj->findChild<QObject*>("infoIcon")->setProperty("visible", true);
-		
+
 		quickObj->findChild<QObject*>("updateNumberLabel")->setProperty("text",
 			QString("KinectToVR v") +
 			QString::number(controller.m_remoteVersionMajor) + "." +
