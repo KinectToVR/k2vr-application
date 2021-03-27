@@ -19,6 +19,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <Eigen/Dense>
 #include "zmq.hpp"
 
 #ifdef KINECTTOVR_API_EXPORTS
@@ -27,10 +28,10 @@
 #define KTVR_API __declspec(dllimport)
 #endif
 
-// GLM serialization
-// Just the 2 types we need
 namespace boost::serialization
 {
+	// GLM serialization
+	// Just the 2 types we need
 	template <typename Ar>
 	void serialize(Ar& ar, glm::vec3& v, unsigned)
 	{
@@ -41,6 +42,27 @@ namespace boost::serialization
 	void serialize(Ar& ar, glm::quat& q, unsigned)
 	{
 		ar& make_nvp("w", q.w)& make_nvp("x", q.x)& make_nvp("y", q.y)& make_nvp("z", q.z);
+	}
+
+	// Eigen serialization
+	// Just the 2 types we need
+	template <class Archive, typename _Scalar, int _Rows, int _Cols, int _Options, int _MaxRows, int _MaxCols>
+	void serialize(Archive& ar,
+		Eigen::Matrix<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols>& t,
+		const unsigned int file_version
+	)
+	{
+		for (size_t i = 0; i < t.size(); i++)
+			ar& make_nvp(("m" + std::to_string(i)).c_str(), t.data()[i]);
+	}
+
+	template <class Archive, typename _Scalar>
+	void serialize(Archive& ar, Eigen::Quaternion<_Scalar>& q, unsigned)
+	{
+		ar& BOOST_SERIALIZATION_NVP(q.w())
+			& BOOST_SERIALIZATION_NVP(q.x())
+			& BOOST_SERIALIZATION_NVP(q.y())
+			& BOOST_SERIALIZATION_NVP(q.z());
 	}
 }
 
