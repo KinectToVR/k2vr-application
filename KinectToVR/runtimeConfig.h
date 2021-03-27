@@ -20,7 +20,8 @@ public:
 	glm::quat boneOrientations[25];
 	ktvr::JointTrackingState trackingStates[25];
 
-	std::array<Eigen::Vector3f, 3> positionalOffsetsBackup{{Eigen::Vector3f(), Eigen::Vector3f(), Eigen::Vector3f()}};
+	std::array<Eigen::Vector3f, 3> positionOffsetsBackup{
+		{Eigen::Vector3f(), Eigen::Vector3f(), Eigen::Vector3f()}};
 	std::array<Eigen::Quaternionf, 3> orientationOffsetsBackup{
 		{Eigen::Quaternionf(), Eigen::Quaternionf(), Eigen::Quaternionf()}
 	};
