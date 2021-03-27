@@ -24,19 +24,41 @@ void signalHandler::cppSlot(const QString& msg)
 
 		if (msg == "SHOWOFFSETS")
 		{
-			process.positionalOffsetsBackup = kinectSettings.positionalOffsets;
-			process.orientationOffsetsBackup = kinectSettings.orientationOffsets;
+			process.positionOffsetsBackup =
+				std::to_array<Eigen::Vector3f>({
+					p_cast_type<Eigen::Vector3f>(kinectSettings.trackerVector.at(0).positionOffset),
+					p_cast_type<Eigen::Vector3f>(kinectSettings.trackerVector.at(1).positionOffset),
+					p_cast_type<Eigen::Vector3f>(kinectSettings.trackerVector.at(2).positionOffset)
+					});
+			process.orientationOffsetsBackup =
+				std::to_array<Eigen::Quaternionf>({
+					p_cast_type<Eigen::Quaternionf>(kinectSettings.trackerVector.at(0).orientationOffset),
+					p_cast_type<Eigen::Quaternionf>(kinectSettings.trackerVector.at(1).orientationOffset),
+					p_cast_type<Eigen::Quaternionf>(kinectSettings.trackerVector.at(2).orientationOffset)
+					});
 			process.settingOffsets = true;
 		}
 
 		if (msg == "OFFSETSCANCELLED")
 		{
 			process.settingOffsets = false;
-			kinectSettings.positionalOffsets = process.positionalOffsetsBackup;
-			kinectSettings.orientationOffsets = process.orientationOffsetsBackup;
+
+			// Copy position offsets
+			for (int i = 0; i < 3; i++)
+				kinectSettings.trackerVector.at(i).positionOffset =
+				p_cast_type<glm::vec3>(process.positionOffsetsBackup[i]);
+
+			// Copy orientation offsets
+			for (int i = 0; i < 3; i++)
+				kinectSettings.trackerVector.at(i).orientationOffset =
+				p_cast_type<glm::quat>(process.orientationOffsetsBackup[i]);
 
 			/* Update spinboxes to their previous state, cause offsets SET was cancelled */
-			updateQSpinboxes(kinectSettings.positionalOffsets, kinectSettings.orientationOffsets);
+			updateQSpinboxes(
+				kinectSettings.trackerVector.at(0),
+				kinectSettings.trackerVector.at(1),
+				kinectSettings.trackerVector.at(2)
+			);
 		}
 
 		if (msg == "OFFSETSAPPROVED")
@@ -44,8 +66,18 @@ void signalHandler::cppSlot(const QString& msg)
 			process.settingOffsets = false;
 
 			/* only SET because offsets are being updated at execution time */
-			process.positionalOffsetsBackup = kinectSettings.positionalOffsets;
-			process.orientationOffsetsBackup = kinectSettings.orientationOffsets;
+			process.positionOffsetsBackup =
+				std::to_array<Eigen::Vector3f>({
+					p_cast_type<Eigen::Vector3f>(kinectSettings.trackerVector.at(0).positionOffset),
+					p_cast_type<Eigen::Vector3f>(kinectSettings.trackerVector.at(1).positionOffset),
+					p_cast_type<Eigen::Vector3f>(kinectSettings.trackerVector.at(2).positionOffset)
+					});
+			process.orientationOffsetsBackup =
+				std::to_array<Eigen::Quaternionf>({
+					p_cast_type<Eigen::Quaternionf>(kinectSettings.trackerVector.at(0).orientationOffset),
+					p_cast_type<Eigen::Quaternionf>(kinectSettings.trackerVector.at(1).orientationOffset),
+					p_cast_type<Eigen::Quaternionf>(kinectSettings.trackerVector.at(2).orientationOffset)
+					});
 		}
 
 		if (msg == "AUTOCALIBRATION_STARTED")
