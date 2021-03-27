@@ -143,13 +143,13 @@ void signalHandler::multiCpp(const QString& msg, const QString& arg)
 
 		if (msg == "FILTER") {
 			if (arg == " Linear Interpolation")
-				kinectSettings.positionalTrackingFilterOption = k_EnableTrackingFilter_LERP;
+				kinectSettings.globalPositionTrackingFilterOption = k_EnableTrackingFilter_LERP;
 			else if (arg == " Lowpass Optical")
-				kinectSettings.positionalTrackingFilterOption = k_EnableTrackingFilter_LowPass;
+				kinectSettings.globalPositionTrackingFilterOption = k_EnableTrackingFilter_LowPass;
 			else if (arg == " Extended Kalman")
-				kinectSettings.positionalTrackingFilterOption = k_EnableTrackingFilter_Kalman;
+				kinectSettings.globalPositionTrackingFilterOption = k_EnableTrackingFilter_Kalman;
 			else if (arg == " Disable Filter")
-				kinectSettings.positionalTrackingFilterOption = k_DisableTrackingFilter;
+				kinectSettings.globalPositionTrackingFilterOption = k_DisableTrackingFilter;
 		}
 
 
