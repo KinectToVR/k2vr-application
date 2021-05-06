@@ -157,6 +157,37 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 		vr::ETrackedControllerRole::TrackedControllerRole_LeftHand);
 	process.vrFrameRate = p_VRSystem->GetFloatTrackedDeviceProperty(0, vr::Prop_DisplayFrequency_Float);
 
+	
+	/* Log dumped values */
+	LOG(INFO) << "Got VR Framerate: " << (process.vrFrameRate >= 30 && process.vrFrameRate <= 140 ? process.vrFrameRate : 60);
+	if (static_cast<unsigned>(process.controllerID[0]) != vr::k_unTrackedDeviceIndexInvalid &&
+		static_cast<unsigned>(process.controllerID[1]) != vr::k_unTrackedDeviceIndexInvalid)
+		LOG(INFO) << "Found controller ids: [R: " << process.controllerID[0] << ", L: " << process.controllerID[0];
+	else LOG(ERROR) << "No controllers were found! (k_unTrackedDeviceIndexInvalid)";
+	
+	/* Initialize the K2API and connect to the server */
+	//TODO: In the meantime, display 3 dots and 'still connecting'
+	LOG(INFO) << "Connecting to the K2Driver server...";
+
+	/* Initialize the port */
+	LOG(INFO) << "Initializing the server port...";
+	const auto init_code = ktvr::init_socket(K2API_SOCKET);
+	
+	LOG(INFO) << "Port " << K2API_SOCKET << " initialization " <<
+		(init_code == 0 ? "succeed" : "failed") << ", exit code: " << init_code;
+
+	/* Connection test and display ping */
+	std::thread([&]
+		{ // We must not be waiting, there's too much work to hang forever (literally)
+			LOG(INFO) << "Testing the connection...";
+
+			for (int i = 0; i < 3; i++) {
+				LOG(INFO) << "Starting the test no " << i << "...";
+				testConnection(true);
+			}
+		}).detach();
+	//TODO: REMOVE K@API INTERFACING IF TEST DID NOT PASS
+
 	/* Update program with potential new version, if detected */
 	if (controller.newVersionDetected())
 	{
