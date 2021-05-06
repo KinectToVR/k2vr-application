@@ -22,6 +22,10 @@
 #include <Eigen/Dense>
 #include "zmq.hpp"
 
+#define K2API_GET_TIMESTAMP_NOW \
+	std::chrono::time_point_cast<std::chrono::microseconds>	\
+	(std::chrono::system_clock::now()).time_since_epoch().count()
+
 #ifdef KINECTTOVR_API_EXPORTS
 #define KTVR_API __declspec(dllexport)
 #else
