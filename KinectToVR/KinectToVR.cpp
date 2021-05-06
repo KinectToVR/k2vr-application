@@ -223,12 +223,12 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 
 			while (true)
 			{
+				
 				/* Check if we have vr framerate, not to divide by 0 and,
-					if there is no vr running on hmd, run at 30 fps*/
+					if there is no vr running on hmd / error, run at 60 fps*/
 				next_frame += std::chrono::milliseconds(1000 /
-					(process.vrFrameRate >= 30 && process.vrFrameRate <= 140 ? process.vrFrameRate : 30));
-
-
+					(process.vrFrameRate >= 30 && process.vrFrameRate <= 140 ? process.vrFrameRate : 60));
+				
 				/* If we are currently working on offsets, then update
 					process variables with QSpinboxes' values */
 				if (process.settingOffsets)
@@ -238,16 +238,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 						kinectSettings.trackerVector.at(2),
 						true);
 
-				/* Grab controller ids in every loop, then we can remove reconnect function,
-					check for vr framerate changed every loop*/
-				process.controllerID[0] = p_VRSystem->GetTrackedDeviceIndexForControllerRole(
-					vr::ETrackedControllerRole::TrackedControllerRole_RightHand);
-				process.controllerID[1] = p_VRSystem->GetTrackedDeviceIndexForControllerRole(
-					vr::ETrackedControllerRole::TrackedControllerRole_LeftHand);
-				process.vrFrameRate = p_VRSystem->GetFloatTrackedDeviceProperty(0,
-					vr::Prop_DisplayFrequency_Float);
-
-
+				
 				/* Get all devices pose in big array, instead of checking for one at time */
 				vr::TrackedDevicePose_t vrDevicesPose[vr::k_unMaxTrackedDeviceCount];
 				p_VRSystem->GetDeviceToAbsoluteTrackingPose(vr::ETrackingUniverseOrigin::TrackingUniverseStanding, 0,
@@ -257,6 +248,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 				process.headsetPosition = p_cast_type<Eigen::Vector3f>(vrDevicesPose[0].mDeviceToAbsoluteTracking);
 				process.headsetOrientation = p_cast_type<Eigen::Quaternionf>(vrDevicesPose[0].mDeviceToAbsoluteTracking);
 
+				
 				/* Process controllers input and position (if they are connected) */
 				for (int id = 0; id < 2; id++)
 				{
