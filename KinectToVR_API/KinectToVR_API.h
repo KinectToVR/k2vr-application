@@ -144,7 +144,8 @@ namespace ktvr
 		K2Message_SetStateAll,
 		K2Message_UpdateTrackerPose, // Update
 		K2Message_UpdateTrackerData,
-		K2Message_DownloadTracker // Get tracker
+		K2Message_DownloadTracker, // Get tracker
+		K2Message_Ping // Test message
 	};
 
 	// Return messenging types
@@ -405,6 +406,13 @@ namespace ktvr
 		// Message type, assume fail
 		MessageType messageType = K2Message_Invalid;
 
+		// Message timestamp when sent
+		long long messageTimestamp = 0,
+			messageManualTimestamp = 0; // This one's for mid-events
+
+		// Since we're updating the main timestamp on creation,
+		// we'd like to check other ones somehow
+
 		// Object, parsing depends on type
 		K2TrackerBase tracker_base = K2TrackerBase();
 		K2PosePacket tracker_pose = K2PosePacket();
@@ -422,7 +430,9 @@ namespace ktvr
 				& BOOST_SERIALIZATION_NVP(tracker_pose)
 				& BOOST_SERIALIZATION_NVP(tracker_data)
 				& BOOST_SERIALIZATION_NVP(id)
-				& BOOST_SERIALIZATION_NVP(state);
+				& BOOST_SERIALIZATION_NVP(state)
+				& BOOST_SERIALIZATION_NVP(messageTimestamp)
+				& BOOST_SERIALIZATION_NVP(messageManualTimestamp);
 		}
 
 		// Serialize as string
@@ -496,7 +506,7 @@ namespace ktvr
 			tracker_base = std::move(m_tracker);
 			messageType = K2Message_AddTracker;
 		}
-
+		
 		// Set all trackers' state
 		K2Message(const bool m_state) :
 			state(m_state)
@@ -530,11 +540,18 @@ namespace ktvr
 		// Message type, assume fail
 		MessageType messageType = K2ResponseMessage_Invalid;
 
+		// Message timestamp when sent
+		long long messageTimestamp = 0,
+			messageManualTimestamp = 0; // This one's for mid-events
+
+		// Since we're updating the main timestamp on creation,
+		// we'd like to check other ones somehow
+
 		// For downloading a tracker
 		K2TrackerBase tracker_base = K2TrackerBase();
 
 		// Rest object, depends on type too
-		int id = -1; // Tracker's id, ssume fail
+		int id = -1; // Tracker's id, assume fail
 		MessageCode result = -1; // For error case
 		bool success = false;
 
@@ -545,7 +562,9 @@ namespace ktvr
 				& BOOST_SERIALIZATION_NVP(tracker_base)
 				& BOOST_SERIALIZATION_NVP(id)
 				& BOOST_SERIALIZATION_NVP(result)
-				& BOOST_SERIALIZATION_NVP(success);
+				& BOOST_SERIALIZATION_NVP(success)
+				& BOOST_SERIALIZATION_NVP(messageTimestamp)
+				& BOOST_SERIALIZATION_NVP(messageManualTimestamp);
 		}
 
 		// Serialize as string
