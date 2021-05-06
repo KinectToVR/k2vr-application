@@ -1,8 +1,15 @@
-﻿#include <KinectToVR.h>
+#include <KinectToVR.h>
 #include <SkeletonImageProvider.h>
+#define K2API_SOCKET 7135
 
 /* For interfacing */
 QObject* quickObj;
+
+using namespace std::chrono;
+
+using PeriodType = high_resolution_clock::period;
+using DurationType = high_resolution_clock::duration;
+using millisecondsf = duration<float, std::chrono::milliseconds::period>;
 
 KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_device)
 {
