@@ -97,24 +97,26 @@ void KinectV1Handler::updateSkeletalData()
 		// Parameters for ms' filter.
 		// There may be a need to experiment with it,
 		// Since it's the first filter happening
-		
-		NUI_TRANSFORM_SMOOTH_PARAMETERS params;
-		/*
-		params.fCorrection = .25f;
-		params.fJitterRadius = .4f;
-		params.fMaxDeviationRadius = .25f;
-		params.fPrediction = .25f;
-		params.fSmoothing = .25f;
-		//*/
-		///*
-		params.fSmoothing = .15f;
-		params.fCorrection = .25f;
-		params.fMaxDeviationRadius = .17f;
-		params.fJitterRadius = .11f;
-		params.fPrediction = .17f;
-		//*/
 
-		kinectSensor->NuiTransformSmooth(&skeletonFrame, &params); //Smooths jittery tracking
+		/* We have our own filters */
+		//NUI_TRANSFORM_SMOOTH_PARAMETERS params;
+		///*
+		//params.fCorrection = .25f;
+		//params.fJitterRadius = .4f;
+		//params.fMaxDeviationRadius = .25f;
+		//params.fPrediction = .25f;
+		//params.fSmoothing = .25f;
+		////*/
+		/////*
+		//params.fSmoothing = .15f;
+		//params.fCorrection = .25f;
+		//params.fMaxDeviationRadius = .17f;
+		//params.fJitterRadius = .11f;
+		//params.fPrediction = .17f;
+		////*/
+
+		//kinectSensor->NuiTransformSmooth(&skeletonFrame, &params); //Smooths jittery tracking
+		/* We have our own filters */
 
 		for (int i = 0; i < NUI_SKELETON_COUNT; ++i)
 		{
