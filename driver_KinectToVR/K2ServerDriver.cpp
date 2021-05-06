@@ -89,7 +89,10 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 	std::string _reply; // Reply that will be sent to client
 	ktvr::K2ResponseMessage _response; // Response message to be sent
 
-		// Parse the message if it's not invalid
+	// Add the timestamp: parsing
+	_response.messageManualTimestamp = K2API_GET_TIMESTAMP_NOW;
+
+	// Parse the message if it's not invalid
 	if (message.messageType != ktvr::K2MessageType::K2Message_Invalid) {
 
 		// Switch based on the message type
@@ -250,6 +253,12 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 				_response.result = ktvr::K2ResponseMessageCode_BadRequest;
 			}
 		}break;
+		case ktvr::K2MessageType::K2Message_Ping: {
+			// Compose the response
+			_response.success = true;
+			_response.messageType =
+				ktvr::K2ResponseMessageType::K2ResponseMessage_Tracker;
+		}break;
 		default:
 			LOG(ERROR) << "Couldn't process message. The message type was not set. (Type invalid)";
 			_response.result = ktvr::K2ResponseMessageCode_BadRequest;
@@ -260,6 +269,13 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 		LOG(ERROR) << "Couldn't process message. Message had had invalid type.";
 		_response.result = ktvr::K2ResponseMessageCode_ParsingError;
 	}
+
+	// Check the return code
+	if (_response.success) // If succeed, let's sassume it's okay
+		_response.result = ktvr::K2ResponseMessageCode_OK;
+
+	// Set the manual timestamp
+	_response.messageTimestamp = K2API_GET_TIMESTAMP_NOW;
 
 	// Serialize the response
 	_reply = // Serialize to hex format
