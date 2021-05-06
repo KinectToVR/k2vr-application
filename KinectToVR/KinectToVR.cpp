@@ -216,6 +216,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 			/* For limiting loop 'fps' */
 			using clock = std::chrono::steady_clock;
 			auto next_frame = clock::now();
+			long long frameNumber = 4995; // Check in 5 frames when starting
 
 			/* We have finished setup */
 			process.started = true;
@@ -223,6 +224,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 
 			while (true)
 			{
+				const auto start = high_resolution_clock::now();
 				
 				/* Check if we have vr framerate, not to divide by 0 and,
 					if there is no vr running on hmd / error, run at 60 fps*/
@@ -281,8 +283,36 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 					std::begin(process.boneOrientations));
 				std::copy(std::begin(tracking_device.trackingStates), std::end(tracking_device.trackingStates),
 					std::begin(process.trackingStates));
+				
 
-				std::this_thread::sleep_until(next_frame); //Sleep until next frame, if time didn't pass yet
+				/* If 5000 frames have passed, log ping and status AND update controller ids (about once per 30s) */
+				if (frameNumber >= 5000) {
+					/* Update IDs and FrameRate, oce per frame is kinda... to often */
+					process.controllerID[0] = p_VRSystem->GetTrackedDeviceIndexForControllerRole(
+						vr::ETrackedControllerRole::TrackedControllerRole_RightHand);
+					process.controllerID[1] = p_VRSystem->GetTrackedDeviceIndexForControllerRole(
+						vr::ETrackedControllerRole::TrackedControllerRole_LeftHand);
+					process.vrFrameRate = p_VRSystem->GetFloatTrackedDeviceProperty(0, vr::Prop_DisplayFrequency_Float);
+					
+					/* Log dumped values */
+					LOG(INFO) << "Got VR Framerate: " << (process.vrFrameRate >= 30 && process.vrFrameRate <= 140 ? process.vrFrameRate : 60);
+					if (static_cast<unsigned>(process.controllerID[0]) != vr::k_unTrackedDeviceIndexInvalid &&
+						static_cast<unsigned>(process.controllerID[1]) != vr::k_unTrackedDeviceIndexInvalid)
+						LOG(INFO) << "Found controller ids: [R: " << process.controllerID[0] << ", L: " << process.controllerID[0] << "]";
+					else LOG(ERROR) << "No controllers were found! (k_unTrackedDeviceIndexInvalid)";
+					
+					/* Test the connection (only ping for now) */
+					const auto end = high_resolution_clock::now();
+					LOG(INFO) << "Last (logic) loop working time: " << duration_cast<millisecondsf>(end - start).count() << " [millis]";
+					std::thread([&]
+						{ // We must not be waiting, there's too much work to hang forever (literally)
+							testConnection(); // No additional logging
+						}).detach();
+						frameNumber = 0;
+				}
+				
+				std::this_thread::sleep_until(next_frame); // Sleep until next frame, if time didn't pass yet
+				frameNumber++; // A frame has passed
 			}
 		}).detach();
 
