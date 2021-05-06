@@ -30,13 +30,19 @@ public:
 	ktvr::TrackingDeviceType k_deviceType;
 	std::string sensorState = "E_UNKNOWN";
 
-	int controllerID[2], vrFrameRate;
+	int controllerID[2], vrFrameRate; // R, L, IndexInvalid if not connected
 	bool initialized = false, started = false,
 	     controllerTriggerPressed[2] = {false, false},
 	     controllerGripPressed[2] = {false, false},
 	     isSkeletonTracked = false,
 	     isOverlayVisible = false, settingOffsets = false;
 	float controllerTrackpadPose[2][2] = {{0.f, 0.f}, {0.f, 0.f}};
+
+	/* Interfacing with the k2api */
+	long long pingTime = 0, parsingTime = 0,
+		lastLoopTime = 0;
+	int pingCheckingThreadsNumber = 0;
+	const int maxPingCheckingThreads = 3;
 };
 
 /* Create instance in header, to get it shared */
