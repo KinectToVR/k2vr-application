@@ -502,3 +502,60 @@ void startCalibration(bool automatic)
 			}).detach();
 	}
 }
+
+void testConnection(bool log)
+{
+	// Do not spawn 1000 voids, check how many do we have
+	if (process.pingCheckingThreadsNumber <= process.maxPingCheckingThreads) {
+
+		// Add a new worker
+		process.pingCheckingThreadsNumber += 1; // May be ++ too
+
+		try {
+			// Send a ping message and capture the data
+			const auto [test_response, send_time, full_time] = ktvr::test_connection();
+
+			// Dump data to variables
+			process.pingTime = full_time;
+			process.parsingTime = std::clamp( // Subtract message creation (got) time and send time
+				test_response.messageTimestamp - test_response.messageManualTimestamp,
+				static_cast<long long>(1), LLONG_MAX);
+
+			// Log ?success
+			LOG(INFO) <<
+				"Connection test has ended, [result: " <<
+				(test_response.success ? "success" : "fail") <<
+				"], response code: " << test_response.result;
+
+			// Log some data if needed
+			LOG_IF(INFO, log) <<
+				"\nTested ping time: " << full_time << " [micros], " <<
+
+				"call time: " <<
+				std::clamp( // Subtract message creation (got) time and send time
+					send_time - test_response.messageManualTimestamp,
+					static_cast<long long>(0), LLONG_MAX) <<
+				" [micros], " <<
+
+				"\nparsing time: " <<
+				process.parsingTime << // Just look at the k2api
+				" [micros], "
+
+				"flight-back time: " <<
+				std::clamp( // Subtract message creation (got) time and send time
+					K2API_GET_TIMESTAMP_NOW - test_response.messageManualTimestamp,
+					static_cast<long long>(1), LLONG_MAX) <<
+				" [micros]";
+		}
+		catch (std::exception const& e)
+		{
+			// Log ?success
+			LOG(INFO) <<
+				"Connection test has ended, [result: fail], got an exception";
+		}
+
+		// Release
+		process.pingCheckingThreadsNumber -= 1; // May be -- too
+	}
+	else LOG(ERROR) << "Connection checking threads exceeds 3, aborting...";
+}
