@@ -750,5 +750,11 @@ namespace ktvr
 	 * \return Returns tracker object / id / success?
 	 */
 	KTVR_API ktvr::K2ResponseMessage download_tracker(ktvr::K2TrackerBase const& tracker) noexcept;
+
+	/**
+	 * \brief Test connection with the server
+	 * \return Returns send_time / total_time / success?
+	 */
+	KTVR_API std::tuple<ktvr::K2ResponseMessage, long long, long long> test_connection() noexcept;
 }
 
