@@ -49,4 +49,7 @@ void updateQSpinboxes(
 
 /* Start the calibration, lower is the bool for aborting */
 void startCalibration(bool automatic = true);
+
+/* Test the connection with k2api, blocking */
+void testConnection(bool log = false);
 inline bool abortCalibration = false;
