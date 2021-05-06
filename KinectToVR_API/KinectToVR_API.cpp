@@ -68,6 +68,9 @@ namespace ktvr
 
 	K2ResponseMessage send_message(K2Message message) noexcept(false)
 	{
+		// Add timestamp
+		message.messageTimestamp = K2API_GET_TIMESTAMP_NOW;
+		
 		// Serialize to string
 		std::ostringstream o;
 		boost::archive::text_oarchive oa(o);
@@ -246,6 +249,29 @@ namespace ktvr
 		catch (std::exception const& e)
 		{
 			return K2ResponseMessage(); // Success is set to false by default
+		}
+	}
+
+	std::tuple<K2ResponseMessage, long long, long long> test_connection() noexcept
+	{
+		try
+		{
+			K2Message message = K2Message();
+			message.messageType = K2Message_Ping;
+
+			// Grab the current time and send the message
+			const long long send_time = K2API_GET_TIMESTAMP_NOW;
+			const auto response = send_message(message);
+
+			// Return tuple with response and elapsed time
+			const auto elapsed_time = // Always >= 0
+				std::clamp(K2API_GET_TIMESTAMP_NOW - send_time, 
+					static_cast<long long>(0), LLONG_MAX);
+			return std::make_tuple(response, send_time, elapsed_time);
+		}
+		catch (std::exception const& e)
+		{
+			return std::make_tuple(K2ResponseMessage(), (long long)0, (long long)0); // Success is set to false by default
 		}
 	}
 
