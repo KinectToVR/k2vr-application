@@ -159,11 +159,11 @@ void KinectV2Handler::updateSkeletalData()
 		if (bodyFrame) bodyFrame->Release();
 
 		// We have the frame, now parse it
-		updateSkeletalFilters();
+		updateParseFrame();
 	}
 }
 
-void KinectV2Handler::updateSkeletalFilters()
+void KinectV2Handler::updateParseFrame()
 {
 	for (int i = 0; i < BODY_COUNT; i++)
 	{

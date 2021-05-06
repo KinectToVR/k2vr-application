@@ -42,7 +42,7 @@ public:
 
 private:
 	bool initKinect();
-	void updateSkeletalFilters();
+	void updateParseFrame();
 	void initializeSkeleton();
 	void terminateSkeleton();
 
