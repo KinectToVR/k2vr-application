@@ -66,12 +66,12 @@
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <QtInstall>Qt6-1</QtInstall>
+    <QtInstall>6.2</QtInstall>
     <QtModules>core;gui;network;opengl;qml;quick;quickcontrols2;quickwidgets;widgets</QtModules>
     <QtQMLDebugEnable>true</QtQMLDebugEnable>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <QtInstall>Qt6-1</QtInstall>
+    <QtInstall>6.2</QtInstall>
     <QtModules>core;gui;network;opengl;qml;quick;quickcontrols2;quickwidgets;widgets</QtModules>
     <QtQMLDebugEnable>true</QtQMLDebugEnable>
     <QtDeploy>false</QtDeploy>
