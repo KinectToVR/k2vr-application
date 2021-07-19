@@ -750,6 +750,13 @@ namespace ktvr
 
 	/**
 	 * \brief Grab all possible data from existing tracker
+	 * \param tracker_serial Tracker id for download
+	 * \return Returns tracker object / id / success?
+	 */
+	KTVR_API ktvr::K2ResponseMessage download_tracker(std::string const& tracker_serial) noexcept;
+
+	/**
+	 * \brief Grab all possible data from existing tracker
 	 * \param tracker Tracker base id is to be grabbed from
 	 * \return Returns tracker object / id / success?
 	 */

@@ -239,6 +239,27 @@ namespace ktvr
 		}
 	}
 
+	K2ResponseMessage download_tracker(std::string const& tracker_serial) noexcept
+	{
+		try
+		{
+			// Send and grab the response
+			// Send the message and return
+			// Normally, we'd set some id to grab tracker from,
+			// although this time it'll be -1,
+			// forcing the driver to check if we've provided a serial
+			K2Message message = K2Message();
+			message.messageType = K2Message_DownloadTracker;
+			message.tracker_data.serial = tracker_serial;
+			
+			return send_message(message);
+		}
+		catch (std::exception const& e)
+		{
+			return K2ResponseMessage(); // Success is set to false by default
+		}
+	}
+
 	K2ResponseMessage download_tracker(K2TrackerBase const& tracker) noexcept
 	{
 		try

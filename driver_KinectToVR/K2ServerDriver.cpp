@@ -204,7 +204,7 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 			if (message.id < trackerVector.size() && message.id >= 0) {
 				// Update tracker pose (with time offset)
 				trackerVector.at(message.id).set_pose(message.tracker_pose);
-				
+
 				// Compose the response
 				_response.success = true;
 				_response.id = message.id; // ID
@@ -222,7 +222,7 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 			if (message.id < trackerVector.size() && message.id >= 0) {
 				// Update tracker data (with time offset)
 				trackerVector.at(message.id).set_data(message.tracker_data);
-				
+
 				// Compose the response
 				_response.success = true;
 				_response.id = message.id; // ID
@@ -247,9 +247,35 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 				_response.id = message.id; // ID
 				_response.messageType = ktvr::K2ResponseMessageType::K2ResponseMessage_Tracker;
 			}
+			// In case we're searching with serial
+			else if (message.id < trackerVector.size() && message.id <= 0
+				&& !message.tracker_data.serial.empty()) {
+
+				// Search in our trackers vector
+				for (auto tracker : trackerVector)
+				{
+					// If we've found the one
+					if (tracker.get_serial() == message.tracker_data.serial)
+					{
+						// Copy the tracker object
+						_response.tracker_base = tracker.getTrackerBase();
+
+						// Compose the response
+						_response.success = true;
+						_response.id = message.id; // ID
+						_response.messageType = ktvr::K2ResponseMessageType::K2ResponseMessage_Tracker;
+					}
+					else
+					{
+						LOG(ERROR) << "Couldn't download tracker via serial: " +
+							std::to_string(message.id) + ". Not found.";
+						_response.result = ktvr::K2ResponseMessageCode_BadRequest;
+					}
+				}
+			}
 			else {
-				LOG(ERROR) << "Couldn't set tracker id: " +
-					std::to_string(message.id) + " pose. Index out of bounds.";
+				LOG(ERROR) << "Couldn't download tracker via id: " +
+					std::to_string(message.id) + ". Index out of bounds.";
 				_response.result = ktvr::K2ResponseMessageCode_BadRequest;
 			}
 		}break;
