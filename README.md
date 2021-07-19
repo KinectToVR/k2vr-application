@@ -44,10 +44,10 @@ repository before posting an issue with building or missing files.
 
       + Add your Qt installation to the available installations list in Qt Visual Studio plugin<br>
       You have to search for msvc2019_64 folder<br><br>
-      ![](https://imgur.com/0T3xb8x.png)<br><br>
-      ![](https://imgur.com/nK9dXHE.png)
+      ![](https://imgur.com/mNDTWb3.png)<br><br>
+      ![](https://imgur.com/IVFJE5Q.png)
       + Select Qt installation you've just added in each project properties (except driver and API projects)<br><br>
-      ![](https://imgur.com/4Aloxdb.png)
+      ![](https://imgur.com/au878Tb.png)
 
 3. Build and deploy
    - Make sure you're building for x64 platform in release mode<br><br>
