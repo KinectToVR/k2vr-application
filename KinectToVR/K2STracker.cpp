@@ -32,42 +32,13 @@ void K2STracker::updatePositionFilters()
 
 void K2STracker::updateOrientationFilters()
 {
-	/* Update the Kalman filter */
-	Eigen::VectorXd y[4] = {
-			Eigen::VectorXd(1), Eigen::VectorXd(1),
-			Eigen::VectorXd(1), Eigen::VectorXd(1)
-	};
-
-	// We're multiplying per 100 to make it reliable
-	// - just the thing to make numbers bigger
-	y[0] << 100.0 * pose.orientation.w;
-	y[1] << 100.0 * pose.orientation.x;
-	y[2] << 100.0 * pose.orientation.y;
-	y[3] << 100.0 * pose.orientation.z;
-
-	for (int i = 0; i < 4; i++)
-		rot_kalmanFilter[i].update(y[i]);
-
-	kalmanOrientation = glm::quat(
-		rot_kalmanFilter[0].state().x() / 100.0,
-		rot_kalmanFilter[1].state().x() / 100.0,
-		rot_kalmanFilter[2].state().x() / 100.0,
-		rot_kalmanFilter[3].state().x() / 100.0);
-
-	/* Update the LowPass filter */
-	lowPassOrientation = glm::quat(
-		rot_lowPassFilter[0].update(
-			100.0 * pose.orientation.w) / 100.0,
-		rot_lowPassFilter[1].update(
-			100.0 * pose.orientation.x) / 100.0,
-		rot_lowPassFilter[2].update(
-			100.0 * pose.orientation.y) / 100.0,
-		rot_lowPassFilter[3].update(
-			100.0 * pose.orientation.z) / 100.0);
-
 	/* Update the SLERP filter */
 	SLERPOrientation = glm::slerp(lastSLERPOrientation, pose.orientation, .5f);
 	lastSLERPOrientation = pose.orientation; // Backup the position
+	
+	/* Update the Slower SLERP filter */
+	SLERPSlowOrientation = glm::slerp(lastSLERPSlowOrientation, pose.orientation, .2f);
+	lastSLERPSlowOrientation = pose.orientation; // Backup the position
 }
 
 void K2STracker::initAllFilters()
@@ -91,12 +62,5 @@ void K2STracker::initAllFilters()
 	{
 		kalmanFilter[i] = KalmanFilter(dt, A, C, Q, R, P);
 		kalmanFilter[i].init(.0, x0);
-	}
-
-	/* Orientation filters */
-	for (int i = 0; i < 4; i++)
-	{
-		rot_kalmanFilter[i] = KalmanFilter(dt, A, C, Q, R, P);
-		rot_kalmanFilter[i].init(.0, x0);
 	}
 }

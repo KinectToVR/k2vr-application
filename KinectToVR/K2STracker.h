@@ -16,8 +16,7 @@ enum positionTrackingFilterOptions
 enum orientationTrackingFilterOptions
 {
 	t_OrientationTrackingFilter_SLERP, // Spherical interpolation
-	t_OrientationTrackingFilter_LowPass, // Low pass filter
-	t_OrientationTrackingFilter_Kalman, // Extended Kalman
+	t_OrientationTrackingFilter_SLERP_Slow, // Spherical interpolation, but slower
 	t_NoOrientationTrackingFilter // Filter Off
 };
 
@@ -81,10 +80,8 @@ public:
 			return pose.orientation;
 		case t_OrientationTrackingFilter_SLERP:
 			return SLERPOrientation;
-		case t_OrientationTrackingFilter_LowPass:
-			return lowPassOrientation;
-		case t_OrientationTrackingFilter_Kalman:
-			return kalmanOrientation;
+		case t_OrientationTrackingFilter_SLERP_Slow:
+			return SLERPSlowOrientation;
 		case t_NoOrientationTrackingFilter:
 			return pose.orientation;
 		}
@@ -117,12 +114,13 @@ public:
 	glm::vec3 kalmanPosition = glm::vec3(),
 		lowPassPosition = glm::vec3(), LERPPosition = glm::vec3();
 
-	glm::quat kalmanOrientation = glm::quat(),
-		lowPassOrientation = glm::quat(), SLERPOrientation = glm::quat();
+	glm::quat SLERPOrientation = glm::quat(),
+		SLERPSlowOrientation = glm::quat();
 
 	// LERP datas backup
 	glm::vec3 lastLERPPosition;
-	glm::quat lastSLERPOrientation;
+	glm::quat lastSLERPOrientation,
+		lastSLERPSlowOrientation;
 
 	// Default constructors
 	K2STracker()
@@ -130,6 +128,7 @@ public:
 		initAllFilters();
 		lastLERPPosition = pose.position;
 		lastSLERPOrientation = pose.orientation;
+		lastSLERPSlowOrientation = pose.orientation;
 	};
 	~K2STracker() = default;
 	
@@ -158,21 +157,6 @@ private:
 	// Internal Kalman filter, must be initialized
 	KalmanFilter kalmanFilter[3] = {
 			KalmanFilter(), KalmanFilter(), KalmanFilter()
-	};
-
-	/* Orientation filters */
-
-	// Internal position filters
-	LowPassFilter rot_lowPassFilter[4] = {
-				LowPassFilter(7.1, 0.005),
-				LowPassFilter(7.1, 0.005),
-				LowPassFilter(7.1, 0.005),
-				LowPassFilter(7.1, 0.005)
-	};
-
-	// Internal Kalman filter, must be initialized
-	KalmanFilter rot_kalmanFilter[4] = {
-			KalmanFilter(), KalmanFilter(), KalmanFilter(), KalmanFilter()
 	};
 };
 
