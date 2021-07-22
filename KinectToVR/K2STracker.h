@@ -30,10 +30,10 @@ public:
 
 	// Should values be overwritten (for default ones)
 	bool overwriteDefaultSerial = false;
-	
+
 	// Internal data offset
-	glm::vec3 positionOffset = glm::vec3(0,0,0);
-	glm::quat orientationOffset = glm::quat(1,0,0,0);
+	glm::vec3 positionOffset = glm::vec3(0, 0, 0);
+	glm::quat orientationOffset = glm::quat(1, 0, 0, 0);
 
 	// For internal filters
 	void updatePositionFilters(),
@@ -42,8 +42,7 @@ public:
 	// Get filtered data
 	// By default, the saved filter is selected,
 	// and to select it, the filter number must be < 0
-	template<int filter = -1>
-	[[nodiscard]] glm::vec3 getFilteredPosition() const
+	[[nodiscard]] glm::vec3 getFilteredPosition(int filter = -1) const
 	{
 		int m_filter = filter;
 		if (filter < 0)
@@ -67,8 +66,7 @@ public:
 	// Get filtered data
 	// By default, the saved filter is selected,
 	// and to select it, the filter number must be < 0
-	template<int filter = -1>
-	[[nodiscard]] glm::quat getFilteredOrientation() const
+	[[nodiscard]] glm::quat getFilteredOrientation(int filter = -1) const
 	{
 		int m_filter = filter;
 		if (filter < 0)
@@ -91,20 +89,18 @@ public:
 	// By default, the saved filter is selected,
 	// and to select it, the filter number must be < 0
 	// Additionally, this adds the offsets
-	template<int filter = -1>
-	[[nodiscard]] glm::vec3 getFullPosition() const
+	[[nodiscard]] glm::vec3 getFullPosition(int filter = -1) const
 	{
-		return getFilteredPosition<filter>() + positionOffset;
+		return getFilteredPosition(filter) + positionOffset;
 	}
 
 	// Get filtered data
 	// By default, the saved filter is selected,
 	// and to select it, the filter number must be < 0
 	// Additionally, this adds the offsets
-	template<int filter = -1>
-	[[nodiscard]] glm::quat getFullOrientation() const
+	[[nodiscard]] glm::quat getFullOrientation(int filter = -1) const
 	{
-		return getFilteredOrientation<filter>() * orientationOffset;
+		return getFilteredOrientation(filter) * orientationOffset;
 	}
 
 	// Get filtered data
@@ -112,23 +108,23 @@ public:
 	// and to select it, the filter number must be < 0
 	// Additionally, this adds the offsets
 	// Offset will be added after translation
-	template<int filter = -1>
 	[[nodiscard]] glm::vec3 getFullCalibratedPosition
 	(
 		Eigen::Matrix<float, 3, 3> rotationMatrix,
 		Eigen::Matrix<float, 3, 1> translationVector,
-		Eigen::Vector3f calibration_origin = Eigen::Vector3d::Zero()
+		Eigen::Vector3f calibration_origin = Eigen::Vector3d::Zero(),
+		int filter = -1
 	) const
 	{
 		// Construct the current pose
 		Eigen::Vector3f m_pose(
-			getFilteredPosition<filter>().x,
-			getFilteredPosition<filter>().y,
-			getFilteredPosition<filter>().z
+			getFilteredPosition(filter).x,
+			getFilteredPosition(filter).y,
+			getFilteredPosition(filter).z
 		);
 
 		// Construct the calibrated pose
-		Eigen::Matrix<float, 3, Eigen::Dynamic> m_pose_calibrated = 
+		Eigen::Matrix<float, 3, Eigen::Dynamic> m_pose_calibrated =
 			(rotationMatrix * (m_pose - calibration_origin)).
 			colwise() + translationVector + calibration_origin;
 
@@ -148,12 +144,12 @@ public:
 	// exclusive filtered data from K2STracker
 	// By default, the saved filter is selected
 	// Offsets are added inside called methods
-	template<int pos_filter = -1, int ori_filter = -1>
 	[[nodiscard]] ktvr::K2TrackerBase getTrackerBase
 	(
 		Eigen::Matrix<float, 3, 3> rotationMatrix,
 		Eigen::Matrix<float, 3, 1> translationVector,
-		Eigen::Vector3f calibration_origin
+		Eigen::Vector3f calibration_origin,
+		int pos_filter = -1, int ori_filter = -1
 	) const
 	{
 		// Check if matrices are empty
@@ -165,10 +161,10 @@ public:
 		// Construct the return type
 		K2TrackerBase tracker_base(
 			ktvr::K2TrackerPose(
-				getFullOrientation<ori_filter>(),
-				uncalibrated ? getFullPosition<pos_filter>() :
-				getFullCalibratedPosition<pos_filter>
-				(rotationMatrix, translationVector, calibration_origin)
+				getFullOrientation(ori_filter),
+				uncalibrated ? getFullPosition(pos_filter) :
+				getFullCalibratedPosition(
+					rotationMatrix, translationVector, calibration_origin, pos_filter)
 			),
 			ktvr::K2TrackerData(
 				data.serial, static_cast<ktvr::ITrackerType>(data.role), data.isActive
@@ -185,14 +181,14 @@ public:
 	// exclusive filtered data from K2STracker
 	// By default, the saved filter is selected
 	// Offsets are added inside called methods
-	template<int pos_filter = -1, int ori_filter = -1>
-	[[nodiscard]] ktvr::K2TrackerBase getTrackerBase() const
+	[[nodiscard]] ktvr::K2TrackerBase getTrackerBase(
+		int pos_filter = -1, int ori_filter = -1) const
 	{
 		// Construct the return type
 		K2TrackerBase tracker_base(
 			ktvr::K2TrackerPose(
-				getFullOrientation<ori_filter>(),
-				getFullPosition<pos_filter>()
+				getFullOrientation(ori_filter),
+				getFullPosition(pos_filter)
 			),
 			ktvr::K2TrackerData(
 				data.serial, static_cast<ktvr::ITrackerType>(data.role), data.isActive
@@ -228,9 +224,9 @@ public:
 		lastSLERPSlowOrientation = pose.orientation;
 	};
 	~K2STracker() = default;
-	
+
 	template <class Archive>
-	void serialize(Archive & ar, const unsigned int version)
+	void serialize(Archive& ar, const unsigned int version)
 	{
 		ar& boost::serialization::make_nvp("tracker_base",
 			boost::serialization::base_object<K2TrackerBase>(*this))
