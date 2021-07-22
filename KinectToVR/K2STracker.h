@@ -143,6 +143,67 @@ public:
 		return calibrated_pose_gl + positionOffset;
 	}
 
+	// Get tracker base
+	// This is for updating the server with
+	// exclusive filtered data from K2STracker
+	// By default, the saved filter is selected
+	// Offsets are added inside called methods
+	template<int pos_filter = -1, int ori_filter = -1>
+	[[nodiscard]] ktvr::K2TrackerBase getTrackerBase
+	(
+		Eigen::Matrix<float, 3, 3> rotationMatrix = Eigen::Matrix<float, 3, 3>::Zero(),
+		Eigen::Matrix<float, 3, 1> translationVector = Eigen::Matrix<float, 3, 1>::Zero(),
+		Eigen::Vector3f calibration_origin = Eigen::Vector3d::Zero()
+	) const
+	{
+		// Check if matrices are empty
+		bool uncalibrated =
+			rotationMatrix.isZero() &&
+			translationVector.isZero() &&
+			calibration_origin.isZero();
+
+		// Construct the return type
+		K2TrackerBase tracker_base(
+			ktvr::K2TrackerPose(
+				getFullOrientation<ori_filter>(),
+				uncalibrated ? getFullPosition<pos_filter>() :
+				getFullCalibratedPosition<pos_filter>
+				(rotationMatrix, translationVector, calibration_origin)
+			),
+			ktvr::K2TrackerData(
+				data.serial, static_cast<ktvr::ITrackerType>(data.role), data.isActive
+			)
+		);
+
+		// Add id and return
+		tracker_base.id = id;
+		return tracker_base;
+	}
+
+	// Get tracker base
+	// This is for updating the server with
+	// exclusive filtered data from K2STracker
+	// By default, the saved filter is selected
+	// Offsets are added inside called methods
+	template<int pos_filter = -1, int ori_filter = -1>
+	[[nodiscard]] ktvr::K2TrackerBase getTrackerBase() const
+	{
+		// Construct the return type
+		K2TrackerBase tracker_base(
+			ktvr::K2TrackerPose(
+				getFullOrientation<ori_filter>(),
+				getFullPosition<pos_filter>()
+			),
+			ktvr::K2TrackerData(
+				data.serial, static_cast<ktvr::ITrackerType>(data.role), data.isActive
+			)
+		);
+
+		// Add id and return
+		tracker_base.id = id;
+		return tracker_base;
+	}
+
 	// Initialize all internal filters
 	void initAllFilters();
 
