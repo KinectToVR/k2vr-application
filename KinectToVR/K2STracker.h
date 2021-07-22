@@ -32,8 +32,8 @@ public:
 	bool overwriteDefaultSerial = false;
 	
 	// Internal data offset
-	glm::vec3 positionOffset = glm::vec3();
-	glm::quat orientationOffset = glm::quat();
+	glm::vec3 positionOffset = glm::vec3(0,0,0);
+	glm::quat orientationOffset = glm::quat(1,0,0,0);
 
 	// For internal filters
 	void updatePositionFilters(),
