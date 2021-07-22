@@ -151,9 +151,9 @@ public:
 	template<int pos_filter = -1, int ori_filter = -1>
 	[[nodiscard]] ktvr::K2TrackerBase getTrackerBase
 	(
-		Eigen::Matrix<float, 3, 3> rotationMatrix = Eigen::Matrix<float, 3, 3>::Zero(),
-		Eigen::Matrix<float, 3, 1> translationVector = Eigen::Matrix<float, 3, 1>::Zero(),
-		Eigen::Vector3f calibration_origin = Eigen::Vector3d::Zero()
+		Eigen::Matrix<float, 3, 3> rotationMatrix,
+		Eigen::Matrix<float, 3, 1> translationVector,
+		Eigen::Vector3f calibration_origin
 	) const
 	{
 		// Check if matrices are empty
