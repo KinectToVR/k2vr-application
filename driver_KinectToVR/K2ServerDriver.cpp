@@ -275,7 +275,7 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 			}
 			else {
 				LOG(ERROR) << "Couldn't download tracker via id: " +
-					std::to_string(message.id) + ". Index out of bounds.";
+					std::to_string(message.id) + " or serial. Index out of bounds / empty.";
 				_response.result = ktvr::K2ResponseMessageCode_BadRequest;
 			}
 		}break;
