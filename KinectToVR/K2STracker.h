@@ -107,6 +107,42 @@ public:
 		return getFilteredOrientation<filter>() * orientationOffset;
 	}
 
+	// Get filtered data
+	// By default, the saved filter is selected,
+	// and to select it, the filter number must be < 0
+	// Additionally, this adds the offsets
+	// Offset will be added after translation
+	template<int filter = -1>
+	[[nodiscard]] glm::vec3 getFullCalibratedPosition
+	(
+		Eigen::Matrix<float, 3, 3> rotationMatrix,
+		Eigen::Matrix<float, 3, 1> translationVector,
+		Eigen::Vector3f calibration_origin = Eigen::Vector3d::Zero()
+	) const
+	{
+		// Construct the current pose
+		Eigen::Vector3f m_pose(
+			getFilteredPosition<filter>().x,
+			getFilteredPosition<filter>().y,
+			getFilteredPosition<filter>().z
+		);
+
+		// Construct the calibrated pose
+		Eigen::Matrix<float, 3, Eigen::Dynamic> m_pose_calibrated = 
+			(rotationMatrix * (m_pose - calibration_origin)).
+			colwise() + translationVector + calibration_origin;
+
+		// Construct the calibrated pose in glm
+		glm::vec3 calibrated_pose_gl(
+			m_pose_calibrated(0),
+			m_pose_calibrated(1),
+			m_pose_calibrated(2)
+		);
+
+		// Return the calibrated pose with offset
+		return calibrated_pose_gl + positionOffset;
+	}
+
 	// Initialize all internal filters
 	void initAllFilters();
 
