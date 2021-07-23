@@ -248,30 +248,49 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 				_response.messageType = ktvr::K2ResponseMessageType::K2ResponseMessage_Tracker;
 			}
 			// In case we're searching with serial
-			else if (message.id < trackerVector.size() && message.id <= 0
+			else if (message.id < 0
 				&& !message.tracker_data.serial.empty()) {
 
-				// Search in our trackers vector
-				for (auto tracker : trackerVector)
-				{
-					// If we've found the one
-					if (tracker.get_serial() == message.tracker_data.serial)
-					{
-						// Copy the tracker object
-						_response.tracker_base = tracker.getTrackerBase();
+				bool trackerFound = false;
 
-						// Compose the response
-						_response.success = true;
-						_response.id = message.id; // ID
-						_response.messageType = ktvr::K2ResponseMessageType::K2ResponseMessage_Tracker;
-					}
-					else
+				// If we can even search
+				if (!trackerVector.empty()) {
+					
+					// Search in our trackers vector
+					for (int _tracker_id = 0; _tracker_id < trackerVector.size(); _tracker_id++)
 					{
-						LOG(ERROR) << "Couldn't download tracker via serial: " +
-							std::to_string(message.id) + ". Not found.";
-						_response.result = ktvr::K2ResponseMessageCode_BadRequest;
+						// If we've found the one
+						if (message.tracker_data.serial == trackerVector.at(_tracker_id).get_serial())
+						{
+							// Copy the tracker object
+							_response.tracker_base = trackerVector.at(_tracker_id).getTrackerBase();
+
+							// Compose the response
+							_response.success = true;
+							_response.id = _tracker_id; // Return the ID
+							_response.messageType = ktvr::K2ResponseMessageType::K2ResponseMessage_Tracker;
+
+							LOG(INFO) << "Serial: " + trackerVector.at(_tracker_id).get_serial() + ", id: " + std::to_string(_response.id);
+
+							// Exit loop
+							trackerFound = true;
+							break;
+						}
 					}
 				}
+				else
+				{
+					// If tracker was not found
+					LOG(ERROR) << "Couldn't download tracker via serial: " +
+						message.tracker_data.serial + " because there are no trackers added.";
+					_response.result = ktvr::K2ResponseMessageCode_BadRequest;
+				}
+
+				// If tracker was not found
+				if (!trackerFound)
+					LOG(ERROR) << "Couldn't download tracker via serial: " +
+					message.tracker_data.serial + ". Not found.";
+				_response.result = ktvr::K2ResponseMessageCode_BadRequest;
 			}
 			else {
 				LOG(ERROR) << "Couldn't download tracker via id: " +
