@@ -26,25 +26,25 @@ void K2STracker::updatePositionFilters()
 		lowPassFilter[2].update(pose.position.z));
 
 	/* Update the LERP (mix) filter */
-	LERPPosition = glm::mix(lastLERPPosition, pose.position, .5f);
+	LERPPosition = glm::mix(lastLERPPosition, pose.position, .9f);
 	lastLERPPosition = pose.position; // Backup the position
 }
 
 void K2STracker::updateOrientationFilters()
 {
 	/* Update the SLERP filter */
-	SLERPOrientation = glm::slerp(lastSLERPOrientation, pose.orientation, .5f);
+	SLERPOrientation = glm::slerp(lastSLERPOrientation, pose.orientation, .8f);
 	lastSLERPOrientation = pose.orientation; // Backup the position
-	
+
 	/* Update the Slower SLERP filter */
-	SLERPSlowOrientation = glm::slerp(lastSLERPSlowOrientation, pose.orientation, .2f);
+	SLERPSlowOrientation = glm::slerp(lastSLERPSlowOrientation, pose.orientation, .5f);
 	lastSLERPSlowOrientation = pose.orientation; // Backup the position
 }
 
 void K2STracker::initAllFilters()
 {
 	int n = 3, m = 1; // Number of measurements & statements
-	double dt = 1.0 / 30, t[3][3] = { {0, 0, 0}, {0, 0, 0}, {0, 0, 0} };
+	double dt = 1.0 / 20.0, t[3][3] = { {0, 0, 0}, {0, 0, 0}, {0, 0, 0} };
 	Eigen::MatrixXd A(n, n), C(m, n), Q(n, n), R(m, m), P(n, n);
 
 	A << 1, dt, 0, 0, 1, dt, 0, 0, 1;
@@ -53,7 +53,7 @@ void K2STracker::initAllFilters()
 	Q << .05, .05, .0, .05, .05, .0, .0, .0, .0;
 	R << 5;
 	P << .1, .1, .1, .1, 10000, 10, .1, 10, 100;
-	
+
 	Eigen::VectorXd x0(n);
 	x0 << .0, .0, .0;
 
