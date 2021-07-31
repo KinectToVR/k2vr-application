@@ -153,6 +153,10 @@ vr::EVRInitError K2Tracker::Activate(vr::TrackedDeviceIndex_t index)
 	// Get the properties handle for our controller
 	_props = vr::VRProperties()->TrackedDeviceToPropertyContainer(_index);
 
+	/*
+	 * Of course thanks to @SDraw
+	 */
+
 	// Set our universe ID
 	vr::VRProperties()->SetUint64Property(_props, vr::Prop_CurrentUniverseId_Uint64, 2);
 
@@ -205,6 +209,7 @@ vr::EVRInitError K2Tracker::Activate(vr::TrackedDeviceIndex_t index)
 	std::string l_registeredType("htc/vive_tracker");
 	l_registeredType.append(_serial);
 	vr::VRProperties()->SetStringProperty(_props, vr::Prop_RegisteredDeviceType_String, l_registeredType.c_str());
+	
 	vr::VRProperties()->SetBoolProperty(_props, vr::Prop_Identifiable_Bool, false);
 	vr::VRProperties()->SetBoolProperty(_props, vr::Prop_Firmware_RemindUpdate_Bool, false);
 	vr::VRProperties()->SetInt32Property(_props, vr::Prop_ControllerRoleHint_Int32, vr::TrackedControllerRole_Invalid);

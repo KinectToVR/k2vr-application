@@ -36,8 +36,25 @@ repository before posting an issue with building or missing files.
    ```./vcpkg integrate install```
 
    - Install needed libraries (You should choose one linking method for all packages)<br>
-   ```vcpkg install glm:x64-windows boost:x64-windows opencv3[world]:x64-windows cppzmq:x64-windows glog:x64-windows curlpp:x64-windows```<br>
+   ```vcpkg install glm:x64-windows boost:x64-windows opencv3[world]:x64-windows cppzmq:x64-windows curlpp:x64-windows```<br>
    (Now you may rest a bit, also consider using a drive other than ```C:/```, it'll be about 6-7GB)
+
+   - Setup GLog<br>
+   ```git clone https://github.com/google/glog.git external/glog```<br>
+   ```git reset --hard f8c8e99fdfb998c2ba96cfb470decccf418f0b30```<br>
+   ```cd external/glog```<br>
+   ```mkdir vcbuild; cd vcbuild```<br>
+   ```cmake -DBUILD_SHARED_LIBS=ON ..```<br>
+   ```msbuild glog.vcxproj "/p:Configuration=Release;Platform=x64```<br>
+   ```WindowsTargetPlatformVersion=10.0"```<br>
+
+   - Setup GFlags<br>
+   ```git clone https://github.com/gflags/gflags.git external/gflags```<br>
+   ```git reset --hard 827c769e5fc98e0f2a34c47cef953cc6328abced```<br>
+   ```cd external/gflags```<br>
+   ```mkdir vcbuild; cd vcbuild```<br>
+   ```cmake -DBUILD_SHARED_LIBS=ON ..```<br>
+   ```msbuild gflags.vcxproj "/p:Configuration=Release;Platform=x64;WindowsTargetPlatformVersion=10.0"```<br>
 
    - Install and setup Qt Visual Studio Tools (If you're planning on building overlay projects)
       + Download and install [for VS2019](https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2019)

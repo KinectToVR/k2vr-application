@@ -43,3 +43,7 @@ x64/
 docs/K2API_example/.vs/
 
 KinectToVR-360/KinectToVR_settings.xml
+
+external/gflags/
+
+external/glog/

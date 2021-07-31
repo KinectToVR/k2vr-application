@@ -145,10 +145,11 @@ extern "C" __declspec(dllexport) void* HmdDriverFactory(const char* pInterfaceNa
 	google::InitGoogleLogging(_path.c_str());
 	/* Log everything >=INFO to same file */
 	google::SetLogDestination(google::GLOG_INFO, _path.c_str());
-
+	google::SetLogFilenameExtension(".log");
+	
 	FLAGS_logbufsecs = 0; //Set max timeout
 	FLAGS_minloglevel = google::GLOG_INFO;
-	
+
 	LOG(INFO) << "~~~KinectToVR OpenVR Driver new logging session begins here!~~~";
 	LOG(INFO) << "Interface name: " << pInterfaceName;
 

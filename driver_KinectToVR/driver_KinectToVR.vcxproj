@@ -146,7 +146,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)external;$(SolutionDir)external\Kinect;$(SolutionDir)external\openvr\headers;$(ProjectDir);$(SolutionDir)KinectToVR;$(SolutionDir)KinectToVR_API;$(SolutionDir)external\eigen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\gflags\vcbuild\include;$(SolutionDir)external\glog\src;$(SolutionDir)external\glog\vcbuild;$(SolutionDir)external;$(SolutionDir)external\Kinect;$(SolutionDir)external\openvr\headers;$(ProjectDir);$(SolutionDir)KinectToVR;$(SolutionDir)KinectToVR_API;$(SolutionDir)external\eigen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -154,14 +154,16 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)external\openvr\lib\win64;$(SolutionDir)$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OutputFile>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalDependencies>KinectToVR_API.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)external\glog\vcbuild\$(Configuration)\glogd.lib;$(SolutionDir)external\gflags\vcbuild\lib\$(Configuration)\gflagsd.lib;KinectToVR_API.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d "$(SolutionDir)external\driver_resources\*" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\"
 xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
 xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\boost_serialization*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
-xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\gflags.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
-xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\glog.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
+
+xcopy /y /d "$(SolutionDir)external\gflags\vcbuild\bin\$(Configuration)\gflags*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
+xcopy /y /d "$(SolutionDir)external\glog\vcbuild\$(Configuration)\glog*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
+
 xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\KinectToVR_API.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
 xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\libzmq*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"</Command>
     </PostBuildEvent>
@@ -176,7 +178,7 @@ xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\libzmq*.dll" "$(Solution
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)external;$(SolutionDir)external\Kinect;$(SolutionDir)external\openvr\headers;$(ProjectDir);$(SolutionDir)KinectToVR;$(SolutionDir)KinectToVR_API;$(SolutionDir)external\eigen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\gflags\vcbuild\include;$(SolutionDir)external\glog\src;$(SolutionDir)external\glog\vcbuild;$(SolutionDir)external;$(SolutionDir)external\Kinect;$(SolutionDir)external\openvr\headers;$(ProjectDir);$(SolutionDir)KinectToVR;$(SolutionDir)KinectToVR_API;$(SolutionDir)external\eigen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -187,14 +189,16 @@ xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\libzmq*.dll" "$(Solution
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>$(SolutionDir)external\openvr\lib\win64;$(SolutionDir)$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OutputFile>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalDependencies>KinectToVR_API.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)external\glog\vcbuild\$(Configuration)\glog.lib;$(SolutionDir)external\gflags\vcbuild\lib\$(Configuration)\gflags.lib;KinectToVR_API.lib;openvr_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d "$(SolutionDir)external\driver_resources\*" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\"
 xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
 xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\boost_serialization*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
-xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\gflags.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
-xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\glog.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
+
+xcopy /y /d "$(SolutionDir)external\gflags\vcbuild\bin\$(Configuration)\gflags*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
+xcopy /y /d "$(SolutionDir)external\glog\vcbuild\$(Configuration)\glog*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
+
 xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\KinectToVR_API.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
 xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\libzmq*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"</Command>
     </PostBuildEvent>
