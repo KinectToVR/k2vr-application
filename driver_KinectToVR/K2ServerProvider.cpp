@@ -10,9 +10,10 @@ namespace k2_driver
 	class K2ServerProvider : public vr::IServerTrackedDeviceProvider
 	{
 		K2ServerDriver m_ServerDriver;
-		int port = 7135;
 
 	public:
+		int port = 7135;
+		
 		K2ServerProvider()
 		{
 			LOG(INFO) << "Provider component creation has started";
@@ -154,6 +155,8 @@ extern "C" __declspec(dllexport) void* HmdDriverFactory(const char* pInterfaceNa
 
 	static k2_driver::K2ServerProvider k2_server_provider;
 	static K2WatchdogDriver k2_watchdog_driver;
+
+	LOG(INFO) << "KinectToVR OpenVR Driver will try to run on port " + std::to_string(k2_server_provider.port);
 
 	if (0 == strcmp(vr::IServerTrackedDeviceProvider_Version, pInterfaceName))
 	{
