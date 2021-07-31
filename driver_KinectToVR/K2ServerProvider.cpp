@@ -52,8 +52,7 @@ namespace k2_driver
 		// It's running every frame
 		void RunFrame() override
 		{
-			// Update all trackers we have
-			for (auto tracker : m_ServerDriver.trackerVector) tracker.update();
+
 		}
 
 		bool ShouldBlockStandbyMode() override

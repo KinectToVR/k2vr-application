@@ -64,6 +64,9 @@ void K2Tracker::set_pose(ktvr::K2PosePacket const& pose)
 				_pose.qRotation.x = pose.orientation.x;
 				_pose.qRotation.y = pose.orientation.y;
 				_pose.qRotation.z = pose.orientation.z;
+
+				// Automatically update the tracker when finished
+				update(); // called from this
 			}).detach();
 	}
 	catch (...) {
