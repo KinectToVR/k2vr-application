@@ -250,7 +250,10 @@ vr::EVRInitError K2Tracker::Activate(vr::TrackedDeviceIndex_t index)
 		vr::Prop_ControllerType_String, role_enum_string.c_str());
 
 	/*Update tracker's role in menu*/
-	vr::VRSettings()->SetString(vr::k_pch_Trackers_Section, _serial.c_str(),
+	std::string l_registeredDevice("/devices/htc/vive_tracker");
+	l_registeredDevice.append(_serial);
+	
+	vr::VRSettings()->SetString(vr::k_pch_Trackers_Section, l_registeredDevice.c_str(),
 		ktvr::ITrackerType_Role_String.at(static_cast<ktvr::ITrackerType>(_role)));
 
 	return vr::VRInitError_None;
