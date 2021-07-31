@@ -51,8 +51,9 @@ void K2Tracker::set_pose(ktvr::K2PosePacket const& pose)
 		std::thread([&, pose]()
 			{
 				// Wait the specified time
-				std::this_thread::sleep_for(std::chrono::milliseconds(
-					static_cast<int>(pose.millisFromNow)));
+				if (pose.millisFromNow > 0)
+					std::this_thread::sleep_for(std::chrono::milliseconds(
+						static_cast<int>(pose.millisFromNow)));
 
 				// Just copy the values
 				_pose.vecPosition[0] = pose.position.x;
@@ -77,8 +78,9 @@ void K2Tracker::set_data(ktvr::K2DataPacket const& data)
 		std::thread([&, data]()
 			{
 				// Wait the specified time
-				std::this_thread::sleep_for(std::chrono::milliseconds(
-					static_cast<int>(data.millisFromNow)));
+				if (data.millisFromNow > 0)
+					std::this_thread::sleep_for(std::chrono::milliseconds(
+						static_cast<int>(data.millisFromNow)));
 
 				// Not spawning, just pose validity
 				_active = data.isActive;
