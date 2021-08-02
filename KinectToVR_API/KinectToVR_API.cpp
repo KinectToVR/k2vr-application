@@ -1,19 +1,22 @@
 #include "pch.h"
 #include "KinectToVR_API.h"
 
-void replace_all(std::string& str, const std::string& from, const std::string& to) {
+void replace_all(std::string& str, const std::string& from, const std::string& to)
+{
 	if (from.empty())
 		return;
 	size_t start_pos = 0;
-	while ((start_pos = str.find(from, start_pos)) != std::string::npos) {
+	while ((start_pos = str.find(from, start_pos)) != std::string::npos)
+	{
 		str.replace(start_pos, from.length(), to);
 		start_pos += to.length();
 	}
 }
 
-template<class V>
-std::type_info const& var_type(V const& v) {
-	return std::visit([](auto&& x)->decltype(auto) { return typeid(x); }, v);
+template <class V>
+std::type_info const& var_type(V const& v)
+{
+	return std::visit([](auto&& x)-> decltype(auto) { return typeid(x); }, v);
 }
 
 namespace ktvr
@@ -31,24 +34,24 @@ namespace ktvr
 			// Copy pipe addresses
 			k2api_to_pipe_address = k2_to_pipe;
 			k2api_from_pipe_address = k2_from_pipe;
-			
+
 			// Open existing *to* semaphore
 			k2api_to_Semaphore = OpenSemaphoreA(
 				SYNCHRONIZE | SEMAPHORE_MODIFY_STATE,
 				FALSE,
-				k2_to_sem.c_str());//Semaphore Name
-			
+				k2_to_sem.c_str()); //Semaphore Name
+
 			// Open existing *from* semaphore
 			k2api_from_Semaphore = OpenSemaphoreA(
 				SYNCHRONIZE | SEMAPHORE_MODIFY_STATE,
 				FALSE,
-				k2_from_sem.c_str());//Semaphore Name
-			
+				k2_from_sem.c_str()); //Semaphore Name
+
 			// Open existing *start* semaphore
 			k2api_start_Semaphore = OpenSemaphoreA(
 				SYNCHRONIZE | SEMAPHORE_MODIFY_STATE,
 				FALSE,
-				k2_start_sem.c_str());//Semaphore Name
+				k2_start_sem.c_str()); //Semaphore Name
 
 			if (k2api_to_Semaphore == nullptr ||
 				k2api_from_Semaphore == nullptr ||
@@ -86,12 +89,12 @@ namespace ktvr
 	{
 		// change the string to hex format
 		std::string msg_data = hexString(data);
-		
+
 		///// Send the message via named pipe /////
 
 		// Wait for the semaphore if it's locked
 		WaitForSingleObject(k2api_to_Semaphore, INFINITE);
-		
+
 		// Here, write to the *to* pipe
 		HANDLE API_WriterPipe = CreateNamedPipeA(
 			k2api_to_pipe_address.c_str(),
@@ -99,30 +102,31 @@ namespace ktvr
 			PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE,
 			1, 1024, 1024, 1000L, nullptr);
 		DWORD Written;
-		
+
 		// Let the server know we'll be writing soon
 		ReleaseSemaphore(k2api_start_Semaphore, 1, 0);
 
 		// Read from the pipe
 		ConnectNamedPipe(API_WriterPipe, nullptr);
 		WriteFile(API_WriterPipe,
-			msg_data.c_str(),
-			strlen(msg_data.c_str()),
-			&Written, nullptr);
+		          msg_data.c_str(),
+		          strlen(msg_data.c_str()),
+		          &Written, nullptr);
 		FlushFileBuffers(API_WriterPipe);
 
 		// Close the pipe
 		DisconnectNamedPipe(API_WriterPipe);
 		CloseHandle(API_WriterPipe);
-		
+
 		///// Send the message via named pipe /////
 
 		///// Receive the response via named pipe /////
 
-		if (want_reply) {
-
+		if (want_reply)
+		{
 			// Wait for the server to request a response, max 1s
-			if (WaitForSingleObject(k2api_from_Semaphore, 1000L) != WAIT_OBJECT_0) {
+			if (WaitForSingleObject(k2api_from_Semaphore, 1000L) != WAIT_OBJECT_0)
+			{
 				k2api_last_error = "Server didn't respond after 1 second.\n";
 				return "";
 				//LOG(ERROR) << "Server didn't respond after 1 second.\n";
@@ -140,14 +144,15 @@ namespace ktvr
 			DWORD Read = DWORD();
 
 			// Check if we're good
-			if (API_ReaderPipe.has_value()) {
-
+			if (API_ReaderPipe.has_value())
+			{
 				// Read the pipe
 				ReadFile(API_ReaderPipe.value(),
-					API_read_buffer, 1024,
-					&Read, nullptr);
+				         API_read_buffer, 1024,
+				         &Read, nullptr);
 			}
-			else {
+			else
+			{
 				k2api_last_error = "Error: Pipe object was not initialized.";
 				return "";
 				//LOG(ERROR) << "Error: Pipe object was not initialized.";
@@ -168,42 +173,11 @@ namespace ktvr
 			// decode hex reply
 			return asciiString(_s); // Return only the reply
 		}
-		else {
+		else
+		{
 			// Unlock the semaphore after job done
 			ReleaseSemaphore(k2api_to_Semaphore, 1, 0);
 			return ""; // No reply
-		}
-	}
-
-	std::variant<K2ResponseMessage, std::monostate>
-	send_message(K2Message message, const bool want_reply) noexcept(false)
-	{
-		// Add timestamp
-		message.messageTimestamp = K2API_GET_TIMESTAMP_NOW;
-		message.want_reply = want_reply;
-		
-		// Serialize to string
-		std::ostringstream o;
-		boost::archive::text_oarchive oa(o);
-		oa << message;
-
-		// Send the message
-		// Deserialize then
-		if (want_reply) {
-			// Compose the response
-			K2ResponseMessage response;
-			auto reply = send_message(o.str(), want_reply);
-
-			std::istringstream i(reply);
-			boost::archive::text_iarchive ia(i);
-			ia >> response;
-
-			// Deserialize reply and return
-			return std::move(response);
-		}
-		else { // Probably void
-			send_message(o.str(), want_reply);
-			return std::monostate();
 		}
 	}
 
@@ -214,138 +188,14 @@ namespace ktvr
 			// Send and grab the response
 			// Thanks to our constructors,
 			// message will set all
-			auto msg =
+			K2ResponseMessage response =
 				send_message(K2Message(tracker));
-			K2ResponseMessage response = 
-				std::get<0>(msg);
 
 			// Overwrite the current tracker's id
 			tracker.id = response.id;
 
 			// Send the message and return
 			return response;
-		}
-		catch (std::exception const& e)
-		{
-			return K2ResponseMessage(); // Success is set to false by default
-		}
-	}
-
-	std::variant<K2ResponseMessage, std::monostate>
-	set_tracker_state(int id, bool state, const bool want_reply) noexcept
-	{
-		try
-		{
-			// Send and grab the response
-			// Thanks to our constructors,
-			// message will set all
-			// Send the message and return
-			return send_message(
-				K2Message(id, state), want_reply);
-		}
-		catch (std::exception const& e)
-		{
-			return K2ResponseMessage(); // Success is set to false by default
-		}
-	}
-
-	std::variant<K2ResponseMessage, std::monostate>
-	set_state_all(bool state, const bool want_reply) noexcept
-	{
-		try
-		{
-			// Send and grab the response
-			// Thanks to our constructors,
-			// message will set all
-			// Send the message
-			auto ret = 
-				send_message(K2Message(state), want_reply);
-
-			// Return
-			if (want_reply) return ret;
-			else return std::monostate();
-		}
-		catch (std::exception const& e)
-		{
-			if (want_reply) return K2ResponseMessage(); // Success is set to false by default
-			else return std::monostate();
-		}
-	}
-
-	std::variant<K2ResponseMessage, std::monostate>
-	update_tracker_pose(int id, K2PosePacket const& tracker_pose, const bool want_reply) noexcept
-	{
-		try
-		{
-			// Send and grab the response
-			// Thanks to our constructors,
-			// message will set all
-			// Send the message and return
-			return send_message(
-				K2Message(id, tracker_pose), want_reply);
-		}
-		catch (std::exception const& e)
-		{
-			return K2ResponseMessage(); // Success is set to false by default
-		}
-	}
-
-	std::variant<K2ResponseMessage, std::monostate>
-	update_tracker_pose(K2TrackerBase const& tracker_handle, const bool want_reply) noexcept
-	{
-		try
-		{
-			// Send the message and return
-			return update_tracker_pose(tracker_handle.id, tracker_handle.pose, want_reply);
-		}
-		catch (std::exception const& e)
-		{
-			return K2ResponseMessage(); // Success is set to false by default
-		}
-	}
-
-	std::variant<K2ResponseMessage, std::monostate>
-	update_tracker_data(int id, K2DataPacket const& tracker_data, const bool want_reply) noexcept
-	{
-		try
-		{
-			// Send and grab the response
-			// Thanks to our constructors,
-			// message will set all
-			// Send the message and return
-			return send_message(
-				K2Message(id, tracker_data), want_reply);
-		}
-		catch (std::exception const& e)
-		{
-			return K2ResponseMessage(); // Success is set to false by default
-		}
-	}
-
-	std::variant<K2ResponseMessage, std::monostate>
-	update_tracker_data(K2TrackerBase const& tracker_handle, const bool want_reply) noexcept
-	{
-		try
-		{
-			// Send the message and return
-			return update_tracker_data(tracker_handle.id, tracker_handle.data, want_reply);
-		}
-		catch (std::exception const& e)
-		{
-			return K2ResponseMessage(); // Success is set to false by default
-		}
-	}
-
-	std::variant<K2ResponseMessage, std::monostate>
-	update_tracker(K2TrackerBase const& tracker, const bool want_reply) noexcept
-	{
-		try
-		{
-			// Send the message and return
-			update_tracker_pose(tracker.id, tracker.pose, want_reply);
-
-			// Data is more important then return data
-			return update_tracker_data(tracker.id, tracker.data, want_reply);
 		}
 		catch (std::exception const& e)
 		{
@@ -361,7 +211,7 @@ namespace ktvr
 			// Thanks to our constructors,
 			// message will set all
 			// Send the message and return
-			return std::get<0>(send_message(K2Message(tracker_id)));
+			return send_message(K2Message(tracker_id));
 		}
 		catch (std::exception const& e)
 		{
@@ -381,8 +231,8 @@ namespace ktvr
 			K2Message message = K2Message();
 			message.messageType = K2Message_DownloadTracker;
 			message.tracker_data.serial = tracker_serial;
-			
-			return std::get<0>(send_message(message));
+
+			return send_message(message);
 		}
 		catch (std::exception const& e)
 		{
@@ -412,19 +262,18 @@ namespace ktvr
 
 			// Grab the current time and send the message
 			const long long send_time = K2API_GET_TIMESTAMP_NOW;
-			const auto response = 
-				send_message(message);
+			const auto response = send_message(message);
 
 			// Return tuple with response and elapsed time
 			const auto elapsed_time = // Always >= 0
-				std::clamp(K2API_GET_TIMESTAMP_NOW - send_time, 
-					static_cast<long long>(0), LLONG_MAX);
-			return std::make_tuple(
-				std::get<0>(response), send_time, elapsed_time);
+				std::clamp(K2API_GET_TIMESTAMP_NOW - send_time,
+				           static_cast<long long>(0), LLONG_MAX);
+			return std::make_tuple(response, send_time, elapsed_time);
 		}
 		catch (std::exception const& e)
 		{
-			return std::make_tuple(K2ResponseMessage(), (long long)0, (long long)0); // Success is set to false by default
+			return std::make_tuple(K2ResponseMessage(), (long long)0, (long long)0);
+			// Success is set to false by default
 		}
 	}
 
