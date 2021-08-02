@@ -87,11 +87,11 @@ int K2ServerDriver::init_ServerDriver(
 					// measure loop time, let's run at 140/s
 					next_frame += std::chrono::milliseconds(1000 / 140);
 
-					// Wait for the client to request a read TODO: May be 1/15s or so
-					while (WaitForSingleObject(k2api_start_Semaphore, 5000L) != WAIT_OBJECT_0) {
+					// Wait for the client to request a read
+					while (WaitForSingleObject(k2api_start_Semaphore, 15000L) != WAIT_OBJECT_0) {
 						LOG(INFO) << "Releasing the *TO* semaphore\n";
 						// Release the semaphore in case something hangs,
-						// no request would take as long as 5 seconds anyway
+						// no request would take as long as 15 seconds anyway
 						ReleaseSemaphore(k2api_to_Semaphore, 1, 0);
 					}
 
@@ -170,9 +170,7 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 {
 	std::string _reply; // Reply that will be sent to client
 	ktvr::K2ResponseMessage _response; // Response message to be sent
-
-	LOG(INFO) << "Message with type: " + std::to_string(message.messageType);
-
+	
 	// Add the timestamp: parsing
 	_response.messageManualTimestamp = K2API_GET_TIMESTAMP_NOW;
 
