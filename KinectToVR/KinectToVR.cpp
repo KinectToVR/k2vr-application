@@ -171,7 +171,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 
 	/* Initialize the port */
 	LOG(INFO) << "Initializing the server port...";
-	const auto init_code = ktvr::init_socket(K2API_SOCKET);
+	const auto init_code = ktvr::init_socket(K2API_SOCKET),,,,;
 	
 	LOG(INFO) << "Port " << K2API_SOCKET << " initialization " <<
 		(init_code == 0 ? "succeed" : "failed") << ", exit code: " << init_code;

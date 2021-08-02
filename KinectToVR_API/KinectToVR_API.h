@@ -1,10 +1,12 @@
 #pragma once
 #include <iostream>
+#include <Windows.h>
 #include <vector>
 #include <random>
 #include <sstream>
 #include <iomanip>
 #include <string>
+#include <chrono>
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -16,11 +18,22 @@
 
 #include <boost/assign/list_of.hpp>
 #include <boost/assign.hpp>
+#include <boost/mp11/algorithm.hpp>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <Eigen/Dense>
-#include "zmq.hpp"
+
+/*
+ * Default IPC defines are:
+ *
+ * \\\\.\\pipe\\k2api_to_pipe
+ * \\\\.\\pipe\\k2api_from_pipe
+ *
+ * Global\\k2api_to_sem
+ * Global\\k2api_from_sem
+ * Global\\k2api_start_sem
+ */
 
 #define K2API_GET_TIMESTAMP_NOW \
 	std::chrono::time_point_cast<std::chrono::microseconds>	\
@@ -424,7 +437,7 @@ namespace ktvr
 
 		// Rest object, depends on type too
 		int id = -1;
-		bool state = false;
+		bool state = false, want_reply = true;
 
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
@@ -435,6 +448,7 @@ namespace ktvr
 				& BOOST_SERIALIZATION_NVP(tracker_data)
 				& BOOST_SERIALIZATION_NVP(id)
 				& BOOST_SERIALIZATION_NVP(state)
+				& BOOST_SERIALIZATION_NVP(want_reply)
 				& BOOST_SERIALIZATION_NVP(messageTimestamp)
 				& BOOST_SERIALIZATION_NVP(messageManualTimestamp);
 		}
@@ -650,37 +664,64 @@ namespace ktvr
 	KTVR_API std::string asciiString(const std::string& s);
 
 	/// <summary>
-	/// ZMQ context for sensing and receiving messages
+	/// K2API Semaphore handles for WINAPI calls
 	/// </summary>
-	inline zmq::context_t context{ 1 };
-	inline zmq::socket_t socket{ context, zmq::socket_type::req };
+	inline HANDLE k2api_to_Semaphore,
+		k2api_from_Semaphore,
+		k2api_start_Semaphore;
+	
+	/// <summary>
+	/// K2API's last error string, check for empty
+	/// </summary>
+	inline std::string k2api_last_error;
+	
+	/// <summary>
+	/// Get K2API's last error string
+	/// </summary>
+	inline std::string GetLastError() { return k2api_last_error; }
 
+	/// <summary>
+	/// K2API Pipe handle addresses for WINAPI calls
+	/// </summary>
+	inline std::string
+		k2api_to_pipe_address,
+		k2api_from_pipe_address;
+	
 	/**
 	 * \brief Connects socket object to selected port, K2 uses 7135
-	 * \param port TCP port on which should be all calls created
 	 * \return Returns 0 for success and -1 for failure
 	 */
-	KTVR_API int init_socket(int port) noexcept;
+	KTVR_API int init_k2api(
+		const std::string& k2_to_pipe = "\\\\.\\pipe\\k2api_to_pipe",
+		const std::string& k2_from_pipe = "\\\\.\\pipe\\k2api_from_pipe",
+		const std::string& k2_to_sem = "Global\\k2api_to_sem",
+		const std::string& k2_from_sem = "Global\\k2api_from_sem",
+		const std::string& k2_start_sem = "Global\\k2api_start_sem") noexcept;
 
 	/**
 	 * \brief Disconnects socket object from port
 	 * \return Returns 0 for success and -1 for failure
 	 */
-	KTVR_API int close_socket() noexcept;
+	KTVR_API int close_k2api() noexcept;
 
 	/**
-	 * \brief Send message via ZMQ and get a server reply, there is no need to decode return
+	 * \brief Send message and get a server reply, there is no need to decode return
 	 * \param data String which is to be sent
+	 * \param want_reply Check if the client wants a reply
 	 * \return Returns server's reply to the message
 	 */
-	KTVR_API [[nodiscard]] std::string send_message(std::string const& data) noexcept(false);
+	std::string	send_message(std::string const& data, bool want_reply = true) noexcept(false);
 
 	/**
 	 * \brief Send message and get a server reply
 	 * \param message Message which is to be sent
+	 * \argument want_reply Check if the client wants a reply
 	 * \return Returns server's reply to the message
 	 */
-	KTVR_API ktvr::K2ResponseMessage send_message(ktvr::K2Message message) noexcept(false);
+	//template <bool want_reply = true>
+	//KTVR_API typename std::conditional<want_reply, K2ResponseMessage, void>::type
+	KTVR_API std::variant<K2ResponseMessage, std::monostate>
+	send_message(ktvr::K2Message message, bool want_reply = true) noexcept(false);
 
 	/**
 	 * \brief Add tracker to driver's trackers list
@@ -695,14 +736,17 @@ namespace ktvr
 	 * \param state Tracker's state to be set
 	 * \return Returns tracker id / success?
 	 */
-	KTVR_API ktvr::K2ResponseMessage set_tracker_state(int id, bool state) noexcept;
-
+	KTVR_API std::variant<K2ResponseMessage, std::monostate>
+	set_tracker_state(int id, bool state, bool want_reply) noexcept;
+	
 	/**
 	 * \brief Connect (activate/spawn) all trackers in SteamVR
 	 * \param state Tracker's state to be set
+	 * \argument want_reply Check if the client wants a reply
 	 * \return Returns success?
 	 */
-	KTVR_API ktvr::K2ResponseMessage set_state_all(bool state) noexcept;
+	KTVR_API std::variant<K2ResponseMessage, std::monostate>
+	set_state_all(bool state, bool want_reply = true) noexcept;
 
 	/**
 	 * \brief Update tracker's pose in SteamVR driver
@@ -710,14 +754,16 @@ namespace ktvr
 	 * \param tracker_pose New pose for tracker
 	 * \return Returns tracker id / success?
 	 */
-	KTVR_API ktvr::K2ResponseMessage update_tracker_pose(int id, ktvr::K2PosePacket const& tracker_pose) noexcept;
+	KTVR_API std::variant<K2ResponseMessage, std::monostate>
+	update_tracker_pose(int id, ktvr::K2PosePacket const& tracker_pose, bool want_reply) noexcept;
 
 	/**
 	 * \brief Update tracker's pose in SteamVR driver
 	 * \param tracker_handle Tracker for updating data
 	 * \return Returns tracker id / success?
 	 */
-	KTVR_API ktvr::K2ResponseMessage update_tracker_pose(ktvr::K2TrackerBase const& tracker_handle) noexcept;
+	KTVR_API std::variant<K2ResponseMessage, std::monostate>
+	update_tracker_pose(ktvr::K2TrackerBase const& tracker_handle, bool want_reply) noexcept;
 
 	/**
 	 * \brief Update tracker's data in SteamVR driver (ONLY for yet not spawned trackers)
@@ -725,21 +771,24 @@ namespace ktvr
 	 * \param tracker_data New pose for tracker
 	 * \return Returns tracker id / success?
 	 */
-	KTVR_API ktvr::K2ResponseMessage update_tracker_data(int id, ktvr::K2DataPacket const& tracker_data) noexcept;
+	KTVR_API std::variant<K2ResponseMessage, std::monostate>
+	update_tracker_data(int id, ktvr::K2DataPacket const& tracker_data, bool want_reply) noexcept;
 
 	/**
 	 * \brief Update tracker's data in SteamVR driver
 	 * \param tracker_handle Tracker for updating data
 	 * \return Returns tracker id / success?
 	 */
-	KTVR_API ktvr::K2ResponseMessage update_tracker_data(ktvr::K2TrackerBase const& tracker_handle) noexcept;
+	KTVR_API std::variant<K2ResponseMessage, std::monostate>
+	update_tracker_data(ktvr::K2TrackerBase const& tracker_handle, bool want_reply) noexcept;
 
 	/**
 	 * \brief Update tracker in SteamVR driver
 	 * \param tracker Tracker base to be updated from
 	 * \return Returns tracker id / success?
 	 */
-	KTVR_API ktvr::K2ResponseMessage update_tracker(ktvr::K2TrackerBase const& tracker) noexcept;
+	KTVR_API std::variant<K2ResponseMessage, std::monostate>
+	update_tracker(ktvr::K2TrackerBase const& tracker, bool want_reply) noexcept;
 
 	/**
 	 * \brief Grab all possible data from existing tracker

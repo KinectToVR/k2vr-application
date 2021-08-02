@@ -11,14 +11,49 @@ void replace_all(std::string& str, const std::string& from, const std::string& t
 	}
 }
 
+template<class V>
+std::type_info const& var_type(V const& v) {
+	return std::visit([](auto&& x)->decltype(auto) { return typeid(x); }, v);
+}
+
 namespace ktvr
 {
-	int init_socket(const int port) noexcept
+	// TODO: May be blocking
+	int init_k2api(
+		const std::string& k2_to_pipe,
+		const std::string& k2_from_pipe,
+		const std::string& k2_to_sem,
+		const std::string& k2_from_sem,
+		const std::string& k2_start_sem) noexcept
 	{
 		try
 		{
-			// Connect to the desired port via tcp, on localhost (127.0.0.1 should be working too)
-			socket.connect("tcp://localhost:" + std::to_string(port));
+			// Copy pipe addresses
+			k2api_to_pipe_address = k2_to_pipe;
+			k2api_from_pipe_address = k2_from_pipe;
+			
+			// Open existing *to* semaphore
+			k2api_to_Semaphore = OpenSemaphoreA(
+				SYNCHRONIZE | SEMAPHORE_MODIFY_STATE,
+				FALSE,
+				k2_to_sem.c_str());//Semaphore Name
+			
+			// Open existing *from* semaphore
+			k2api_from_Semaphore = OpenSemaphoreA(
+				SYNCHRONIZE | SEMAPHORE_MODIFY_STATE,
+				FALSE,
+				k2_from_sem.c_str());//Semaphore Name
+			
+			// Open existing *start* semaphore
+			k2api_start_Semaphore = OpenSemaphoreA(
+				SYNCHRONIZE | SEMAPHORE_MODIFY_STATE,
+				FALSE,
+				k2_start_sem.c_str());//Semaphore Name
+
+			if (k2api_to_Semaphore == nullptr ||
+				k2api_from_Semaphore == nullptr ||
+				k2api_start_Semaphore == nullptr)
+				return -1;
 		}
 		catch (std::exception const& e)
 		{
@@ -27,13 +62,14 @@ namespace ktvr
 		return 0;
 	}
 
-	int close_socket() noexcept
+	// TODO: May be blocking
+	int close_k2api() noexcept
 	{
 		try
 		{
-			// Otherwise we'll get WSASTARTUP errors
-			socket.close();
-			context.close();
+			CloseHandle(k2api_to_Semaphore);
+			CloseHandle(k2api_from_Semaphore);
+			CloseHandle(k2api_start_Semaphore);
 		}
 		catch (std::exception const& e)
 		{
@@ -42,52 +78,133 @@ namespace ktvr
 		return 0;
 	}
 
-	std::string send_message(std::string const& data) noexcept(false)
+	// TODO: May be blocking
+	// TODO: Add custom timeout set to init
+	//template <bool want_reply>
+	//typename std::conditional<want_reply, std::string, void>::type
+	std::string send_message(std::string const& data, const bool want_reply) noexcept(false)
 	{
 		// change the string to hex format
 		std::string msg_data = hexString(data);
+		
+		///// Send the message via named pipe /////
 
-		// construct new ZMQ message and copy data to it
-		zmq::message_t message(msg_data.size());
-		std::memcpy(message.data(), msg_data.data(), msg_data.size());
-		socket.send(message, zmq::send_flags::none); // send
+		// Wait for the semaphore if it's locked
+		WaitForSingleObject(k2api_to_Semaphore, INFINITE);
+		
+		// Here, write to the *to* pipe
+		HANDLE API_WriterPipe = CreateNamedPipeA(
+			k2api_to_pipe_address.c_str(),
+			PIPE_ACCESS_INBOUND | PIPE_ACCESS_OUTBOUND,
+			PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE,
+			1, 1024, 1024, 1000L, nullptr);
+		DWORD Written;
+		
+		// Let the server know we'll be writing soon
+		ReleaseSemaphore(k2api_start_Semaphore, 1, 0);
 
-		// wait for reply from server
-		zmq::message_t reply{};
-		socket.recv(std::ref(reply), zmq::recv_flags::none);
+		// Read from the pipe
+		ConnectNamedPipe(API_WriterPipe, nullptr);
+		WriteFile(API_WriterPipe,
+			msg_data.c_str(),
+			strlen(msg_data.c_str()),
+			&Written, nullptr);
+		FlushFileBuffers(API_WriterPipe);
 
-		// I don't know why, when and how,
-		// but somehow K2API inserts this shit at index 62
-		std::string _s = reply.to_string();
-		if (_s.find("3120300a") == 62)_s.erase(62, 8);
+		// Close the pipe
+		DisconnectNamedPipe(API_WriterPipe);
+		CloseHandle(API_WriterPipe);
+		
+		///// Send the message via named pipe /////
 
-		// decode hex reply
-		std::string reply_data = asciiString(_s);
-		return reply_data; // Return only the reply
+		///// Receive the response via named pipe /////
+
+		if (want_reply) {
+
+			// Wait for the server to request a response, max 1s
+			if (WaitForSingleObject(k2api_from_Semaphore, 1000L) != WAIT_OBJECT_0) {
+				k2api_last_error = "Server didn't respond after 1 second.\n";
+				return "";
+				//LOG(ERROR) << "Server didn't respond after 1 second.\n";
+			}
+
+			// Here, read from the *from* pipe
+			// Create the pipe file
+			std::optional<HANDLE> API_ReaderPipe = CreateFile(
+				TEXT("\\\\.\\pipe\\k2api_from_pipe"),
+				GENERIC_READ | GENERIC_WRITE,
+				0, nullptr, OPEN_EXISTING, 0, nullptr);
+
+			// Create the buffer
+			char API_read_buffer[1024];
+			DWORD Read = DWORD();
+
+			// Check if we're good
+			if (API_ReaderPipe.has_value()) {
+
+				// Read the pipe
+				ReadFile(API_ReaderPipe.value(),
+					API_read_buffer, 1024,
+					&Read, nullptr);
+			}
+			else {
+				k2api_last_error = "Error: Pipe object was not initialized.";
+				return "";
+				//LOG(ERROR) << "Error: Pipe object was not initialized.";
+			}
+
+			CloseHandle(API_ReaderPipe.value());
+
+			// Unlock the semaphore after job done
+			ReleaseSemaphore(k2api_to_Semaphore, 1, 0);
+
+			///// Receive the response via named pipe /////
+
+			// I don't know why, when and how,
+			// but somehow K2API inserts this shit at index 62
+			std::string _s = API_read_buffer;
+			if (_s.find("3120300a") == 62)_s.erase(62, 8);
+
+			// decode hex reply
+			return asciiString(_s); // Return only the reply
+		}
+		else {
+			// Unlock the semaphore after job done
+			ReleaseSemaphore(k2api_to_Semaphore, 1, 0);
+			return ""; // No reply
+		}
 	}
 
-	K2ResponseMessage send_message(K2Message message) noexcept(false)
+	std::variant<K2ResponseMessage, std::monostate>
+	send_message(K2Message message, const bool want_reply) noexcept(false)
 	{
 		// Add timestamp
 		message.messageTimestamp = K2API_GET_TIMESTAMP_NOW;
+		message.want_reply = want_reply;
 		
 		// Serialize to string
 		std::ostringstream o;
 		boost::archive::text_oarchive oa(o);
 		oa << message;
 
-		// send the message
-		std::string reply =
-			send_message(o.str());
+		// Send the message
+		// Deserialize then
+		if (want_reply) {
+			// Compose the response
+			K2ResponseMessage response;
+			auto reply = send_message(o.str(), want_reply);
 
-		// Deserialize the response
-		K2ResponseMessage response;
-		std::istringstream i(reply);
-		boost::archive::text_iarchive ia(i);
-		ia >> response;
+			std::istringstream i(reply);
+			boost::archive::text_iarchive ia(i);
+			ia >> response;
 
-		// Deserialize reply and return
-		return response;
+			// Deserialize reply and return
+			return std::move(response);
+		}
+		else { // Probably void
+			send_message(o.str(), want_reply);
+			return std::monostate();
+		}
 	}
 
 	K2ResponseMessage add_tracker(K2TrackerBase& tracker) noexcept
@@ -97,8 +214,10 @@ namespace ktvr
 			// Send and grab the response
 			// Thanks to our constructors,
 			// message will set all
-			auto response = send_message(
-				K2Message(tracker));
+			auto msg =
+				send_message(K2Message(tracker));
+			K2ResponseMessage response = 
+				std::get<0>(msg);
 
 			// Overwrite the current tracker's id
 			tracker.id = response.id;
@@ -112,7 +231,8 @@ namespace ktvr
 		}
 	}
 
-	K2ResponseMessage set_tracker_state(int id, bool state) noexcept
+	std::variant<K2ResponseMessage, std::monostate>
+	set_tracker_state(int id, bool state, const bool want_reply) noexcept
 	{
 		try
 		{
@@ -121,7 +241,7 @@ namespace ktvr
 			// message will set all
 			// Send the message and return
 			return send_message(
-				K2Message(id, state));
+				K2Message(id, state), want_reply);
 		}
 		catch (std::exception const& e)
 		{
@@ -129,7 +249,31 @@ namespace ktvr
 		}
 	}
 
-	K2ResponseMessage set_state_all(bool state) noexcept
+	std::variant<K2ResponseMessage, std::monostate>
+	set_state_all(bool state, const bool want_reply) noexcept
+	{
+		try
+		{
+			// Send and grab the response
+			// Thanks to our constructors,
+			// message will set all
+			// Send the message
+			auto ret = 
+				send_message(K2Message(state), want_reply);
+
+			// Return
+			if (want_reply) return ret;
+			else return std::monostate();
+		}
+		catch (std::exception const& e)
+		{
+			if (want_reply) return K2ResponseMessage(); // Success is set to false by default
+			else return std::monostate();
+		}
+	}
+
+	std::variant<K2ResponseMessage, std::monostate>
+	update_tracker_pose(int id, K2PosePacket const& tracker_pose, const bool want_reply) noexcept
 	{
 		try
 		{
@@ -138,7 +282,7 @@ namespace ktvr
 			// message will set all
 			// Send the message and return
 			return send_message(
-				K2Message(state));
+				K2Message(id, tracker_pose), want_reply);
 		}
 		catch (std::exception const& e)
 		{
@@ -146,7 +290,22 @@ namespace ktvr
 		}
 	}
 
-	K2ResponseMessage update_tracker_pose(int id, K2PosePacket const& tracker_pose) noexcept
+	std::variant<K2ResponseMessage, std::monostate>
+	update_tracker_pose(K2TrackerBase const& tracker_handle, const bool want_reply) noexcept
+	{
+		try
+		{
+			// Send the message and return
+			return update_tracker_pose(tracker_handle.id, tracker_handle.pose, want_reply);
+		}
+		catch (std::exception const& e)
+		{
+			return K2ResponseMessage(); // Success is set to false by default
+		}
+	}
+
+	std::variant<K2ResponseMessage, std::monostate>
+	update_tracker_data(int id, K2DataPacket const& tracker_data, const bool want_reply) noexcept
 	{
 		try
 		{
@@ -155,7 +314,7 @@ namespace ktvr
 			// message will set all
 			// Send the message and return
 			return send_message(
-				K2Message(id, tracker_pose));
+				K2Message(id, tracker_data), want_reply);
 		}
 		catch (std::exception const& e)
 		{
@@ -163,12 +322,13 @@ namespace ktvr
 		}
 	}
 
-	K2ResponseMessage update_tracker_pose(K2TrackerBase const& tracker_handle) noexcept
+	std::variant<K2ResponseMessage, std::monostate>
+	update_tracker_data(K2TrackerBase const& tracker_handle, const bool want_reply) noexcept
 	{
 		try
 		{
 			// Send the message and return
-			return update_tracker_pose(tracker_handle.id, tracker_handle.pose);
+			return update_tracker_data(tracker_handle.id, tracker_handle.data, want_reply);
 		}
 		catch (std::exception const& e)
 		{
@@ -176,45 +336,16 @@ namespace ktvr
 		}
 	}
 
-	K2ResponseMessage update_tracker_data(int id, K2DataPacket const& tracker_data) noexcept
-	{
-		try
-		{
-			// Send and grab the response
-			// Thanks to our constructors,
-			// message will set all
-			// Send the message and return
-			return send_message(
-				K2Message(id, tracker_data));
-		}
-		catch (std::exception const& e)
-		{
-			return K2ResponseMessage(); // Success is set to false by default
-		}
-	}
-
-	K2ResponseMessage update_tracker_data(K2TrackerBase const& tracker_handle) noexcept
+	std::variant<K2ResponseMessage, std::monostate>
+	update_tracker(K2TrackerBase const& tracker, const bool want_reply) noexcept
 	{
 		try
 		{
 			// Send the message and return
-			return update_tracker_data(tracker_handle.id, tracker_handle.data);
-		}
-		catch (std::exception const& e)
-		{
-			return K2ResponseMessage(); // Success is set to false by default
-		}
-	}
-
-	K2ResponseMessage update_tracker(K2TrackerBase const& tracker) noexcept
-	{
-		try
-		{
-			// Send the message and return
-			update_tracker_pose(tracker.id, tracker.pose);
+			update_tracker_pose(tracker.id, tracker.pose, want_reply);
 
 			// Data is more important then return data
-			return update_tracker_data(tracker.id, tracker.data);
+			return update_tracker_data(tracker.id, tracker.data, want_reply);
 		}
 		catch (std::exception const& e)
 		{
@@ -230,8 +361,7 @@ namespace ktvr
 			// Thanks to our constructors,
 			// message will set all
 			// Send the message and return
-			return send_message(
-				K2Message(tracker_id));
+			return std::get<0>(send_message(K2Message(tracker_id)));
 		}
 		catch (std::exception const& e)
 		{
@@ -252,7 +382,7 @@ namespace ktvr
 			message.messageType = K2Message_DownloadTracker;
 			message.tracker_data.serial = tracker_serial;
 			
-			return send_message(message);
+			return std::get<0>(send_message(message));
 		}
 		catch (std::exception const& e)
 		{
@@ -282,13 +412,15 @@ namespace ktvr
 
 			// Grab the current time and send the message
 			const long long send_time = K2API_GET_TIMESTAMP_NOW;
-			const auto response = send_message(message);
+			const auto response = 
+				send_message(message);
 
 			// Return tuple with response and elapsed time
 			const auto elapsed_time = // Always >= 0
 				std::clamp(K2API_GET_TIMESTAMP_NOW - send_time, 
 					static_cast<long long>(0), LLONG_MAX);
-			return std::make_tuple(response, send_time, elapsed_time);
+			return std::make_tuple(
+				std::get<0>(response), send_time, elapsed_time);
 		}
 		catch (std::exception const& e)
 		{

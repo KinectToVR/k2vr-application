@@ -164,8 +164,7 @@ xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\boost_serialization*.dll
 xcopy /y /d "$(SolutionDir)external\gflags\vcbuild\bin\$(Configuration)\gflags*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
 xcopy /y /d "$(SolutionDir)external\glog\vcbuild\$(Configuration)\glog*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
 
-xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\KinectToVR_API.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
-xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\libzmq*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"</Command>
+xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\KinectToVR_API.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -199,8 +198,7 @@ xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\boost_serialization*.dll
 xcopy /y /d "$(SolutionDir)external\gflags\vcbuild\bin\$(Configuration)\gflags*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
 xcopy /y /d "$(SolutionDir)external\glog\vcbuild\$(Configuration)\glog*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
 
-xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\KinectToVR_API.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"
-xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\libzmq*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"</Command>
+xcopy /y /d "$(SolutionDir)$(Platform)\$(Configuration)\KinectToVR_API.dll" "$(SolutionDir)$(Platform)\$(Configuration)\driver\KinectToVR\bin\win64\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

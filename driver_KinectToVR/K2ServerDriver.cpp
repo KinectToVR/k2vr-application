@@ -5,15 +5,66 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/string.hpp>
 
-int K2ServerDriver::init_ServerDriver(std::string const& port)
+int K2ServerDriver::init_ServerDriver(
+	const std::string& k2_to_pipe,
+	const std::string& k2_from_pipe,
+	const std::string& k2_to_sem,
+	const std::string& k2_from_sem,
+	const std::string& k2_start_sem)
 {
 	using namespace std::chrono_literals;
 	_isActive = true;
 
-	// initialize the zmq context with a single IO thread
+	// initialize the semaphores
 	try
 	{
-		socket.bind(port);
+		// Create the *to* semaphore
+		k2api_to_Semaphore = CreateSemaphoreA(
+			NULL, //Security Attributes
+			0,	  //Initial State i.e.Non Signaled
+			1,    //No. of Resources
+			"Global\\k2api_to_sem");//Semaphore Name
+
+		if (nullptr == k2api_to_Semaphore)
+		{
+			LOG(ERROR) << "Semaphore Creation Failed\n";
+			LOG(ERROR) << "Error No - " << GetLastError() << '\n';
+			return -1;
+		}
+		LOG(INFO) << "*TO* Semaphore Creation Success\n";
+
+		// Automatically release the sem after creation
+		ReleaseSemaphore(k2api_to_Semaphore, 1, 0);
+
+		// Create the *from* semaphore
+		k2api_from_Semaphore = CreateSemaphoreA(
+			NULL, //Security Attributes
+			0,    //Initial State i.e.Non Signaled
+			1,    //No. of Resources
+			"Global\\k2api_from_sem");//Semaphore Name
+
+		if (nullptr == k2api_from_Semaphore)
+		{
+			LOG(ERROR) << "Semaphore Creation Failed\n";
+			LOG(ERROR) << "Error No - " << GetLastError() << '\n';
+			return -1;
+		}
+		LOG(INFO) << "*FROM* Semaphore Creation Success\n";
+
+		// Create the *start* semaphore
+		k2api_start_Semaphore = CreateSemaphoreA(
+			NULL, //Security Attributes
+			0,    //Initial State i.e.Non Signaled
+			1,    //No. of Resources
+			"Global\\k2api_start_sem");//Semaphore Name
+
+		if (nullptr == k2api_start_Semaphore)
+		{
+			LOG(ERROR) << "Semaphore Creation Failed\n";
+			LOG(ERROR) << "Error No - " << GetLastError() << '\n';
+			return -1;
+		}
+		LOG(INFO) << "*START* Semaphore Creation Success\n";
 	}
 	catch (std::exception const& e)
 	{
@@ -36,17 +87,48 @@ int K2ServerDriver::init_ServerDriver(std::string const& port)
 					// measure loop time, let's run at 140/s
 					next_frame += std::chrono::milliseconds(1000 / 140);
 
-					// create new ZMQ request to receive
-					zmq::message_t request;
+					// Wait for the client to request a read TODO: May be 1/15s or so
+					while (WaitForSingleObject(k2api_start_Semaphore, 5000L) != WAIT_OBJECT_0) {
+						LOG(INFO) << "Releasing the *TO* semaphore\n";
+						// Release the semaphore in case something hangs,
+						// no request would take as long as 5 seconds anyway
+						ReleaseSemaphore(k2api_to_Semaphore, 1, 0);
+					}
 
-					// receive a request from client
-					socket.recv(std::ref(request), zmq::recv_flags::none);
+					// Here, read from the *TO* pipe
+					// Create the pipe file
+					std::optional<HANDLE> ReaderPipe = CreateFile(
+						TEXT("\\\\.\\pipe\\k2api_to_pipe"),
+						GENERIC_READ | GENERIC_WRITE,
+						0, nullptr, OPEN_EXISTING, 0, nullptr);
 
+					// Create the buffer
+					char read_buffer[1024];
+					DWORD Read = DWORD();
+					std::string read_string;
+
+					// Check if we're good
+					if (ReaderPipe.has_value()) {
+
+						// Read the pipe
+						ReadFile(ReaderPipe.value(),
+							read_buffer, 1024,
+							&Read, nullptr);
+
+						// Convert the message to string
+						read_string = read_buffer;
+					}
+					else
+						LOG(ERROR) << "Error: Pipe object was not initialized.";
+
+					// Close the pipe
+					CloseHandle(ReaderPipe.value());
+					
 					// parse request, send reply and return
 					try {
 						// I don't know why, when and how,
 						// but somehow K2API inserts this shit at index 62
-						std::string _s = request.to_string();
+						std::string _s = read_string;
 						if (_s.find("3120300a") == 62)_s.erase(62, 8);
 
 						// Convert hex to readable ascii and parse
@@ -55,7 +137,7 @@ int K2ServerDriver::init_ServerDriver(std::string const& port)
 					}
 					catch (boost::archive::archive_exception const& e)
 					{
-						LOG(ERROR) << "Message may corrupted. Boost serialization error: " << e.what();
+						LOG(ERROR) << "Message may be corrupted. Boost serialization error: " << e.what();
 					}
 					catch (std::exception const& e)
 					{
@@ -88,6 +170,8 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 {
 	std::string _reply; // Reply that will be sent to client
 	ktvr::K2ResponseMessage _response; // Response message to be sent
+
+	LOG(INFO) << "Message with type: " + std::to_string(message.messageType);
 
 	// Add the timestamp: parsing
 	_response.messageManualTimestamp = K2API_GET_TIMESTAMP_NOW;
@@ -326,10 +410,32 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 	_reply = // Serialize to hex format
 		ktvr::hexString(_response.serializeToString());
 
-	// send the reply to the client
-	zmq::message_t reply(_reply.size());
-	std::memcpy(reply.data(), _reply.data(), _reply.size());
-	socket.send(reply, zmq::send_flags::none);
+	// Check if the client wants a response and eventually send it
+	if(message.want_reply)
+	{
+		// Here, write to the *from* pipe
+		HANDLE WriterPipe = CreateNamedPipe(
+			TEXT("\\\\.\\pipe\\k2api_from_pipe"),
+			PIPE_ACCESS_INBOUND | PIPE_ACCESS_OUTBOUND,
+			PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE,
+			1, 1024, 1024, 1000L, nullptr);
+		DWORD Written;
+		
+		// Let the client know that we'll be writing soon
+		ReleaseSemaphore(k2api_from_Semaphore, 1, 0);
+
+		// Read from the pipe
+		ConnectNamedPipe(WriterPipe, nullptr);
+		WriteFile(WriterPipe,
+			_reply.c_str(),
+			strlen(_reply.c_str()),
+			&Written, nullptr);
+		FlushFileBuffers(WriterPipe);
+
+		// Disconnect and close the pipe
+		DisconnectNamedPipe(WriterPipe);
+		CloseHandle(WriterPipe);
+	}
 }
 
 /*

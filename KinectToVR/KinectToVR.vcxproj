@@ -150,7 +150,10 @@
       <QtRccFileName>qrc_%(Filename).cpp</QtRccFileName>
     </QtRcc>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(SolutionDir)external\openvr\bin\win64\openvr_api.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"
+      <Command>xcopy /y /d "$(SolutionDir)external\gflags\vcbuild\bin\$(Configuration)\gflags*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"
+xcopy /y /d "$(SolutionDir)external\glog\vcbuild\$(Configuration)\glog*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"
+
+xcopy /y /d "$(SolutionDir)external\openvr\bin\win64\openvr_api.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"
 $(QtToolsPath)\windeployqt.exe --release --qmldir $(SolutionDir)KinectToVR\ $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)  &gt; $(SolutionDir)$(Platform)\$(Configuration)\windeployqt-$(TargetName)$(TargetExt).log
 del "$(SolutionDir)$(Platform)\$(Configuration)\D3Dcompiler_47.dll"</Command>
     </PostBuildEvent>
@@ -211,12 +214,12 @@ del "$(SolutionDir)$(Platform)\$(Configuration)\D3Dcompiler_47.dll"</Command>
       <QtRccFileName>qrc_%(Filename).cpp</QtRccFileName>
     </QtRcc>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(SolutionDir)external\openvr\bin\win64\openvr_api.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"
-$(QtToolsPath)\windeployqt.exe --release --qmldir $(SolutionDir)KinectToVR\ $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)  &gt; $(SolutionDir)$(Platform)\$(Configuration)\windeployqt-$(TargetName)$(TargetExt).log
-del "$(SolutionDir)$(Platform)\$(Configuration)\D3Dcompiler_47.dll"
+      <Command>xcopy /y /d "$(SolutionDir)external\gflags\vcbuild\bin\$(Configuration)\gflags*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"
+xcopy /y /d "$(SolutionDir)external\glog\vcbuild\$(Configuration)\glog*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"
 
-xcopy /y /d "$(SolutionDir)external\gflags\vcbuild\bin\$(Configuration)\gflags*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"
-xcopy /y /d "$(SolutionDir)external\glog\vcbuild\$(Configuration)\glog*.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"</Command>
+xcopy /y /d "$(SolutionDir)external\openvr\bin\win64\openvr_api.dll" "$(SolutionDir)$(Platform)\$(Configuration)\"
+$(QtToolsPath)\windeployqt.exe --release --qmldir $(SolutionDir)KinectToVR\ $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)  &gt; $(SolutionDir)$(Platform)\$(Configuration)\windeployqt-$(TargetName)$(TargetExt).log
+del "$(SolutionDir)$(Platform)\$(Configuration)\D3Dcompiler_47.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

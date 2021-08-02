@@ -12,7 +12,6 @@ namespace k2_driver
 		K2ServerDriver m_ServerDriver;
 
 	public:
-		int port = 7135;
 		
 		K2ServerProvider()
 		{
@@ -26,8 +25,8 @@ namespace k2_driver
 			LOG(INFO) << "Driver context init success";
 
 			// Initialize communication with K2API
-			const int initCode = m_ServerDriver.init_ServerDriver("tcp://127.0.0.1:" + std::to_string(port));
-			LOG(INFO) << "Driver's networking server init code: " + 
+			const int initCode = m_ServerDriver.init_ServerDriver(); // Default IPC addresses
+			LOG(INFO) << "Driver's IPC server init code: " + 
 				std::to_string(initCode);
 
 			if (initCode == 0) {
@@ -156,7 +155,7 @@ extern "C" __declspec(dllexport) void* HmdDriverFactory(const char* pInterfaceNa
 	static k2_driver::K2ServerProvider k2_server_provider;
 	static K2WatchdogDriver k2_watchdog_driver;
 
-	LOG(INFO) << "KinectToVR OpenVR Driver will try to run on port " + std::to_string(k2_server_provider.port);
+	LOG(INFO) << "KinectToVR OpenVR Driver will try to run on K2API's default addresses.";
 
 	if (0 == strcmp(vr::IServerTrackedDeviceProvider_Version, pInterfaceName))
 	{
