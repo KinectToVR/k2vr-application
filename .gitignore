@@ -47,3 +47,5 @@ KinectToVR-360/KinectToVR_settings.xml
 external/gflags/
 
 external/glog/
+
+external/glm/
