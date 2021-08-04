@@ -25,9 +25,13 @@ repository before posting an issue with building or missing files.
    it's gonna take some time to set up all ```vcpkg``` packages.<br>
    (About 1-1.5 hour if you have 300-500mbps internet and a hdd)
 
-   - Clone the latest OpenVR and Eigen3 into ```external/```:<br>
+   - Clone the latest OpenVR, GLM and Eigen3 into ```external/```:<br>
    ```git clone https://github.com/ValveSoftware/openvr external/openvr```<br>
    ```git clone https://gitlab.com/libeigen/eigen external/eigen```
+   ```git clone https://github.com/g-truc/glm external/glm```
+
+   - Fix min/max error in GLM (unresolved with NOMINMAX for now)
+   ```sed -i '/#include <limits>/c\#include <limits>\n\n#undef min\n#undef max' external/glm/glm/gtx/component_wise.inl```
 
    - Install ```vcpkg``` and its Visual Studio integration<br>
    ```git clone https://github.com/Microsoft/vcpkg.git```<br>
@@ -36,7 +40,7 @@ repository before posting an issue with building or missing files.
    ```./vcpkg integrate install```
 
    - Install needed libraries (You should choose one linking method for all packages)<br>
-   ```vcpkg install glm:x64-windows boost:x64-windows opencv3[world]:x64-windows cppzmq:x64-windows curlpp:x64-windows```<br>
+   ```vcpkg install boost:x64-windows opencv3[world]:x64-windows cppzmq:x64-windows curlpp:x64-windows```<br>
    (Now you may rest a bit, also consider using a drive other than ```C:/```, it'll be about 6-7GB)
 
    - Setup GLog<br>

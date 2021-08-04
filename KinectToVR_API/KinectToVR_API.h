@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <string>
 #include <chrono>
+#include <span>
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -18,7 +19,7 @@
 
 #include <boost/assign/list_of.hpp>
 #include <boost/assign.hpp>
-#include <boost/mp11/algorithm.hpp>
+#include <boost/serialization/utility.hpp>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -80,6 +81,14 @@ namespace boost::serialization
 			& BOOST_SERIALIZATION_NVP(q.x())
 			& BOOST_SERIALIZATION_NVP(q.y())
 			& BOOST_SERIALIZATION_NVP(q.z());
+	}
+
+	template<typename Archive, typename T1, typename T2>
+	void serialize(Archive& ar, std::tuple<T1, T2>& t,
+		const unsigned int)
+	{
+		ar& make_nvp("0", std::get<0>(t))
+			& make_nvp("1", std::get<1>(t));
 	}
 }
 
@@ -153,7 +162,7 @@ namespace ktvr
 		Tracker_Keyboard
 	};
 
-	// K2API messenging types
+	// K2API messaging types
 	enum K2MessageType
 	{
 		K2Message_Invalid,
@@ -161,17 +170,21 @@ namespace ktvr
 		K2Message_AddTracker,
 		// Add
 		K2Message_SetTrackerState,
-		// State
+		K2Message_SetTrackerStateVector,
 		K2Message_SetStateAll,
+		// State
 		K2Message_UpdateTrackerPose,
-		// Update
+		K2Message_UpdateTrackerPoseVector,
 		K2Message_UpdateTrackerData,
+		K2Message_UpdateTrackerDataVector,
+		// Update
 		K2Message_DownloadTracker,
 		// Get tracker
-		K2Message_Ping // Test message
+		K2Message_Ping
+		// Test message
 	};
 
-	// Return messenging types
+	// Return messaging types
 	enum K2ResponseMessageType
 	{
 		K2ResponseMessage_Invalid,
@@ -207,35 +220,36 @@ namespace ktvr
 	typedef int JointTrackingState, TrackingDeviceType, MessageType, MessageCode;
 
 	// Mapping enum to string for eliminating if-else loop
-	const boost::unordered_map<ITrackerType, const char*> ITrackerType_String = boost::assign::map_list_of
-		                                                      (Tracker_Handed, "vive_tracker_handed")
-		                                                      (Tracker_LeftFoot, "vive_tracker_left_foot")
-		                                                      (Tracker_RightFoot, "vive_tracker_right_foot")
-		                                                      (Tracker_LeftShoulder, "vive_tracker_left_Shoulder")
-		                                                      (Tracker_RightShoulder, "vive_tracker_right_shoulder")
-		                                                      (Tracker_LeftElbow, "vive_tracker_left_elbow")
-		                                                      (Tracker_RightElbow, "vive_tracker_right_elbow")
-		                                                      (Tracker_LeftKnee, "vive_tracker_left_knee")
-		                                                      (Tracker_RightKnee, "vive_tracker_right_knee")
-		                                                      (Tracker_Waist, "vive_tracker_waist")
-		                                                      (Tracker_Chest, "vive_tracker_chest")
-		                                                      (Tracker_Camera, "vive_tracker_camera")
-		                                                      (Tracker_Keyboard, "vive_tracker_keyboard"),
+	const boost::unordered_map<ITrackerType, const char*>
+		ITrackerType_String = boost::assign::map_list_of
+			(Tracker_Handed, "vive_tracker_handed")
+			(Tracker_LeftFoot, "vive_tracker_left_foot")
+			(Tracker_RightFoot, "vive_tracker_right_foot")
+			(Tracker_LeftShoulder, "vive_tracker_left_Shoulder")
+			(Tracker_RightShoulder, "vive_tracker_right_shoulder")
+			(Tracker_LeftElbow, "vive_tracker_left_elbow")
+			(Tracker_RightElbow, "vive_tracker_right_elbow")
+			(Tracker_LeftKnee, "vive_tracker_left_knee")
+			(Tracker_RightKnee, "vive_tracker_right_knee")
+			(Tracker_Waist, "vive_tracker_waist")
+			(Tracker_Chest, "vive_tracker_chest")
+			(Tracker_Camera, "vive_tracker_camera")
+			(Tracker_Keyboard, "vive_tracker_keyboard"),
 
-	                                                      ITrackerType_Role_String = boost::assign::map_list_of
-		                                                      (Tracker_Handed, "TrackerRole_Handed")
-		                                                      (Tracker_LeftFoot, "TrackerRole_LeftFoot")
-		                                                      (Tracker_RightFoot, "TrackerRole_RightFoot")
-		                                                      (Tracker_LeftShoulder, "TrackerRole_LeftShoulder")
-		                                                      (Tracker_RightShoulder, "TrackerRole_RightShoulder")
-		                                                      (Tracker_LeftElbow, "TrackerRole_LeftElbow")
-		                                                      (Tracker_RightElbow, "TrackerRole_RightElbow")
-		                                                      (Tracker_LeftKnee, "TrackerRole_LeftKnee")
-		                                                      (Tracker_RightKnee, "TrackerRole_RightKnee")
-		                                                      (Tracker_Waist, "TrackerRole_Waist")
-		                                                      (Tracker_Chest, "TrackerRole_Chest")
-		                                                      (Tracker_Camera, "TrackerRole_Camera")
-		                                                      (Tracker_Keyboard, "TrackerRole_Keyboard");
+		ITrackerType_Role_String = boost::assign::map_list_of
+			(Tracker_Handed, "TrackerRole_Handed")
+			(Tracker_LeftFoot, "TrackerRole_LeftFoot")
+			(Tracker_RightFoot, "TrackerRole_RightFoot")
+			(Tracker_LeftShoulder, "TrackerRole_LeftShoulder")
+			(Tracker_RightShoulder, "TrackerRole_RightShoulder")
+			(Tracker_LeftElbow, "TrackerRole_LeftElbow")
+			(Tracker_RightElbow, "TrackerRole_RightElbow")
+			(Tracker_LeftKnee, "TrackerRole_LeftKnee")
+			(Tracker_RightKnee, "TrackerRole_RightKnee")
+			(Tracker_Waist, "TrackerRole_Waist")
+			(Tracker_Chest, "TrackerRole_Chest")
+			(Tracker_Camera, "TrackerRole_Camera")
+			(Tracker_Keyboard, "TrackerRole_Keyboard");
 
 	class K2TrackerPose
 	{
@@ -449,6 +463,11 @@ namespace ktvr
 		K2PosePacket tracker_pose = K2PosePacket();
 		K2DataPacket tracker_data = K2DataPacket();
 
+		// Vector updates
+		std::vector<std::pair<int, K2PosePacket>> tracker_pose_vector;
+		std::vector<std::pair<int, K2DataPacket>> tracker_data_vector;
+		std::vector<std::pair<int, bool>> tracker_state_vector;
+
 		// Rest object, depends on type too
 		int id = -1;
 		bool state = false, want_reply = true;
@@ -460,6 +479,9 @@ namespace ktvr
 				& BOOST_SERIALIZATION_NVP(tracker_base)
 				& BOOST_SERIALIZATION_NVP(tracker_pose)
 				& BOOST_SERIALIZATION_NVP(tracker_data)
+				& BOOST_SERIALIZATION_NVP(tracker_pose_vector)
+				& BOOST_SERIALIZATION_NVP(tracker_data_vector)
+				& BOOST_SERIALIZATION_NVP(tracker_state_vector)
 				& BOOST_SERIALIZATION_NVP(id)
 				& BOOST_SERIALIZATION_NVP(state)
 				& BOOST_SERIALIZATION_NVP(want_reply)
@@ -477,7 +499,7 @@ namespace ktvr
 		}
 
 		// Serialize from string, do not call as an overwrite
-		[[nodiscard]] static K2Message parseFromString(std::string str) noexcept
+		[[nodiscard]] static K2Message parseFromString(std::string const& str) noexcept
 		{
 			try
 			{
@@ -490,8 +512,8 @@ namespace ktvr
 			}
 			catch (boost::archive::archive_exception const& e)
 			{
+				return K2Message();
 			}
-			return K2Message();
 		}
 
 		// Default constructors
@@ -520,11 +542,25 @@ namespace ktvr
 			messageType = K2Message_UpdateTrackerPose;
 		}
 
+		// Update the tracker's pose via vector
+		K2Message(const std::vector<std::pair<int, K2PosePacket>>& m_pose_vector)
+		{
+			tracker_pose_vector = m_pose_vector;
+			messageType = K2Message_UpdateTrackerPoseVector;
+		}
+
 		// Update the tracker's data
 		K2Message(int m_id, K2DataPacket m_data) : id(m_id)
 		{
 			tracker_data = std::move(m_data);
 			messageType = K2Message_UpdateTrackerData;
+		}
+
+		// Update the tracker's data via vector
+		K2Message(const std::vector<std::pair<int, K2DataPacket>>& m_data_vector)
+		{
+			tracker_data_vector = m_data_vector;
+			messageType = K2Message_UpdateTrackerDataVector;
 		}
 
 		// Add a tracker, to automatically spawn,
@@ -556,6 +592,13 @@ namespace ktvr
 			id(m_id), state(m_state)
 		{
 			messageType = K2Message_SetTrackerState;
+		}
+
+		// Update the tracker's state via vector
+		K2Message(const std::vector<std::pair<int, bool>>& m_state_vector)
+		{
+			tracker_state_vector = m_state_vector;
+			messageType = K2Message_SetTrackerStateVector;
 		}
 
 		// Download a tracker
@@ -613,7 +656,7 @@ namespace ktvr
 		}
 
 		// Serialize from string, do not call as an overwriter
-		[[nodiscard]] static K2ResponseMessage parseFromString(std::string str) noexcept
+		[[nodiscard]] static K2ResponseMessage parseFromString(std::string const& str) noexcept
 		{
 			try
 			{
@@ -812,6 +855,32 @@ namespace ktvr
 	}
 
 	/**
+	 * \brief Update tracker's state in SteamVR driver
+	 * \param tracker_states_vector Vector of pairs with ids and states
+	 * \argument want_reply Check if the client wants a reply
+	 * \return Returns LAST tracker id / success?
+	 */
+	template <bool want_reply = true>
+	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
+	set_tracker_state(const std::vector<std::pair<int, bool>>& tracker_states_vector) noexcept
+	{
+		try
+		{
+			// Send and grab the response
+			// Thanks to our constructors,
+			// message will set all
+			// Send the message and return
+			return send_message<want_reply>(
+				K2Message(tracker_states_vector));
+		}
+		catch (std::exception const& e)
+		{
+			if constexpr (want_reply) return K2ResponseMessage(); // Success is set to false by default
+			else return std::monostate();
+		}
+	}
+	
+	/**
 	 * \brief Connect (activate/spawn) all trackers in SteamVR
 	 * \param state Tracker's state to be set
 	 * \argument want_reply Check if the client wants a reply
@@ -891,6 +960,32 @@ namespace ktvr
 	}
 
 	/**
+	 * \brief Update tracker's pose in SteamVR driver
+	 * \param tracker_poses_vector Vector of pairs with ids and poses
+	 * \argument want_reply Check if the client wants a reply
+	 * \return Returns LAST tracker id / success?
+	 */
+	template <bool want_reply = true>
+	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
+	update_tracker_pose(const std::vector<std::pair<int, K2PosePacket>>& tracker_poses_vector) noexcept
+	{
+		try
+		{
+			// Send and grab the response
+			// Thanks to our constructors,
+			// message will set all
+			// Send the message and return
+			return send_message<want_reply>(
+				K2Message(tracker_poses_vector));
+		}
+		catch (std::exception const& e)
+		{
+			if constexpr (want_reply) return K2ResponseMessage(); // Success is set to false by default
+			else return std::monostate();
+		}
+	}
+	
+	/**
 	 * \brief Update tracker's data in SteamVR driver (ONLY for yet not spawned trackers)
 	 * \param id Tracker's id which is to update
 	 * \param tracker_data New pose for tracker
@@ -917,6 +1012,32 @@ namespace ktvr
 		}
 	}
 
+	/**
+	 * \brief Update tracker's data in SteamVR driver
+	 * \param tracker_data_vector Vector of pairs with ids and data's
+	 * \argument want_reply Check if the client wants a reply
+	 * \return Returns LAST tracker id / success?
+	 */
+	template <bool want_reply = true>
+	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
+	update_tracker_data(const std::vector<std::pair<int, K2DataPacket>>& tracker_data_vector) noexcept
+	{
+		try
+		{
+			// Send and grab the response
+			// Thanks to our constructors,
+			// message will set all
+			// Send the message and return
+			return send_message<want_reply>(
+				K2Message(tracker_data_vector));
+		}
+		catch (std::exception const& e)
+		{
+			if constexpr (want_reply) return K2ResponseMessage(); // Success is set to false by default
+			else return std::monostate();
+		}
+	}
+	
 	/**
 	 * \brief Update tracker's data in SteamVR driver
 	 * \param tracker_handle Tracker for updating data
