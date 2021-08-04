@@ -100,7 +100,7 @@ namespace ktvr
 			k2api_to_pipe_address.c_str(),
 			PIPE_ACCESS_INBOUND | PIPE_ACCESS_OUTBOUND,
 			PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE,
-			1, 1024, 1024, 1000L, nullptr);
+			1, 4096, 4096, 1000L, nullptr);
 		DWORD Written;
 
 		// Let the server know we'll be writing soon
@@ -140,7 +140,7 @@ namespace ktvr
 				0, nullptr, OPEN_EXISTING, 0, nullptr);
 
 			// Create the buffer
-			char API_read_buffer[1024];
+			char API_read_buffer[4096];
 			DWORD Read = DWORD();
 
 			// Check if we're good
@@ -148,7 +148,7 @@ namespace ktvr
 			{
 				// Read the pipe
 				ReadFile(API_ReaderPipe.value(),
-				         API_read_buffer, 1024,
+				         API_read_buffer, 4096,
 				         &Read, nullptr);
 			}
 			else

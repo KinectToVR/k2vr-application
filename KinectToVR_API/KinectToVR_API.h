@@ -82,14 +82,6 @@ namespace boost::serialization
 			& BOOST_SERIALIZATION_NVP(q.y())
 			& BOOST_SERIALIZATION_NVP(q.z());
 	}
-
-	template<typename Archive, typename T1, typename T2>
-	void serialize(Archive& ar, std::tuple<T1, T2>& t,
-		const unsigned int)
-	{
-		ar& make_nvp("0", std::get<0>(t))
-			& make_nvp("1", std::get<1>(t));
-	}
 }
 
 namespace ktvr
@@ -316,7 +308,7 @@ namespace ktvr
 
 		// Quick constructor
 		K2TrackerData(std::string m_serial, ITrackerType m_role, bool m_isActive = false) :
-			serial(std::move(m_serial)), role(m_role), isActive(m_isActive)
+			serial(m_serial), role(m_role), isActive(m_isActive)
 		{
 		}
 	};
@@ -345,13 +337,13 @@ namespace ktvr
 		}
 
 		// Default constructor 2
-		K2PosePacket(K2TrackerPose const& m_pose, int const& millis) :
+		K2PosePacket(K2TrackerPose m_pose, const int millis) :
 			K2TrackerPose(m_pose), millisFromNow(millis)
 		{
 		}
 
 		// Default constructor
-		K2PosePacket(K2TrackerPose const& m_pose) :
+		explicit K2PosePacket(K2TrackerPose m_pose) :
 			K2TrackerPose(m_pose)
 		{
 		}
@@ -389,13 +381,13 @@ namespace ktvr
 		}
 
 		// Default constructor 2
-		K2DataPacket(K2TrackerData const& m_data, int const& millis) :
+		K2DataPacket(K2TrackerData m_data, const int millis) :
 			K2TrackerData(m_data), millisFromNow(millis)
 		{
 		}
 
 		// Default constructor
-		K2DataPacket(K2TrackerData const& m_data) :
+		explicit K2DataPacket(K2TrackerData m_data) :
 			K2TrackerData(m_data)
 		{
 		}
@@ -435,8 +427,8 @@ namespace ktvr
 		K2TrackerBase(K2TrackerBase&&) = default;
 		K2TrackerBase& operator=(K2TrackerBase&&) = default;
 
-		K2TrackerBase(K2TrackerPose const& m_pose, K2TrackerData m_data) :
-			pose(m_pose), data(std::move(m_data))
+		K2TrackerBase(K2TrackerPose m_pose, K2TrackerData m_data) :
+			pose(m_pose), data(m_data)
 		{
 		}
 	};

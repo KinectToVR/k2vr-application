@@ -103,7 +103,7 @@ int K2ServerDriver::init_ServerDriver(
 						0, nullptr, OPEN_EXISTING, 0, nullptr);
 
 					// Create the buffer
-					char read_buffer[1024];
+					char read_buffer[4096];
 					DWORD Read = DWORD();
 					std::string read_string;
 
@@ -112,7 +112,7 @@ int K2ServerDriver::init_ServerDriver(
 
 						// Read the pipe
 						ReadFile(ReaderPipe.value(),
-							read_buffer, 1024,
+							read_buffer, 4096,
 							&Read, nullptr);
 
 						// Convert the message to string
@@ -134,7 +134,17 @@ int K2ServerDriver::init_ServerDriver(
 						// Convert hex to readable ascii and parse
 						std::string s = ktvr::asciiString(_s);
 						LOG(INFO) << s;
-						parse_message(ktvr::K2Message::parseFromString(s));
+
+						// This is also in parsefromstring of K2Message.
+						// Though, this time we want to catch any error ourselves.
+						std::istringstream i(s);
+						boost::archive::text_iarchive ia(i);
+
+						// Deserialize now
+						ktvr::K2Message response;
+						ia >> response;
+						
+						parse_message(response);
 					}
 					catch (boost::archive::archive_exception const& e)
 					{
@@ -539,7 +549,7 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 			TEXT("\\\\.\\pipe\\k2api_from_pipe"),
 			PIPE_ACCESS_INBOUND | PIPE_ACCESS_OUTBOUND,
 			PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE,
-			1, 1024, 1024, 1000L, nullptr);
+			1, 4096, 4096, 1000L, nullptr);
 		DWORD Written;
 		
 		// Let the client know that we'll be writing soon
