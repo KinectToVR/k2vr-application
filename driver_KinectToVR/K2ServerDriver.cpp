@@ -189,8 +189,7 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 
 	LOG(INFO) << "Type: " <<  message.messageType;
 	LOG(INFO) << "Vector: " << !message.tracker_pose_vector.empty();
-	LOG(INFO) << "Vector: " << !message.tracker_data_vector.empty();
-	LOG(INFO) << "Vector: " << !message.tracker_state_vector.empty();
+	LOG(INFO) << "Vector size: " << !message.tracker_pose_vector.size();
 
 	/*DEBUG*/
 
@@ -373,7 +372,7 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 					// Check if desired tracker exists
 					if (tracker_pair.first < trackerVector.size() && tracker_pair.first >= 0) {
 						// Update tracker pose (with time offset)
-						trackerVector.at(tracker_pair.first).set_pose(tracker_pair.second);
+						trackerVector.at(tracker_pair.first).set_pose(ktvr::K2PosePacket(tracker_pair.second));
 
 						// Compose the response
 						_response.success = true;
@@ -424,7 +423,7 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 					// Check if desired tracker exists
 					if (tracker_pair.first < trackerVector.size() && tracker_pair.first >= 0) {
 						// Update tracker data (with time offset)
-						trackerVector.at(tracker_pair.first).set_data(tracker_pair.second);
+						trackerVector.at(tracker_pair.first).set_data(ktvr::K2DataPacket(tracker_pair.second));
 
 						// Compose the response
 						_response.success = true;

@@ -14,12 +14,13 @@
 
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/array.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/unordered_map.hpp>
+#include <boost/serialization/utility.hpp>
+#include <boost/serialization/shared_ptr.hpp>
 
 #include <boost/assign/list_of.hpp>
 #include <boost/assign.hpp>
-#include <boost/serialization/utility.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/unordered_map.hpp>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -324,28 +325,25 @@ namespace ktvr
 		// Copy constructors
 		K2PosePacket(const K2PosePacket&) = default;
 		K2PosePacket& operator=(const K2PosePacket&) = default;
-
-		// Move operators
-		K2PosePacket(K2PosePacket&& packet) noexcept : K2TrackerPose(packet)
-		{
-		}
-
-		K2PosePacket& operator=(K2PosePacket&& packet) noexcept
-		{
-			K2TrackerPose::operator=(packet);
-			return *this;
-		}
-
+		
 		// Default constructor 2
-		K2PosePacket(K2TrackerPose m_pose, const int millis) :
+		K2PosePacket(K2TrackerPose const& m_pose, const int millis) :
 			K2TrackerPose(m_pose), millisFromNow(millis)
 		{
 		}
 
 		// Default constructor
-		explicit K2PosePacket(K2TrackerPose m_pose) :
+		explicit K2PosePacket(K2TrackerPose const& m_pose) :
 			K2TrackerPose(m_pose)
 		{
+		}
+
+		// Custom constructor
+		explicit K2PosePacket(std::shared_ptr<K2PosePacket> const& m_pose)
+		{
+			position = m_pose->position;
+			orientation = m_pose->orientation;
+			millisFromNow = m_pose->millisFromNow;
 		}
 
 		template <class Archive>
@@ -369,27 +367,25 @@ namespace ktvr
 		K2DataPacket(const K2DataPacket&) = default;
 		K2DataPacket& operator=(const K2DataPacket&) = default;
 
-		// Move operators
-		K2DataPacket(K2DataPacket&& packet) noexcept : K2TrackerData(packet)
-		{
-		}
-
-		K2DataPacket& operator=(K2DataPacket&& packet) noexcept
-		{
-			K2TrackerData::operator=(packet);
-			return *this;
-		}
-
 		// Default constructor 2
-		K2DataPacket(K2TrackerData m_data, const int millis) :
+		K2DataPacket(K2TrackerData const& m_data, const int millis) :
 			K2TrackerData(m_data), millisFromNow(millis)
 		{
 		}
 
 		// Default constructor
-		explicit K2DataPacket(K2TrackerData m_data) :
+		explicit K2DataPacket(K2TrackerData const& m_data) :
 			K2TrackerData(m_data)
 		{
+		}
+
+		// Custom constructor
+		explicit K2DataPacket(std::shared_ptr<K2DataPacket> const& m_data)
+		{
+			serial = m_data->serial;
+			role = m_data->role;
+			isActive = m_data->isActive;
+			millisFromNow = m_data->millisFromNow;
 		}
 
 		template <class Archive>
@@ -427,7 +423,7 @@ namespace ktvr
 		K2TrackerBase(K2TrackerBase&&) = default;
 		K2TrackerBase& operator=(K2TrackerBase&&) = default;
 
-		K2TrackerBase(K2TrackerPose m_pose, K2TrackerData m_data) :
+		K2TrackerBase(K2TrackerPose const& m_pose, K2TrackerData const& m_data) :
 			pose(m_pose), data(m_data)
 		{
 		}
@@ -456,8 +452,8 @@ namespace ktvr
 		K2DataPacket tracker_data = K2DataPacket();
 
 		// Vector updates
-		std::vector<std::pair<int, K2PosePacket>> tracker_pose_vector;
-		std::vector<std::pair<int, K2DataPacket>> tracker_data_vector;
+		std::vector<std::pair<int, std::shared_ptr<K2PosePacket>>> tracker_pose_vector;
+		std::vector<std::pair<int, std::shared_ptr<K2DataPacket>>> tracker_data_vector;
 		std::vector<std::pair<int, bool>> tracker_state_vector;
 
 		// Rest object, depends on type too
@@ -471,9 +467,18 @@ namespace ktvr
 				& BOOST_SERIALIZATION_NVP(tracker_base)
 				& BOOST_SERIALIZATION_NVP(tracker_pose)
 				& BOOST_SERIALIZATION_NVP(tracker_data)
-				& BOOST_SERIALIZATION_NVP(tracker_pose_vector)
-				& BOOST_SERIALIZATION_NVP(tracker_data_vector)
-				& BOOST_SERIALIZATION_NVP(tracker_state_vector)
+				& BOOST_SERIALIZATION_NVP(
+					boost::serialization::make_array(
+						tracker_pose_vector.data(), 
+						tracker_pose_vector.size()))
+				& BOOST_SERIALIZATION_NVP(
+					boost::serialization::make_array(
+						tracker_data_vector.data(),
+						tracker_data_vector.size()))
+				& BOOST_SERIALIZATION_NVP(
+					boost::serialization::make_array(
+						tracker_state_vector.data(),
+						tracker_state_vector.size()))
 				& BOOST_SERIALIZATION_NVP(id)
 				& BOOST_SERIALIZATION_NVP(state)
 				& BOOST_SERIALIZATION_NVP(want_reply)
@@ -486,7 +491,7 @@ namespace ktvr
 		{
 			std::ostringstream o;
 			boost::archive::text_oarchive oa(o);
-			oa << this;
+			oa << *this;
 			return o.str();
 		}
 
@@ -528,28 +533,28 @@ namespace ktvr
 		 */
 
 		// Update the tracker's pose
-		K2Message(int m_id, K2PosePacket m_pose) : id(m_id)
+		K2Message(const int m_id, K2PosePacket const& m_pose) : id(m_id)
 		{
-			tracker_pose = std::move(m_pose);
+			tracker_pose = m_pose;
 			messageType = K2Message_UpdateTrackerPose;
 		}
 
 		// Update the tracker's pose via vector
-		K2Message(const std::vector<std::pair<int, K2PosePacket>>& m_pose_vector)
+		K2Message(const std::vector<std::pair<int, std::shared_ptr<K2PosePacket>>>& m_pose_vector)
 		{
 			tracker_pose_vector = m_pose_vector;
 			messageType = K2Message_UpdateTrackerPoseVector;
 		}
 
 		// Update the tracker's data
-		K2Message(int m_id, K2DataPacket m_data) : id(m_id)
+		K2Message(const int m_id, K2DataPacket const& m_data) : id(m_id)
 		{
-			tracker_data = std::move(m_data);
+			tracker_data = m_data;
 			messageType = K2Message_UpdateTrackerData;
 		}
 
 		// Update the tracker's data via vector
-		K2Message(const std::vector<std::pair<int, K2DataPacket>>& m_data_vector)
+		K2Message(const std::vector<std::pair<int, std::shared_ptr<K2DataPacket>>>& m_data_vector)
 		{
 			tracker_data_vector = m_data_vector;
 			messageType = K2Message_UpdateTrackerDataVector;
@@ -557,18 +562,18 @@ namespace ktvr
 
 		// Add a tracker, to automatically spawn,
 		// set it's state to true
-		K2Message(K2TrackerBase m_tracker)
+		K2Message(K2TrackerBase const& m_tracker)
 		{
-			tracker_base = std::move(m_tracker);
+			tracker_base = m_tracker;
 			messageType = K2Message_AddTracker;
 		}
 
 		// Basically the upper command,
 		// although written a bit different
 		// It uhmmm... will let us autospawn, but at the call
-		K2Message(K2TrackerBase m_tracker, bool m_state) : state(m_state)
+		K2Message(K2TrackerBase const& m_tracker, const bool m_state) : state(m_state)
 		{
-			tracker_base = std::move(m_tracker);
+			tracker_base = m_tracker;
 			messageType = K2Message_AddTracker;
 		}
 
@@ -643,7 +648,7 @@ namespace ktvr
 		{
 			std::ostringstream o;
 			boost::archive::text_oarchive oa(o);
-			oa << this;
+			oa << *this;
 			return o.str();
 		}
 
@@ -700,8 +705,8 @@ namespace ktvr
 		}
 
 		// Return whole tracker object: creation / download
-		K2ResponseMessage(K2TrackerBase m_tracker) :
-			tracker_base(std::move(m_tracker))
+		K2ResponseMessage(K2TrackerBase const& m_tracker) :
+			tracker_base(m_tracker)
 		{
 			messageType = K2ResponseMessage_Tracker;
 		}
@@ -959,7 +964,7 @@ namespace ktvr
 	 */
 	template <bool want_reply = true>
 	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
-	update_tracker_pose(const std::vector<std::pair<int, K2PosePacket>>& tracker_poses_vector) noexcept
+	update_tracker_pose(const std::vector<std::pair<int, std::shared_ptr<K2PosePacket>>>& tracker_poses_vector) noexcept
 	{
 		try
 		{
@@ -1012,7 +1017,7 @@ namespace ktvr
 	 */
 	template <bool want_reply = true>
 	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
-	update_tracker_data(const std::vector<std::pair<int, K2DataPacket>>& tracker_data_vector) noexcept
+	update_tracker_data(const std::vector<std::pair<int, std::shared_ptr<K2DataPacket>>>& tracker_data_vector) noexcept
 	{
 		try
 		{
