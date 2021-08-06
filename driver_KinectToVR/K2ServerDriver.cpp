@@ -142,12 +142,14 @@ int K2ServerDriver::init_ServerDriver(
 						// Deserialize now
 						ktvr::K2Message response;
 						ia >> response;
-						
+
 						parse_message(response);
 					}
 					catch (boost::archive::archive_exception const& e)
 					{
-						LOG(ERROR) << "Message may be corrupted. Boost serialization error: " << e.what();
+						// It just happens sometimes
+						if (e.what() != "input stream error")
+							LOG(ERROR) << "Message may be corrupted. Boost serialization error: " << e.what();
 					}
 					catch (std::exception const& e)
 					{

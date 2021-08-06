@@ -203,7 +203,7 @@ namespace ktvr
 		}
 	}
 
-	K2ResponseMessage download_tracker(int const tracker_id) noexcept
+	K2ResponseMessage download_tracker(int const& tracker_id) noexcept
 	{
 		try
 		{
@@ -219,7 +219,7 @@ namespace ktvr
 		}
 	}
 
-	K2ResponseMessage download_tracker(std::string tracker_serial) noexcept
+	K2ResponseMessage download_tracker(std::string const& tracker_serial) noexcept
 	{
 		try
 		{
@@ -230,7 +230,7 @@ namespace ktvr
 			// forcing the driver to check if we've provided a serial
 			K2Message message = K2Message();
 			message.messageType = K2Message_DownloadTracker;
-			message.tracker_data.serial = std::move(tracker_serial);
+			message.tracker_data.serial = tracker_serial;
 
 			return send_message(message);
 		}

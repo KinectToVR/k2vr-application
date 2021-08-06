@@ -251,7 +251,7 @@ namespace ktvr
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			ar & BOOST_SERIALIZATION_NVP(orientation)
+			ar& BOOST_SERIALIZATION_NVP(orientation)
 				& BOOST_SERIALIZATION_NVP(position);
 		}
 
@@ -287,7 +287,7 @@ namespace ktvr
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			ar & BOOST_SERIALIZATION_NVP(serial)
+			ar& BOOST_SERIALIZATION_NVP(serial)
 				& BOOST_SERIALIZATION_NVP(role)
 				& BOOST_SERIALIZATION_NVP(isActive);
 		}
@@ -306,7 +306,7 @@ namespace ktvr
 
 		// Quick constructor
 		K2TrackerData(std::string m_serial, ITrackerType m_role, bool m_isActive = false) :
-			serial(m_serial), role(m_role), isActive(m_isActive)
+			serial(std::move(m_serial)), role(m_role), isActive(m_isActive)
 		{
 		}
 	};
@@ -322,31 +322,34 @@ namespace ktvr
 		// Copy constructors
 		K2PosePacket(const K2PosePacket&) = default;
 		K2PosePacket& operator=(const K2PosePacket&) = default;
-		
+
+		// Move operators
+		K2PosePacket(K2PosePacket&& packet) noexcept : K2TrackerPose(packet)
+		{
+		}
+
+		K2PosePacket& operator=(K2PosePacket&& packet) noexcept
+		{
+			K2TrackerPose::operator=(packet);
+			return *this;
+		}
+
 		// Default constructor 2
-		K2PosePacket(K2TrackerPose const& m_pose, const int millis) :
+		K2PosePacket(K2TrackerPose const& m_pose, int const& millis) :
 			K2TrackerPose(m_pose), millisFromNow(millis)
 		{
 		}
 
 		// Default constructor
-		explicit K2PosePacket(K2TrackerPose const& m_pose) :
+		K2PosePacket(K2TrackerPose const& m_pose) :
 			K2TrackerPose(m_pose)
 		{
-		}
-
-		// Custom constructor
-		explicit K2PosePacket(std::shared_ptr<K2PosePacket> const& m_pose)
-		{
-			position = m_pose->position;
-			orientation = m_pose->orientation;
-			millisFromNow = m_pose->millisFromNow;
 		}
 
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			ar & BOOST_SERIALIZATION_NVP(boost::serialization::base_object<K2TrackerPose>(*this))
+			ar& BOOST_SERIALIZATION_NVP(boost::serialization::base_object<K2TrackerPose>(*this))
 				& BOOST_SERIALIZATION_NVP(millisFromNow); // Serialize via base class
 		}
 	};
@@ -364,31 +367,33 @@ namespace ktvr
 		K2DataPacket(const K2DataPacket&) = default;
 		K2DataPacket& operator=(const K2DataPacket&) = default;
 
+		// Move operators
+		K2DataPacket(K2DataPacket&& packet) noexcept : K2TrackerData(packet)
+		{
+		}
+
+		K2DataPacket& operator=(K2DataPacket&& packet) noexcept
+		{
+			K2TrackerData::operator=(packet);
+			return *this;
+		}
+
 		// Default constructor 2
-		K2DataPacket(K2TrackerData const& m_data, const int millis) :
+		K2DataPacket(K2TrackerData const& m_data, int const& millis) :
 			K2TrackerData(m_data), millisFromNow(millis)
 		{
 		}
 
 		// Default constructor
-		explicit K2DataPacket(K2TrackerData const& m_data) :
+		K2DataPacket(K2TrackerData const& m_data) :
 			K2TrackerData(m_data)
 		{
-		}
-
-		// Custom constructor
-		explicit K2DataPacket(std::shared_ptr<K2DataPacket> const& m_data)
-		{
-			serial = m_data->serial;
-			role = m_data->role;
-			isActive = m_data->isActive;
-			millisFromNow = m_data->millisFromNow;
 		}
 
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			ar & BOOST_SERIALIZATION_NVP(boost::serialization::base_object<K2TrackerData>(*this))
+			ar& BOOST_SERIALIZATION_NVP(boost::serialization::base_object<K2TrackerData>(*this))
 				& BOOST_SERIALIZATION_NVP(millisFromNow); // Serialize via base class
 		}
 	};
@@ -420,8 +425,8 @@ namespace ktvr
 		K2TrackerBase(K2TrackerBase&&) = default;
 		K2TrackerBase& operator=(K2TrackerBase&&) = default;
 
-		K2TrackerBase(K2TrackerPose const& m_pose, K2TrackerData const& m_data) :
-			pose(m_pose), data(m_data)
+		K2TrackerBase(K2TrackerPose const& m_pose, K2TrackerData m_data) :
+			pose(m_pose), data(std::move(m_data))
 		{
 		}
 	};
@@ -506,40 +511,40 @@ namespace ktvr
 		K2Message& operator=(K2Message&&) = default;
 
 		/*
-		 * Lower constructors are made just because
+		 * Lower constructors are made just
 		 * to have a faster way to construct a message,
 		 * without caring about its type.
 		 * I mean, just why not?
 		 */
 
 		// Update the tracker's pose
-		K2Message(const int m_id, K2PosePacket const m_pose) : id(m_id)
+		K2Message(int m_id, K2PosePacket m_pose) : id(m_id)
 		{
-			tracker_pose = m_pose;
+			tracker_pose = std::move(m_pose);
 			messageType = K2Message_UpdateTrackerPose;
 		}
-		
+
 		// Update the tracker's data
-		K2Message(const int m_id, K2DataPacket const m_data) : id(m_id)
+		K2Message(int m_id, K2DataPacket m_data) : id(m_id)
 		{
-			tracker_data = m_data;
+			tracker_data = std::move(m_data);
 			messageType = K2Message_UpdateTrackerData;
 		}
 		
 		// Add a tracker, to automatically spawn,
 		// set it's state to true
-		K2Message(K2TrackerBase const& m_tracker)
+		K2Message(K2TrackerBase m_tracker)
 		{
-			tracker_base = m_tracker;
+			tracker_base = std::move(m_tracker);
 			messageType = K2Message_AddTracker;
 		}
 
 		// Basically the upper command,
 		// although written a bit different
 		// It uhmmm... will let us autospawn, but at the call
-		K2Message(K2TrackerBase const& m_tracker, const bool m_state) : state(m_state)
+		K2Message(K2TrackerBase m_tracker, bool m_state) : state(m_state)
 		{
-			tracker_base = m_tracker;
+			tracker_base = std::move(m_tracker);
 			messageType = K2Message_AddTracker;
 		}
 
@@ -664,8 +669,8 @@ namespace ktvr
 		}
 
 		// Return whole tracker object: creation / download
-		K2ResponseMessage(K2TrackerBase const& m_tracker) :
-			tracker_base(m_tracker)
+		K2ResponseMessage(K2TrackerBase m_tracker) :
+			tracker_base(std::move(m_tracker))
 		{
 			messageType = K2ResponseMessage_Tracker;
 		}
@@ -849,7 +854,7 @@ namespace ktvr
 	 */
 	template <bool want_reply = true>
 	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
-	update_tracker_pose(int id, K2PosePacket const tracker_pose) noexcept
+	update_tracker_pose(int id, K2PosePacket const& tracker_pose) noexcept
 	{
 		try
 		{
@@ -867,6 +872,7 @@ namespace ktvr
 		}
 	}
 
+
 	/**
 	 * \brief Update tracker's pose in SteamVR driver
 	 * \param tracker_handle Tracker for updating data
@@ -875,12 +881,12 @@ namespace ktvr
 	 */
 	template <bool want_reply = true>
 	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
-	update_tracker_pose(K2TrackerBase tracker_handle) noexcept
+	update_tracker_pose(K2TrackerBase const& tracker_handle) noexcept
 	{
 		try
 		{
 			// Send the message and return
-			return update_tracker_pose<want_reply>(tracker_handle.id, K2PosePacket(tracker_handle.pose));
+			return update_tracker_pose<want_reply>(tracker_handle.id, tracker_handle.pose);
 		}
 		catch (std::exception const& e)
 		{
@@ -898,7 +904,7 @@ namespace ktvr
 	 */
 	template <bool want_reply = true>
 	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
-	update_tracker_data(int id, K2DataPacket const tracker_data) noexcept
+	update_tracker_data(int id, K2DataPacket const& tracker_data) noexcept
 	{
 		try
 		{
@@ -924,12 +930,12 @@ namespace ktvr
 	 */
 	template <bool want_reply = true>
 	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
-	update_tracker_data(K2TrackerBase const tracker_handle) noexcept
+	update_tracker_data(K2TrackerBase const& tracker_handle) noexcept
 	{
 		try
 		{
 			// Send the message and return
-			return update_tracker_data<want_reply>(tracker_handle.id, K2DataPacket(tracker_handle.data));
+			return update_tracker_data<want_reply>(tracker_handle.id, tracker_handle.data);
 		}
 		catch (std::exception const& e)
 		{
@@ -946,15 +952,15 @@ namespace ktvr
 	 */
 	template <bool want_reply = true>
 	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
-	update_tracker(K2TrackerBase const tracker) noexcept
+	update_tracker(K2TrackerBase const& tracker) noexcept
 	{
 		try
 		{
 			// Send the message and return
-			update_tracker_pose<want_reply>(tracker.id, K2PosePacket(tracker.pose));
+			update_tracker_pose<want_reply>(tracker.id, tracker.pose);
 
 			// Data is more important then return data
-			return update_tracker_data<want_reply>(tracker.id, K2DataPacket(tracker.data));
+			return update_tracker_data<want_reply>(tracker.id, tracker.data);
 		}
 		catch (std::exception const& e)
 		{
@@ -968,14 +974,14 @@ namespace ktvr
 	 * \param tracker_id Tracker id for download
 	 * \return Returns tracker object / id / success?
 	 */
-	KTVR_API ktvr::K2ResponseMessage download_tracker(int tracker_id) noexcept;
+	KTVR_API ktvr::K2ResponseMessage download_tracker(int const& tracker_id) noexcept;
 
 	/**
 	 * \brief Grab all possible data from existing tracker
 	 * \param tracker_serial Tracker id for download
 	 * \return Returns tracker object / id / success?
 	 */
-	KTVR_API ktvr::K2ResponseMessage download_tracker(std::string tracker_serial) noexcept;
+	KTVR_API ktvr::K2ResponseMessage download_tracker(std::string const& tracker_serial) noexcept;
 
 	/**
 	 * \brief Grab all possible data from existing tracker
