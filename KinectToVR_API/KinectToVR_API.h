@@ -163,13 +163,10 @@ namespace ktvr
 		K2Message_AddTracker,
 		// Add
 		K2Message_SetTrackerState,
-		K2Message_SetTrackerStateVector,
 		K2Message_SetStateAll,
 		// State
 		K2Message_UpdateTrackerPose,
-		K2Message_UpdateTrackerPoseVector,
 		K2Message_UpdateTrackerData,
-		K2Message_UpdateTrackerDataVector,
 		// Update
 		K2Message_DownloadTracker,
 		// Get tracker
@@ -450,12 +447,7 @@ namespace ktvr
 		K2TrackerBase tracker_base = K2TrackerBase();
 		K2PosePacket tracker_pose = K2PosePacket();
 		K2DataPacket tracker_data = K2DataPacket();
-
-		// Vector updates
-		std::vector<std::pair<int, std::shared_ptr<K2PosePacket>>> tracker_pose_vector;
-		std::vector<std::pair<int, std::shared_ptr<K2DataPacket>>> tracker_data_vector;
-		std::vector<std::pair<int, bool>> tracker_state_vector;
-
+		
 		// Rest object, depends on type too
 		int id = -1;
 		bool state = false, want_reply = true;
@@ -467,18 +459,6 @@ namespace ktvr
 				& BOOST_SERIALIZATION_NVP(tracker_base)
 				& BOOST_SERIALIZATION_NVP(tracker_pose)
 				& BOOST_SERIALIZATION_NVP(tracker_data)
-				& BOOST_SERIALIZATION_NVP(
-					boost::serialization::make_array(
-						tracker_pose_vector.data(), 
-						tracker_pose_vector.size()))
-				& BOOST_SERIALIZATION_NVP(
-					boost::serialization::make_array(
-						tracker_data_vector.data(),
-						tracker_data_vector.size()))
-				& BOOST_SERIALIZATION_NVP(
-					boost::serialization::make_array(
-						tracker_state_vector.data(),
-						tracker_state_vector.size()))
 				& BOOST_SERIALIZATION_NVP(id)
 				& BOOST_SERIALIZATION_NVP(state)
 				& BOOST_SERIALIZATION_NVP(want_reply)
@@ -533,33 +513,19 @@ namespace ktvr
 		 */
 
 		// Update the tracker's pose
-		K2Message(const int m_id, K2PosePacket const& m_pose) : id(m_id)
+		K2Message(const int m_id, K2PosePacket const m_pose) : id(m_id)
 		{
 			tracker_pose = m_pose;
 			messageType = K2Message_UpdateTrackerPose;
 		}
-
-		// Update the tracker's pose via vector
-		K2Message(const std::vector<std::pair<int, std::shared_ptr<K2PosePacket>>>& m_pose_vector)
-		{
-			tracker_pose_vector = m_pose_vector;
-			messageType = K2Message_UpdateTrackerPoseVector;
-		}
-
+		
 		// Update the tracker's data
-		K2Message(const int m_id, K2DataPacket const& m_data) : id(m_id)
+		K2Message(const int m_id, K2DataPacket const m_data) : id(m_id)
 		{
 			tracker_data = m_data;
 			messageType = K2Message_UpdateTrackerData;
 		}
-
-		// Update the tracker's data via vector
-		K2Message(const std::vector<std::pair<int, std::shared_ptr<K2DataPacket>>>& m_data_vector)
-		{
-			tracker_data_vector = m_data_vector;
-			messageType = K2Message_UpdateTrackerDataVector;
-		}
-
+		
 		// Add a tracker, to automatically spawn,
 		// set it's state to true
 		K2Message(K2TrackerBase const& m_tracker)
@@ -589,13 +555,6 @@ namespace ktvr
 			id(m_id), state(m_state)
 		{
 			messageType = K2Message_SetTrackerState;
-		}
-
-		// Update the tracker's state via vector
-		K2Message(const std::vector<std::pair<int, bool>>& m_state_vector)
-		{
-			tracker_state_vector = m_state_vector;
-			messageType = K2Message_SetTrackerStateVector;
 		}
 
 		// Download a tracker
@@ -850,32 +809,6 @@ namespace ktvr
 			else return std::monostate();
 		}
 	}
-
-	/**
-	 * \brief Update tracker's state in SteamVR driver
-	 * \param tracker_states_vector Vector of pairs with ids and states
-	 * \argument want_reply Check if the client wants a reply
-	 * \return Returns LAST tracker id / success?
-	 */
-	template <bool want_reply = true>
-	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
-	set_tracker_state(const std::vector<std::pair<int, bool>>& tracker_states_vector) noexcept
-	{
-		try
-		{
-			// Send and grab the response
-			// Thanks to our constructors,
-			// message will set all
-			// Send the message and return
-			return send_message<want_reply>(
-				K2Message(tracker_states_vector));
-		}
-		catch (std::exception const& e)
-		{
-			if constexpr (want_reply) return K2ResponseMessage(); // Success is set to false by default
-			else return std::monostate();
-		}
-	}
 	
 	/**
 	 * \brief Connect (activate/spawn) all trackers in SteamVR
@@ -916,7 +849,7 @@ namespace ktvr
 	 */
 	template <bool want_reply = true>
 	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
-	update_tracker_pose(int id, K2PosePacket const& tracker_pose) noexcept
+	update_tracker_pose(int id, K2PosePacket const tracker_pose) noexcept
 	{
 		try
 		{
@@ -942,38 +875,12 @@ namespace ktvr
 	 */
 	template <bool want_reply = true>
 	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
-	update_tracker_pose(K2TrackerBase const& tracker_handle) noexcept
+	update_tracker_pose(K2TrackerBase tracker_handle) noexcept
 	{
 		try
 		{
 			// Send the message and return
-			return update_tracker_pose<want_reply>(tracker_handle.id, tracker_handle.pose);
-		}
-		catch (std::exception const& e)
-		{
-			if constexpr (want_reply) return K2ResponseMessage(); // Success is set to false by default
-			else return std::monostate();
-		}
-	}
-
-	/**
-	 * \brief Update tracker's pose in SteamVR driver
-	 * \param tracker_poses_vector Vector of pairs with ids and poses
-	 * \argument want_reply Check if the client wants a reply
-	 * \return Returns LAST tracker id / success?
-	 */
-	template <bool want_reply = true>
-	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
-	update_tracker_pose(const std::vector<std::pair<int, std::shared_ptr<K2PosePacket>>>& tracker_poses_vector) noexcept
-	{
-		try
-		{
-			// Send and grab the response
-			// Thanks to our constructors,
-			// message will set all
-			// Send the message and return
-			return send_message<want_reply>(
-				K2Message(tracker_poses_vector));
+			return update_tracker_pose<want_reply>(tracker_handle.id, K2PosePacket(tracker_handle.pose));
 		}
 		catch (std::exception const& e)
 		{
@@ -991,7 +898,7 @@ namespace ktvr
 	 */
 	template <bool want_reply = true>
 	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
-	update_tracker_data(int id, K2DataPacket const& tracker_data) noexcept
+	update_tracker_data(int id, K2DataPacket const tracker_data) noexcept
 	{
 		try
 		{
@@ -1008,32 +915,6 @@ namespace ktvr
 			else return std::monostate();
 		}
 	}
-
-	/**
-	 * \brief Update tracker's data in SteamVR driver
-	 * \param tracker_data_vector Vector of pairs with ids and data's
-	 * \argument want_reply Check if the client wants a reply
-	 * \return Returns LAST tracker id / success?
-	 */
-	template <bool want_reply = true>
-	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
-	update_tracker_data(const std::vector<std::pair<int, std::shared_ptr<K2DataPacket>>>& tracker_data_vector) noexcept
-	{
-		try
-		{
-			// Send and grab the response
-			// Thanks to our constructors,
-			// message will set all
-			// Send the message and return
-			return send_message<want_reply>(
-				K2Message(tracker_data_vector));
-		}
-		catch (std::exception const& e)
-		{
-			if constexpr (want_reply) return K2ResponseMessage(); // Success is set to false by default
-			else return std::monostate();
-		}
-	}
 	
 	/**
 	 * \brief Update tracker's data in SteamVR driver
@@ -1043,12 +924,12 @@ namespace ktvr
 	 */
 	template <bool want_reply = true>
 	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
-	update_tracker_data(K2TrackerBase const& tracker_handle) noexcept
+	update_tracker_data(K2TrackerBase const tracker_handle) noexcept
 	{
 		try
 		{
 			// Send the message and return
-			return update_tracker_data<want_reply>(tracker_handle.id, tracker_handle.data);
+			return update_tracker_data<want_reply>(tracker_handle.id, K2DataPacket(tracker_handle.data));
 		}
 		catch (std::exception const& e)
 		{
@@ -1065,15 +946,15 @@ namespace ktvr
 	 */
 	template <bool want_reply = true>
 	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
-	update_tracker(K2TrackerBase const& tracker) noexcept
+	update_tracker(K2TrackerBase const tracker) noexcept
 	{
 		try
 		{
 			// Send the message and return
-			update_tracker_pose<want_reply>(tracker.id, tracker.pose);
+			update_tracker_pose<want_reply>(tracker.id, K2PosePacket(tracker.pose));
 
 			// Data is more important then return data
-			return update_tracker_data<want_reply>(tracker.id, tracker.data);
+			return update_tracker_data<want_reply>(tracker.id, K2DataPacket(tracker.data));
 		}
 		catch (std::exception const& e)
 		{
@@ -1087,14 +968,14 @@ namespace ktvr
 	 * \param tracker_id Tracker id for download
 	 * \return Returns tracker object / id / success?
 	 */
-	KTVR_API ktvr::K2ResponseMessage download_tracker(int const& tracker_id) noexcept;
+	KTVR_API ktvr::K2ResponseMessage download_tracker(int tracker_id) noexcept;
 
 	/**
 	 * \brief Grab all possible data from existing tracker
 	 * \param tracker_serial Tracker id for download
 	 * \return Returns tracker object / id / success?
 	 */
-	KTVR_API ktvr::K2ResponseMessage download_tracker(std::string const& tracker_serial) noexcept;
+	KTVR_API ktvr::K2ResponseMessage download_tracker(std::string tracker_serial) noexcept;
 
 	/**
 	 * \brief Grab all possible data from existing tracker

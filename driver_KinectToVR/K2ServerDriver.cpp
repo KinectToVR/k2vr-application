@@ -133,7 +133,6 @@ int K2ServerDriver::init_ServerDriver(
 
 						// Convert hex to readable ascii and parse
 						std::string s = ktvr::asciiString(_s);
-						LOG(INFO) << s;
 
 						// This is also in parsefromstring of K2Message.
 						// Though, this time we want to catch any error ourselves.
@@ -184,15 +183,7 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 	
 	// Add the timestamp: parsing
 	_response.messageManualTimestamp = K2API_GET_TIMESTAMP_NOW;
-
-	/*DEBUG*/
-
-	LOG(INFO) << "Type: " <<  message.messageType;
-	LOG(INFO) << "Vector: " << !message.tracker_pose_vector.empty();
-	LOG(INFO) << "Vector size: " << !message.tracker_pose_vector.size();
-
-	/*DEBUG*/
-
+	
 	// Parse the message if it's not invalid
 	if (message.messageType != ktvr::K2MessageType::K2Message_Invalid) {
 
@@ -280,50 +271,7 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 				_response.result = ktvr::K2ResponseMessageCode_BadRequest;
 			}
 		}break;
-
-		case ktvr::K2MessageType::K2Message_SetTrackerStateVector: {
-			// Loop over the vector
-			// If we can even search
-			if (!message.tracker_state_vector.empty()) {
-
-				// Search in our trackers vector
-				for (auto& tracker_pair : message.tracker_state_vector)
-				{
-					// Check if desired tracker exists
-					if (tracker_pair.first < trackerVector.size() && tracker_pair.first >= 0) {
-
-						// Set tracker's state to one gathered from argument
-						if (!trackerVector.at(tracker_pair.first).is_added())
-							if (!trackerVector.at(tracker_pair.first).spawn()) { // spawn if needed
-								LOG(INFO) << "Tracker autospawn exception! Serial: " + trackerVector.at(tracker_pair.first).get_serial();
-								_response.result = ktvr::K2ResponseMessageCode_SpawnFailed;
-							}
-
-						// Set the state
-						trackerVector.at(tracker_pair.first).set_state(tracker_pair.second);
-						LOG(INFO) << "Tracker id: " + std::to_string(tracker_pair.first) +
-							" state has been set to: " + std::to_string(tracker_pair.second);
-
-						// Compose the response
-						_response.success = true;
-						_response.id = tracker_pair.first; // ID
-						_response.messageType = ktvr::K2ResponseMessageType::K2ResponseMessage_ID;
-					}
-					else {
-						LOG(ERROR) << "Couldn't set tracker id: " +
-							std::to_string(message.id) + " state. Index out of bounds.";
-						_response.result = ktvr::K2ResponseMessageCode_BadRequest;
-					}
-				}
-			}
-			else
-			{
-				// If tracker was not found
-				LOG(ERROR) << "Couldn't set tracker state via vector because it was empty.";
-				_response.result = ktvr::K2ResponseMessageCode_BadRequest;
-			}
-		}break;
-
+			
 		case ktvr::K2MessageType::K2Message_SetStateAll: {
 			// Set all trackers' state
 			for (K2Tracker& k2_tracker : trackerVector)
@@ -360,40 +308,7 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 				_response.result = ktvr::K2ResponseMessageCode_BadRequest;
 			}
 		}break;
-
-		case ktvr::K2MessageType::K2Message_UpdateTrackerPoseVector: {
-			// Loop over the vector
-			// If we can even search
-			if (!message.tracker_pose_vector.empty()) {
-
-				// Search in our trackers vector
-				for (auto& tracker_pair : message.tracker_pose_vector)
-				{
-					// Check if desired tracker exists
-					if (tracker_pair.first < trackerVector.size() && tracker_pair.first >= 0) {
-						// Update tracker pose (with time offset)
-						trackerVector.at(tracker_pair.first).set_pose(ktvr::K2PosePacket(tracker_pair.second));
-
-						// Compose the response
-						_response.success = true;
-						_response.id = message.id; // ID
-						_response.messageType = ktvr::K2ResponseMessageType::K2ResponseMessage_ID;
-					}
-					else {
-						LOG(ERROR) << "Couldn't set tracker id: " +
-							std::to_string(message.id) + " pose. Index out of bounds.";
-						_response.result = ktvr::K2ResponseMessageCode_BadRequest;
-					}
-				}
-			}
-			else
-			{
-				// If tracker was not found
-				LOG(ERROR) << "Couldn't update tracker pose via vector because it was empty.";
-				_response.result = ktvr::K2ResponseMessageCode_BadRequest;
-			}
-		}break;
-
+			
 		case ktvr::K2MessageType::K2Message_UpdateTrackerData: {
 			// Check if desired tracker exists
 			if (message.id < trackerVector.size() && message.id >= 0) {
@@ -411,40 +326,7 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 				_response.result = ktvr::K2ResponseMessageCode_BadRequest;
 			}
 		}break;
-
-		case ktvr::K2MessageType::K2Message_UpdateTrackerDataVector: {
-			// Loop over the vector
-			// If we can even search
-			if (!message.tracker_data_vector.empty()) {
-
-				// Search in our trackers vector
-				for (auto& tracker_pair : message.tracker_data_vector)
-				{
-					// Check if desired tracker exists
-					if (tracker_pair.first < trackerVector.size() && tracker_pair.first >= 0) {
-						// Update tracker data (with time offset)
-						trackerVector.at(tracker_pair.first).set_data(ktvr::K2DataPacket(tracker_pair.second));
-
-						// Compose the response
-						_response.success = true;
-						_response.id = message.id; // ID
-						_response.messageType = ktvr::K2ResponseMessageType::K2ResponseMessage_ID;
-					}
-					else {
-						LOG(ERROR) << "Couldn't set tracker id: " +
-							std::to_string(message.id) + " data. Index out of bounds.";
-						_response.result = ktvr::K2ResponseMessageCode_BadRequest;
-					}
-				}
-			}
-			else
-			{
-				// If tracker was not found
-				LOG(ERROR) << "Couldn't update tracker pose via vector because it was empty.";
-				_response.result = ktvr::K2ResponseMessageCode_BadRequest;
-			}
-		}break;
-
+			
 		case ktvr::K2MessageType::K2Message_DownloadTracker: {
 			// Check if desired tracker exists
 			if (message.id < trackerVector.size() && message.id >= 0) {
