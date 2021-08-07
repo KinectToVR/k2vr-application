@@ -268,6 +268,9 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 				LOG(INFO) << "Tracker id: " + std::to_string(message.id) +
 					" state has been set to: " + std::to_string(message.state);
 
+				// Update the tracker
+				trackerVector.at(message.id).update();
+
 				// Compose the response
 				_response.success = true;
 				_response.id = message.id; // ID
@@ -290,6 +293,7 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 						_response.result = ktvr::K2ResponseMessageCode_SpawnFailed;
 					}
 				k2_tracker.set_state(message.state); // set state
+				k2_tracker.update(); // Update the tracker
 			}
 			LOG(INFO) << "All trackers' state has been set to: " + std::to_string(message.state);
 
