@@ -21,7 +21,6 @@ std::type_info const& var_type(V const& v)
 
 namespace ktvr
 {
-	// TODO: May be blocking
 	int init_k2api(
 		const std::string& k2_to_pipe,
 		const std::string& k2_from_pipe,
@@ -65,7 +64,7 @@ namespace ktvr
 		return 0;
 	}
 
-	// TODO: May be blocking
+	// May be blocking
 	int close_k2api() noexcept
 	{
 		try
@@ -80,11 +79,7 @@ namespace ktvr
 		}
 		return 0;
 	}
-
-	// TODO: May be blocking
-	// TODO: Add custom timeout set to init
-	//template <bool want_reply>
-	//typename std::conditional<want_reply, std::string, void>::type
+	
 	std::string send_message(std::string const& data, const bool want_reply) noexcept(false)
 	{
 		// change the string to hex format

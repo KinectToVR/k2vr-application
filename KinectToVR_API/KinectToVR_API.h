@@ -16,6 +16,7 @@
 #include <boost/serialization/array.hpp>
 #include <boost/serialization/utility.hpp>
 #include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/optional.hpp>
 
 #include <boost/assign/list_of.hpp>
 #include <boost/assign.hpp>
@@ -170,6 +171,10 @@ namespace ktvr
 		// Update
 		K2Message_DownloadTracker,
 		// Get tracker
+		K2Message_RefreshTracker,
+		// Refresh tracker pose
+		K2Message_RequestRestart,
+		// Request a restart
 		K2Message_Ping
 		// Test message
 	};
@@ -449,13 +454,14 @@ namespace ktvr
 		// we'd like to check other ones somehow
 
 		// Object, parsing depends on type
-		K2TrackerBase tracker_base = K2TrackerBase();
-		K2PosePacket tracker_pose = K2PosePacket();
-		K2DataPacket tracker_data = K2DataPacket();
+		boost::optional<K2TrackerBase> tracker_base;
+		boost::optional<K2PosePacket> tracker_pose;
+		K2DataPacket tracker_data;
 		
 		// Rest object, depends on type too
 		int id = -1;
 		bool state = false, want_reply = true;
+		std::string message_string; // Placeholder for anything
 
 		template <class Archive>
 		void serialize(Archive& ar, const unsigned int version)
@@ -464,6 +470,7 @@ namespace ktvr
 				& BOOST_SERIALIZATION_NVP(tracker_base)
 				& BOOST_SERIALIZATION_NVP(tracker_pose)
 				& BOOST_SERIALIZATION_NVP(tracker_data)
+				& BOOST_SERIALIZATION_NVP(message_string)
 				& BOOST_SERIALIZATION_NVP(id)
 				& BOOST_SERIALIZATION_NVP(state)
 				& BOOST_SERIALIZATION_NVP(want_reply)
@@ -831,12 +838,8 @@ namespace ktvr
 			// Thanks to our constructors,
 			// message will set all
 			// Send the message
-			auto ret =
-				send_message<want_reply>(K2Message(state));
-
-			// Return
-			if constexpr (want_reply) return ret;
-			else return std::monostate();
+			return send_message<want_reply>(
+				K2Message(state));
 		}
 		catch (std::exception const& e)
 		{
@@ -961,6 +964,60 @@ namespace ktvr
 
 			// Data is more important then return data
 			return update_tracker_data<want_reply>(tracker.id, tracker.data);
+		}
+		catch (std::exception const& e)
+		{
+			if constexpr (want_reply) return K2ResponseMessage(); // Success is set to false by default
+			else return std::monostate();
+		}
+	}
+
+	/**
+	 * \brief Update tracker's pose in SteamVR driver with already existing values
+	 * \param tracker_id Tracker for updating data
+	 * \argument want_reply Check if the client wants a reply
+	 * \return Returns tracker id / success?
+	 */
+	template <bool want_reply = true>
+	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
+	refresh_tracker_pose(int const& tracker_id) noexcept
+	{
+		try
+		{
+			// Send and grab the response
+			auto message = K2Message();
+			message.id = tracker_id;
+			message.messageType = K2Message_RefreshTracker;
+
+			// Send the message and return
+			return send_message<want_reply>(message);
+		}
+		catch (std::exception const& e)
+		{
+			if constexpr (want_reply) return K2ResponseMessage(); // Success is set to false by default
+			else return std::monostate();
+		}
+	}
+
+	/**
+	 * \brief Request OpenVR to restart with a message
+	 * \param reason Reason for the restart
+	 * \argument want_reply Check if the client wants a reply
+	 * \return Returns tracker id / success?
+	 */
+	template <bool want_reply = true>
+	typename std::conditional<want_reply, K2ResponseMessage, std::monostate>::type
+	request_vr_restart(std::string const& reason) noexcept
+	{
+		try
+		{
+			// Send and grab the response
+			auto message = K2Message();
+			message.message_string = std::move(reason);
+			message.messageType = K2Message_RequestRestart;
+
+			// Send the message and return
+			return send_message<want_reply>(message);
 		}
 		catch (std::exception const& e)
 		{

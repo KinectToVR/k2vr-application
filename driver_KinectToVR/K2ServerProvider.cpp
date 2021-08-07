@@ -87,27 +87,12 @@ private:
 	std::thread* m_pWatchdogThread;
 };
 
-void WatchdogThreadFunction()
-{
-	while (!g_bExiting)
-	{
-		vr::VRWatchdogHost()->WatchdogWakeUp(vr::TrackedDeviceClass_HMD);
-		std::this_thread::sleep_for(std::chrono::microseconds(500));
-	}
-}
-
 vr::EVRInitError K2WatchdogDriver::Init(vr::IVRDriverContext* pDriverContext)
 {
 	VR_INIT_WATCHDOG_DRIVER_CONTEXT(pDriverContext);
 	LOG(INFO) << "Watchdog init has started...";
 
 	g_bExiting = false;
-	m_pWatchdogThread = new std::thread(WatchdogThreadFunction);
-	if (!m_pWatchdogThread)
-	{
-		//Log watchdog error and set init=false
-		return vr::VRInitError_Driver_Failed;
-	}
 
 	return vr::VRInitError_None;
 }
@@ -115,12 +100,6 @@ vr::EVRInitError K2WatchdogDriver::Init(vr::IVRDriverContext* pDriverContext)
 void K2WatchdogDriver::Cleanup()
 {
 	g_bExiting = true;
-	if (m_pWatchdogThread)
-	{
-		m_pWatchdogThread->join();
-		delete m_pWatchdogThread;
-		m_pWatchdogThread = nullptr;
-	}
 }
 
 extern "C" __declspec(dllexport) void* HmdDriverFactory(const char* pInterfaceName, int* pReturnCode)
@@ -165,6 +144,9 @@ extern "C" __declspec(dllexport) void* HmdDriverFactory(const char* pInterfaceNa
 	{
 		return &k2_watchdog_driver;
 	}
+	
+	(*pReturnCode) = vr::VRInitError_None;
 
-	return nullptr;
+	if (pReturnCode)
+		*pReturnCode = vr::VRInitError_Init_InterfaceNotFound;
 }
