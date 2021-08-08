@@ -148,7 +148,7 @@ int K2ServerDriver::init_ServerDriver(
 					catch (boost::archive::archive_exception const& e)
 					{
 						// It just happens sometimes
-						if (e.what() != std::string("input stream error").c_str())
+						if (e.code != boost::archive::archive_exception::input_stream_error)
 							LOG(ERROR) << "Message may be corrupted. Boost serialization error: " << e.what();
 					}
 					catch (std::exception const& e)
