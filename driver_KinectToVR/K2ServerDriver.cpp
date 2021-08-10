@@ -379,7 +379,7 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 							_response.id = _tracker_id; // Return the ID
 							_response.messageType = ktvr::K2ResponseMessageType::K2ResponseMessage_Tracker;
 
-							LOG(INFO) << "Serial: " + trackerVector.at(_tracker_id).get_serial() + "<-> id: " + std::to_string(_response.id);
+							LOG(INFO) << "Serial: " + trackerVector.at(_tracker_id).get_serial() + " <-> id: " + std::to_string(_response.id);
 
 							// Exit loop
 							trackerFound = true;
