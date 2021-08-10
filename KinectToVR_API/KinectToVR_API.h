@@ -198,17 +198,19 @@ namespace ktvr
 		// Excaption occured
 		K2ResponseMessageCode_UnknownError = -1,
 		// IDK
-		K2ResponseMessageCode_OK = 0,
-		// Default
-		K2ResponseMessageCode_SpawnFailed = 1,
+		K2ResponseMessageCode_Invalid = 0,
+		// Default Invalid
+		K2ResponseMessageCode_OK = 1,
+		// Default OK
+		K2ResponseMessageCode_SpawnFailed = 2,
 		// Spawn failed, exception
-		K2ResponseMessageCode_AlreadyPresent = 2,
+		K2ResponseMessageCode_AlreadyPresent = 3,
 		// Serial already present
-		K2ResponseMessageCode_BadRequest = 3,
+		K2ResponseMessageCode_BadRequest = 4,
 		// Unknown message type, wrong ID
-		K2ResponseMessageCode_ParsingError = 4,
+		K2ResponseMessageCode_ParsingError = 5,
 		// Global parsing exception
-		K2ResponseMessageCode_BadSerial = 5 // Serial was empty
+		K2ResponseMessageCode_BadSerial = 6 // Serial was empty
 	};
 
 	// Alias for code readability
