@@ -32,8 +32,8 @@ public:
 	bool overwriteDefaultSerial = false;
 
 	// Internal data offset
-	glm::vec3 positionOffset = glm::vec3(0, 0, 0);
-	glm::quat orientationOffset = glm::quat(1, 0, 0, 0);
+	Eigen::Vector3f positionOffset = Eigen::Vector3f(0, 0, 0);
+	Eigen::Quaternionf orientationOffset = Eigen::Quaternionf(1, 0, 0, 0);
 
 	// For internal filters
 	void updatePositionFilters(),
@@ -42,7 +42,7 @@ public:
 	// Get filtered data
 	// By default, the saved filter is selected,
 	// and to select it, the filter number must be < 0
-	[[nodiscard]] glm::vec3 getFilteredPosition(int filter = -1) const
+	[[nodiscard]] Eigen::Vector3f getFilteredPosition(int filter = -1) const
 	{
 		int m_filter = filter;
 		if (filter < 0)
@@ -66,7 +66,7 @@ public:
 	// Get filtered data
 	// By default, the saved filter is selected,
 	// and to select it, the filter number must be < 0
-	[[nodiscard]] glm::quat getFilteredOrientation(int filter = -1) const
+	[[nodiscard]] Eigen::Quaternionf getFilteredOrientation(int filter = -1) const
 	{
 		int m_filter = filter;
 		if (filter < 0)
@@ -89,7 +89,7 @@ public:
 	// By default, the saved filter is selected,
 	// and to select it, the filter number must be < 0
 	// Additionally, this adds the offsets
-	[[nodiscard]] glm::vec3 getFullPosition(int filter = -1) const
+	[[nodiscard]] Eigen::Vector3f getFullPosition(int filter = -1) const
 	{
 		return getFilteredPosition(filter) + positionOffset;
 	}
@@ -98,7 +98,7 @@ public:
 	// By default, the saved filter is selected,
 	// and to select it, the filter number must be < 0
 	// Additionally, this adds the offsets
-	[[nodiscard]] glm::quat getFullOrientation(int filter = -1) const
+	[[nodiscard]] Eigen::Quaternionf getFullOrientation(int filter = -1) const
 	{
 		return getFilteredOrientation(filter) * orientationOffset;
 	}
@@ -108,7 +108,7 @@ public:
 	// and to select it, the filter number must be < 0
 	// Additionally, this adds the offsets
 	// Offset will be added after translation
-	[[nodiscard]] glm::vec3 getFullCalibratedPosition
+	[[nodiscard]] Eigen::Vector3f getFullCalibratedPosition
 	(
 		Eigen::Matrix<float, 3, 3> rotationMatrix,
 		Eigen::Matrix<float, 3, 1> translationVector,
@@ -118,9 +118,9 @@ public:
 	{
 		// Construct the current pose
 		Eigen::Vector3f m_pose(
-			getFilteredPosition(filter).x,
-			getFilteredPosition(filter).y,
-			getFilteredPosition(filter).z
+			getFilteredPosition(filter).x(),
+			getFilteredPosition(filter).y(),
+			getFilteredPosition(filter).z()
 		);
 
 		// Construct the calibrated pose
@@ -129,7 +129,7 @@ public:
 			colwise() + translationVector + calibration_origin;
 
 		// Construct the calibrated pose in glm
-		glm::vec3 calibrated_pose_gl(
+		Eigen::Vector3f calibrated_pose_gl(
 			m_pose_calibrated(0),
 			m_pose_calibrated(1),
 			m_pose_calibrated(2)
@@ -204,15 +204,15 @@ public:
 	void initAllFilters();
 
 	// Internal filters' datas
-	glm::vec3 kalmanPosition = glm::vec3(),
-		lowPassPosition = glm::vec3(), LERPPosition = glm::vec3();
+	Eigen::Vector3f kalmanPosition = Eigen::Vector3f(),
+		lowPassPosition = Eigen::Vector3f(), LERPPosition = Eigen::Vector3f();
 
-	glm::quat SLERPOrientation = glm::quat(),
-		SLERPSlowOrientation = glm::quat();
+	Eigen::Quaternionf SLERPOrientation = Eigen::Quaternionf(),
+		SLERPSlowOrientation = Eigen::Quaternionf();
 
 	// LERP datas backup
-	glm::vec3 lastLERPPosition;
-	glm::quat lastSLERPOrientation,
+	Eigen::Vector3f lastLERPPosition;
+	Eigen::Quaternionf lastSLERPOrientation,
 		lastSLERPSlowOrientation;
 
 	// Default constructors

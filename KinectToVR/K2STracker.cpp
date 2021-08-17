@@ -1,5 +1,10 @@
 #include "K2STracker.h"
 
+template <typename _Scalar>
+Eigen::Vector3<_Scalar> lerp(const Eigen::Vector3<_Scalar>& x, const Eigen::Vector3<_Scalar>& y, float a) {
+	return x * (1.0 - a) + y * a; // Same as glm::mix - https://glm.g-truc.net/0.9.4/api/a00129.html#ga3f64b3986efe205cf30300700667e761
+}
+
 void K2STracker::updatePositionFilters()
 {
 	/* Update the Kalman filter */
@@ -7,37 +12,37 @@ void K2STracker::updatePositionFilters()
 			Eigen::VectorXd(1), Eigen::VectorXd(1), Eigen::VectorXd(1)
 	};
 
-	y[0] << pose.position.x;
-	y[1] << pose.position.y;
-	y[2] << pose.position.z;
+	y[0] << pose.position.x();
+	y[1] << pose.position.y();
+	y[2] << pose.position.z();
 
 	for (int i = 0; i < 3; i++)
 		kalmanFilter[i].update(y[i]);
 
-	kalmanPosition = glm::vec3(
+	kalmanPosition = Eigen::Vector3f(
 		kalmanFilter[0].state().x(),
 		kalmanFilter[1].state().x(),
 		kalmanFilter[2].state().x());
 
 	/* Update the LowPass filter */
-	lowPassPosition = glm::vec3(
-		lowPassFilter[0].update(pose.position.x),
-		lowPassFilter[1].update(pose.position.y),
-		lowPassFilter[2].update(pose.position.z));
+	lowPassPosition = Eigen::Vector3f(
+		lowPassFilter[0].update(pose.position.x()),
+		lowPassFilter[1].update(pose.position.y()),
+		lowPassFilter[2].update(pose.position.z()));
 
 	/* Update the LERP (mix) filter */
-	LERPPosition = glm::mix(lastLERPPosition, pose.position, .9f);
+	LERPPosition = lerp(lastLERPPosition, pose.position, .9f);
 	lastLERPPosition = pose.position; // Backup the position
 }
 
 void K2STracker::updateOrientationFilters()
 {
 	/* Update the SLERP filter */
-	SLERPOrientation = glm::slerp(lastSLERPOrientation, pose.orientation, .8f);
+	SLERPOrientation = lastSLERPOrientation.slerp(0.8, pose.orientation);
 	lastSLERPOrientation = pose.orientation; // Backup the position
 
 	/* Update the Slower SLERP filter */
-	SLERPSlowOrientation = glm::slerp(lastSLERPSlowOrientation, pose.orientation, .5f);
+	SLERPSlowOrientation = lastSLERPSlowOrientation.slerp(0.5, pose.orientation);
 	lastSLERPSlowOrientation = pose.orientation; // Backup the position
 }
 
