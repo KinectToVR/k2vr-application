@@ -56,14 +56,14 @@ void K2Tracker::set_pose(ktvr::K2PosePacket const& pose)
 						static_cast<int>(pose.millisFromNow)));
 
 				// Just copy the values
-				_pose.vecPosition[0] = pose.position.x;
-				_pose.vecPosition[1] = pose.position.y;
-				_pose.vecPosition[2] = pose.position.z;
+				_pose.vecPosition[0] = pose.position.x();
+				_pose.vecPosition[1] = pose.position.y();
+				_pose.vecPosition[2] = pose.position.z();
 
-				_pose.qRotation.w = pose.orientation.w;
-				_pose.qRotation.x = pose.orientation.x;
-				_pose.qRotation.y = pose.orientation.y;
-				_pose.qRotation.z = pose.orientation.z;
+				_pose.qRotation.w = pose.orientation.w();
+				_pose.qRotation.x = pose.orientation.x();
+				_pose.qRotation.y = pose.orientation.y();
+				_pose.qRotation.z = pose.orientation.z();
 
 				// Automatically update the tracker when finished
 				update(); // called from this
@@ -300,15 +300,15 @@ ktvr::K2TrackerBase K2Tracker::getTrackerBase() {
 	_trackerBase.data.isActive = _active;
 
 	// Copy the position
-	_trackerBase.pose.position.x = _pose.vecPosition[0];
-	_trackerBase.pose.position.y = _pose.vecPosition[1];
-	_trackerBase.pose.position.z = _pose.vecPosition[2];
+	_trackerBase.pose.position.x() = _pose.vecPosition[0];
+	_trackerBase.pose.position.y() = _pose.vecPosition[1];
+	_trackerBase.pose.position.z() = _pose.vecPosition[2];
 
 	// Copy the orientation
-	_trackerBase.pose.orientation.w = _pose.qRotation.w;
-	_trackerBase.pose.orientation.x = _pose.qRotation.x;
-	_trackerBase.pose.orientation.y = _pose.qRotation.y;
-	_trackerBase.pose.orientation.z = _pose.qRotation.z;
+	_trackerBase.pose.orientation.w() = _pose.qRotation.w;
+	_trackerBase.pose.orientation.x() = _pose.qRotation.x;
+	_trackerBase.pose.orientation.y() = _pose.qRotation.y;
+	_trackerBase.pose.orientation.z() = _pose.qRotation.z;
 
 	// Return the base object
 	return _trackerBase;
