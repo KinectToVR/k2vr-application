@@ -138,6 +138,9 @@
     <ClInclude Include="KalmanFilter.h">
       <Filter>Filter Files</Filter>
     </ClInclude>
+    <ClInclude Include="EigenUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">

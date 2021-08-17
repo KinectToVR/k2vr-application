@@ -102,7 +102,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <ObjectFileName>release\</ObjectFileName>
       <Optimization>MaxSpeed</Optimization>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_DEPRECATED_WARNINGS;MAKE_KINECTTOVR_LIB;ELPP_NO_DEFAULT_LOG_FILE;NDEBUG;QT_NO_DEBUG;QT_QMLMODELS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_DEPRECATED_WARNINGS;MAKE_KINECTTOVR_LIB;ELPP_NO_DEFAULT_LOG_FILE;NDEBUG;QT_NO_DEBUG;QT_QMLMODELS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <ProgramDataBaseFileName>
       </ProgramDataBaseFileName>
@@ -170,7 +170,7 @@ del "$(SolutionDir)$(Platform)\$(Configuration)\D3Dcompiler_47.dll"</Command>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <ObjectFileName>debug\</ObjectFileName>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_DEPRECATED_WARNINGS;MAKE_KINECTTOVR_LIB;ELPP_NO_DEFAULT_LOG_FILE;QT_QMLMODELS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_DEPRECATED_WARNINGS;MAKE_KINECTTOVR_LIB;ELPP_NO_DEFAULT_LOG_FILE;QT_QMLMODELS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -237,6 +237,7 @@ del "$(SolutionDir)$(Platform)\$(Configuration)\D3Dcompiler_47.dll"</Command>
     <ClCompile Include="update_rate.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EigenUtils.h" />
     <ClInclude Include="K2STracker.h" />
     <ClInclude Include="KalmanFilter.h" />
     <ClInclude Include="LowPassFilter.h" />

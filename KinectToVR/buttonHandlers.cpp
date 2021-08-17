@@ -45,13 +45,11 @@ void signalHandler::cppSlot(const QString& msg)
 
 			// Copy position offsets
 			for (int i = 0; i < 3; i++)
-				kinectSettings.trackerVector.at(i).positionOffset =
-				p_cast_type<glm::vec3>(process.positionOffsetsBackup[i]);
+				kinectSettings.trackerVector.at(i).positionOffset = process.positionOffsetsBackup[i];
 
 			// Copy orientation offsets
 			for (int i = 0; i < 3; i++)
-				kinectSettings.trackerVector.at(i).orientationOffset =
-				p_cast_type<glm::quat>(process.orientationOffsetsBackup[i]);
+				kinectSettings.trackerVector.at(i).orientationOffset = process.orientationOffsetsBackup[i];
 
 			/* Update spinboxes to their previous state, cause offsets SET was cancelled */
 			updateQSpinboxes(

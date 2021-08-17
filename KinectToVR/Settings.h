@@ -15,6 +15,7 @@
 #include <runtimeConfig.h>
 #include <K2STracker.h>
 #include "Logging.h"
+#include <KinectToVR_API.h>
 
 typedef int waistRotationOption,
             feetRotationOption, trackingFilterOption;
@@ -58,7 +59,7 @@ public:
 	feetRotationOption feetOrientationTrackingOption = k_EnableFeetOrientationFilter;
 	trackingFilterOption globalPositionTrackingFilterOption = k_EnableTrackingFilter_LERP;
 
-	glm::vec3 playspaceOrigin = glm::vec3{0, 0, 0};
+	Eigen::Vector3f playspaceOrigin = Eigen::Vector3f(0, 0, 0);
 	
 	/* Rotation and Translation matrices used in calibration */
 	Eigen::Matrix<float, 3, 3> rotationMatrix = Eigen::Matrix3f::Zero();
