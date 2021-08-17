@@ -1,4 +1,4 @@
-﻿#include <KinectToVR.h>
+#include <KinectToVR.h>
 #include <SkeletonImageProvider.h>
 #define K2API_SOCKET 7135
 
@@ -142,7 +142,7 @@ KINECTTOVR_LIB int run(int argc, char* argv[], TrackingDeviceBase& tracking_devi
 
 	/* Scan for playspace origin that is not 0,0,0,0RAD for more see openvr docs */
 	LOG(INFO) << "Scanning for non-default space origin...";
-	kinectSettings.playspaceOrigin = p_cast_type<glm::vec3>(p_VRSystem->GetRawZeroPoseToStandingAbsoluteTrackingPose());
+	kinectSettings.playspaceOrigin = p_cast_type<Eigen::Vector3f>(p_VRSystem->GetRawZeroPoseToStandingAbsoluteTrackingPose());
 	double yaw = std::atan2(p_VRSystem->GetRawZeroPoseToStandingAbsoluteTrackingPose().m[0][2],
 		p_VRSystem->GetRawZeroPoseToStandingAbsoluteTrackingPose().m[2][2]);
 	if (yaw < 0.0) yaw = 2 * M_PI + yaw;
@@ -337,93 +337,93 @@ void updateQSpinboxes(
 {
 	if (!set)
 	{
-		glm::vec3 rot[3] = {
-			glm::eulerAngles(tracker_waist.orientationOffset),
-			glm::eulerAngles(tracker_lfoot.orientationOffset),
-			glm::eulerAngles(tracker_rfoot.orientationOffset)
+		Eigen::Vector3f rot[3] = {
+			EigenUtils::QuatToEulers(tracker_waist.orientationOffset),
+			EigenUtils::QuatToEulers(tracker_lfoot.orientationOffset),
+			EigenUtils::QuatToEulers(tracker_rfoot.orientationOffset)
 		};
-
+		
 		/* Shift to degrees */
-		for (glm::vec3 &v : rot)
+		for (Eigen::Vector3f&v : rot)
 		{
-			v.x = glm::degrees(v.x);
-			v.y = glm::degrees(v.y);
-			v.z = glm::degrees(v.z);
+			v.x() = glm::degrees(v.x());
+			v.y() = glm::degrees(v.y());
+			v.z() = glm::degrees(v.z());
 		}
 
 		/* Rotational offsets, XZY in ui, XYZ in code, array order: W->L->R */
-		quickObj->findChild<QObject*>("controlW")->setProperty("value", 100 * rot[0].x);
-		quickObj->findChild<QObject*>("control1W")->setProperty("value", 100 * rot[0].z);
-		quickObj->findChild<QObject*>("control2W")->setProperty("value", 100 * rot[0].y);
+		quickObj->findChild<QObject*>("controlW")->setProperty("value", 100 * rot[0].x());
+		quickObj->findChild<QObject*>("control1W")->setProperty("value", 100 * rot[0].z());
+		quickObj->findChild<QObject*>("control2W")->setProperty("value", 100 * rot[0].y());
 
-		quickObj->findChild<QObject*>("controlL")->setProperty("value", 100 * rot[1].x);
-		quickObj->findChild<QObject*>("control1L")->setProperty("value", 100 * rot[1].z);
-		quickObj->findChild<QObject*>("control2L")->setProperty("value", 100 * rot[1].y);
+		quickObj->findChild<QObject*>("controlL")->setProperty("value", 100 * rot[1].x());
+		quickObj->findChild<QObject*>("control1L")->setProperty("value", 100 * rot[1].z());
+		quickObj->findChild<QObject*>("control2L")->setProperty("value", 100 * rot[1].y());
 
-		quickObj->findChild<QObject*>("controlR")->setProperty("value", 100 * rot[2].x);
-		quickObj->findChild<QObject*>("control1R")->setProperty("value", 100 * rot[2].z);
-		quickObj->findChild<QObject*>("control2R")->setProperty("value", 100 * rot[2].y);
+		quickObj->findChild<QObject*>("controlR")->setProperty("value", 100 * rot[2].x());
+		quickObj->findChild<QObject*>("control1R")->setProperty("value", 100 * rot[2].z());
+		quickObj->findChild<QObject*>("control2R")->setProperty("value", 100 * rot[2].y());
 
 		/* Positional offsets, UXYZ in ui, UXYZ in code, array order: W->L->R */
-		quickObj->findChild<QObject*>("control3W")->setProperty("value", 100 * tracker_waist.positionOffset.x);
-		quickObj->findChild<QObject*>("control4W")->setProperty("value", 100 * tracker_waist.positionOffset.y);
-		quickObj->findChild<QObject*>("control5W")->setProperty("value", 100 * tracker_waist.positionOffset.z);
+		quickObj->findChild<QObject*>("control3W")->setProperty("value", 100 * tracker_waist.positionOffset.x());
+		quickObj->findChild<QObject*>("control4W")->setProperty("value", 100 * tracker_waist.positionOffset.y());
+		quickObj->findChild<QObject*>("control5W")->setProperty("value", 100 * tracker_waist.positionOffset.z());
 
-		quickObj->findChild<QObject*>("control3L")->setProperty("value", 100 * tracker_lfoot.positionOffset.x);
-		quickObj->findChild<QObject*>("control4L")->setProperty("value", 100 * tracker_lfoot.positionOffset.y);
-		quickObj->findChild<QObject*>("control5L")->setProperty("value", 100 * tracker_lfoot.positionOffset.z);
+		quickObj->findChild<QObject*>("control3L")->setProperty("value", 100 * tracker_lfoot.positionOffset.x());
+		quickObj->findChild<QObject*>("control4L")->setProperty("value", 100 * tracker_lfoot.positionOffset.y());
+		quickObj->findChild<QObject*>("control5L")->setProperty("value", 100 * tracker_lfoot.positionOffset.z());
 
-		quickObj->findChild<QObject*>("control3R")->setProperty("value", 100 * tracker_rfoot.positionOffset.x);
-		quickObj->findChild<QObject*>("control4R")->setProperty("value", 100 * tracker_rfoot.positionOffset.y);
-		quickObj->findChild<QObject*>("control5R")->setProperty("value", 100 * tracker_rfoot.positionOffset.z);
+		quickObj->findChild<QObject*>("control3R")->setProperty("value", 100 * tracker_rfoot.positionOffset.x());
+		quickObj->findChild<QObject*>("control4R")->setProperty("value", 100 * tracker_rfoot.positionOffset.y());
+		quickObj->findChild<QObject*>("control5R")->setProperty("value", 100 * tracker_rfoot.positionOffset.z());
 	}
 	else
 	{
 		/* Get variables and compute quaternions from them */
-		glm::vec3 rot[3] = {
-			glm::vec3(),
-			glm::vec3(),
-			glm::vec3()
+		Eigen::Vector3f rot[3] = {
+			Eigen::Vector3f(),
+			Eigen::Vector3f(),
+			Eigen::Vector3f()
 		};
 
 		/* Read offsets from qml, remember that they are XZY, might be as well a for loop */
-		rot[0].x = static_cast<float>(quickObj->findChild<QObject*>("controlW")->property("value").toInt()) / 100.f;
-		rot[0].z = static_cast<float>(quickObj->findChild<QObject*>("control1W")->property("value").toInt()) / 100.f;
-		rot[0].y = static_cast<float>(quickObj->findChild<QObject*>("control2W")->property("value").toInt()) / 100.f;
+		rot[0].x() = static_cast<float>(quickObj->findChild<QObject*>("controlW")->property("value").toInt()) / 100.f;
+		rot[0].z() = static_cast<float>(quickObj->findChild<QObject*>("control1W")->property("value").toInt()) / 100.f;
+		rot[0].y() = static_cast<float>(quickObj->findChild<QObject*>("control2W")->property("value").toInt()) / 100.f;
 
-		rot[1].x = static_cast<float>(quickObj->findChild<QObject*>("controlL")->property("value").toInt()) / 100.f;
-		rot[1].z = static_cast<float>(quickObj->findChild<QObject*>("control1L")->property("value").toInt()) / 100.f;
-		rot[1].y = static_cast<float>(quickObj->findChild<QObject*>("control2L")->property("value").toInt()) / 100.f;
+		rot[1].x() = static_cast<float>(quickObj->findChild<QObject*>("controlL")->property("value").toInt()) / 100.f;
+		rot[1].z() = static_cast<float>(quickObj->findChild<QObject*>("control1L")->property("value").toInt()) / 100.f;
+		rot[1].y() = static_cast<float>(quickObj->findChild<QObject*>("control2L")->property("value").toInt()) / 100.f;
 
-		rot[2].x = static_cast<float>(quickObj->findChild<QObject*>("controlR")->property("value").toInt()) / 100.f;
-		rot[2].z = static_cast<float>(quickObj->findChild<QObject*>("control1R")->property("value").toInt()) / 100.f;
-		rot[2].y = static_cast<float>(quickObj->findChild<QObject*>("control2R")->property("value").toInt()) / 100.f;
+		rot[2].x() = static_cast<float>(quickObj->findChild<QObject*>("controlR")->property("value").toInt()) / 100.f;
+		rot[2].z() = static_cast<float>(quickObj->findChild<QObject*>("control1R")->property("value").toInt()) / 100.f;
+		rot[2].y() = static_cast<float>(quickObj->findChild<QObject*>("control2R")->property("value").toInt()) / 100.f;
 
 		/* Shift to radians */
-		for(glm::vec3 &v : rot)
+		for(Eigen::Vector3f &v : rot)
 		{
-			v.x = glm::radians(v.x);
-			v.y = glm::radians(v.y);
-			v.z = glm::radians(v.z);
+			v.x() = glm::radians(v.x());
+			v.y() = glm::radians(v.y());
+			v.z() = glm::radians(v.z());
 		}
 
 		/* Construct quaternions from given euler angles */
-		tracker_waist.orientationOffset = glm::quat(rot[0]);
-		tracker_lfoot.orientationOffset = glm::quat(rot[1]);
-		tracker_rfoot.orientationOffset = glm::quat(rot[2]);
+		tracker_waist.orientationOffset = EigenUtils::EulersToQuat(rot[0]);
+		tracker_lfoot.orientationOffset = EigenUtils::EulersToQuat(rot[1]);
+		tracker_rfoot.orientationOffset = EigenUtils::EulersToQuat(rot[2]);
 
 		/* Get positional offsets onto given arrays, might be as well a for loop */
-		tracker_waist.positionOffset.x = static_cast<float>(quickObj->findChild<QObject*>("control3W")->property("value").toInt()) / 100.f;
-		tracker_waist.positionOffset.y = static_cast<float>(quickObj->findChild<QObject*>("control4W")->property("value").toInt()) / 100.f;
-		tracker_waist.positionOffset.z = static_cast<float>(quickObj->findChild<QObject*>("control5W")->property("value").toInt()) / 100.f;
+		tracker_waist.positionOffset.x() = static_cast<float>(quickObj->findChild<QObject*>("control3W")->property("value").toInt()) / 100.f;
+		tracker_waist.positionOffset.y() = static_cast<float>(quickObj->findChild<QObject*>("control4W")->property("value").toInt()) / 100.f;
+		tracker_waist.positionOffset.z() = static_cast<float>(quickObj->findChild<QObject*>("control5W")->property("value").toInt()) / 100.f;
 
-		tracker_lfoot.positionOffset.x = static_cast<float>(quickObj->findChild<QObject*>("control3L")->property("value").toInt()) / 100.f;
-		tracker_lfoot.positionOffset.y = static_cast<float>(quickObj->findChild<QObject*>("control4L")->property("value").toInt()) / 100.f;
-		tracker_lfoot.positionOffset.z = static_cast<float>(quickObj->findChild<QObject*>("control5L")->property("value").toInt()) / 100.f;
+		tracker_lfoot.positionOffset.x() = static_cast<float>(quickObj->findChild<QObject*>("control3L")->property("value").toInt()) / 100.f;
+		tracker_lfoot.positionOffset.y() = static_cast<float>(quickObj->findChild<QObject*>("control4L")->property("value").toInt()) / 100.f;
+		tracker_lfoot.positionOffset.z() = static_cast<float>(quickObj->findChild<QObject*>("control5L")->property("value").toInt()) / 100.f;
 
-		tracker_rfoot.positionOffset.x = static_cast<float>(quickObj->findChild<QObject*>("control3R")->property("value").toInt()) / 100.f;
-		tracker_rfoot.positionOffset.y = static_cast<float>(quickObj->findChild<QObject*>("control4R")->property("value").toInt()) / 100.f;
-		tracker_rfoot.positionOffset.z = static_cast<float>(quickObj->findChild<QObject*>("control5R")->property("value").toInt()) / 100.f;
+		tracker_rfoot.positionOffset.x() = static_cast<float>(quickObj->findChild<QObject*>("control3R")->property("value").toInt()) / 100.f;
+		tracker_rfoot.positionOffset.y() = static_cast<float>(quickObj->findChild<QObject*>("control4R")->property("value").toInt()) / 100.f;
+		tracker_rfoot.positionOffset.z() = static_cast<float>(quickObj->findChild<QObject*>("control5R")->property("value").toInt()) / 100.f;
 	}
 }
 
