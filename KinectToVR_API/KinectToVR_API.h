@@ -23,6 +23,7 @@
 #include <boost/assign.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/unordered_map.hpp>
+#include <boost/math/special_functions/fpclassify.hpp>
 
 #include <Eigen/Dense>
 
