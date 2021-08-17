@@ -134,6 +134,10 @@ int K2ServerDriver::init_ServerDriver(
 						// Convert hex to readable ascii and parse
 						std::string s = ktvr::asciiString(_s);
 
+#ifdef K2PAI_DEBUG
+						LOG(INFO) << s;
+#endif
+
 						// This is also in parsefromstring of K2Message.
 						// Though, this time we want to catch any error ourselves.
 						std::istringstream i(s);
@@ -147,9 +151,7 @@ int K2ServerDriver::init_ServerDriver(
 					}
 					catch (boost::archive::archive_exception const& e)
 					{
-						// It just happens sometimes
-						if (e.code != boost::archive::archive_exception::input_stream_error)
-							LOG(ERROR) << "Message may be corrupted. Boost serialization error: " << e.what();
+						LOG(ERROR) << "Message may be corrupted. Boost serialization error: " << e.what();
 					}
 					catch (std::exception const& e)
 					{
