@@ -83,91 +83,113 @@ int K2ServerDriver::init_ServerDriver(
 			auto next_frame = clock::now();
 			LOG(INFO) << "Server thread started";
 
-			// run until termination
-			while (true)
-			{
-				while (_isActive)
-				{
-					// measure loop time, let's run at 140/s
-					next_frame += std::chrono::milliseconds(1000 / 140);
+			// Errors' case
+			bool server_giveUp = false;
+			int server_tries = 0;
 
-					// Wait for the client to request a read
-					while (WaitForSingleObject(k2api_start_Semaphore, 15000L) != WAIT_OBJECT_0) {
-						LOG(INFO) << "Releasing the *TO* semaphore\n";
-						// Release the semaphore in case something hangs,
-						// no request would take as long as 15 seconds anyway
-						ReleaseSemaphore(k2api_to_Semaphore, 1, 0);
-					}
+			while (!server_giveUp) {
+				try {
 
-					// Here, read from the *TO* pipe
-					// Create the pipe file
-					std::optional<HANDLE> ReaderPipe = CreateFile(
-						TEXT("\\\\.\\pipe\\k2api_to_pipe"),
-						GENERIC_READ | GENERIC_WRITE,
-						0, nullptr, OPEN_EXISTING, 0, nullptr);
+					// run until termination
+					while (true)
+					{
+						while (_isActive)
+						{
+							// measure loop time, let's run at 140/s
+							next_frame += std::chrono::milliseconds(1000 / 140);
 
-					// Create the buffer
-					char read_buffer[4096];
-					DWORD Read = DWORD();
-					std::string read_string;
+							// Wait for the client to request a read
+							while (WaitForSingleObject(k2api_start_Semaphore, 15000L) != WAIT_OBJECT_0) {
+								LOG(INFO) << "Releasing the *TO* semaphore\n";
+								// Release the semaphore in case something hangs,
+								// no request would take as long as 15 seconds anyway
+								ReleaseSemaphore(k2api_to_Semaphore, 1, 0);
+							}
 
-					// Check if we're good
-					if (ReaderPipe.has_value()) {
+							// Here, read from the *TO* pipe
+							// Create the pipe file
+							std::optional<HANDLE> ReaderPipe = CreateFile(
+								TEXT("\\\\.\\pipe\\k2api_to_pipe"),
+								GENERIC_READ | GENERIC_WRITE,
+								0, nullptr, OPEN_EXISTING, 0, nullptr);
 
-						// Read the pipe
-						ReadFile(ReaderPipe.value(),
-							read_buffer, 4096,
-							&Read, nullptr);
+							// Create the buffer
+							char read_buffer[4096];
+							DWORD Read = DWORD();
+							std::string read_string;
 
-						// Convert the message to string
-						read_string = read_buffer;
-					}
-					else
-						LOG(ERROR) << "Error: Pipe object was not initialized.";
+							// Check if we're good
+							if (ReaderPipe.has_value()) {
 
-					// Close the pipe
-					CloseHandle(ReaderPipe.value());
-					
-					// parse request, send reply and return
-					try {
-						// I don't know why, when and how,
-						// but somehow K2API inserts this shit at index 62
-						std::string _s = read_string;
-						if (_s.find("3120300a") == 62)_s.erase(62, 8);
+								// Read the pipe
+								ReadFile(ReaderPipe.value(),
+									read_buffer, 4096,
+									&Read, nullptr);
 
-						// Convert hex to readable ascii and parse
-						std::string s = ktvr::asciiString(_s);
+								// Convert the message to string
+								read_string = read_buffer;
+							}
+							else
+								LOG(ERROR) << "Error: Pipe object was not initialized.";
+
+							// Close the pipe
+							CloseHandle(ReaderPipe.value());
+
+							// parse request, send reply and return
+							try {
+								// I don't know why, when and how,
+								// but somehow K2API inserts this shit at index 62
+								std::string _s = read_string;
+								if (_s.find("3120300a") == 62)_s.erase(62, 8);
+
+								// Convert hex to readable ascii and parse
+								std::string s = ktvr::asciiString(_s);
 
 #ifdef K2PAI_DEBUG
-						LOG(INFO) << s;
+								LOG(INFO) << s;
 #endif
 
-						// This is also in parsefromstring of K2Message.
-						// Though, this time we want to catch any error ourselves.
-						std::istringstream i(s);
-						boost::archive::text_iarchive ia(i);
+								// This is also in parsefromstring of K2Message.
+								// Though, this time we want to catch any error ourselves.
+								std::istringstream i(s);
+								boost::archive::text_iarchive ia(i);
 
-						// Deserialize now
-						ktvr::K2Message response;
-						ia >> response;
+								// Deserialize now
+								ktvr::K2Message response;
+								ia >> response;
 
-						parse_message(response);
-					}
-					catch (boost::archive::archive_exception const& e)
-					{
-						LOG(ERROR) << "Message may be corrupted. Boost serialization error: " << e.what();
-					}
-					catch (std::exception const& e)
-					{
-						LOG(ERROR) << "Global parsing error: " << e.what();
+								parse_message(response);
+							}
+							catch (boost::archive::archive_exception const& e)
+							{
+								LOG(ERROR) << "Message may be corrupted. Boost serialization error: " << e.what();
+							}
+							catch (std::exception const& e)
+							{
+								LOG(ERROR) << "Global parsing error: " << e.what();
+							}
+
+							//Sleep until next frame, if time haven't passed yet
+							std::this_thread::sleep_until(next_frame);
+						}
+						// if we're currently not running, just wait
+						std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 					}
 
-					//Sleep until next frame, if time haven't passed yet
-					std::this_thread::sleep_until(next_frame);
 				}
-				// if we're currently not running, just wait
-				std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+				catch (...) // Catch everything
+				{
+					LOG(ERROR) << "Server loop has crashed! Restarting it now...";
+					server_tries++; // One more?
+					if(server_tries > 3)
+					{
+						// We've crashed the third time now. Somethin's off.. really...
+						LOG(ERROR) << "Server loop has already crashed 3 times. Giving up...";
+						server_giveUp = true;
+					}
+				}
 			}
+
 		}).detach();
 
 		// if everything went ok, return 0
@@ -188,10 +210,10 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 {
 	std::string _reply; // Reply that will be sent to client
 	ktvr::K2ResponseMessage _response; // Response message to be sent
-	
+
 	// Add the timestamp: parsing
 	_response.messageManualTimestamp = K2API_GET_TIMESTAMP_NOW;
-	
+
 	// Parse the message if it's not invalid
 	if (message.messageType != ktvr::K2MessageType::K2Message_Invalid) {
 
@@ -451,7 +473,7 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 				_response.result = ktvr::K2ResponseMessageCode_BadRequest;
 			}
 		}break;
-			
+
 		case ktvr::K2MessageType::K2Message_Ping: {
 			// Compose the response
 			_response.success = true;
@@ -467,7 +489,7 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 	else {
 		LOG(ERROR) << "Couldn't process message. Message had had invalid type.";
 		_response.result = ktvr::K2ResponseMessageCode_ParsingError;
-		
+
 		// We're done, screw em if the type was bad
 		ReleaseSemaphore(k2api_to_Semaphore, 1, 0);
 		return;
@@ -485,7 +507,7 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 		ktvr::hexString(_response.serializeToString());
 
 	// Check if the client wants a response and eventually send it
-	if(message.want_reply)
+	if (message.want_reply)
 	{
 		// Here, write to the *from* pipe
 		HANDLE WriterPipe = CreateNamedPipe(
@@ -494,7 +516,7 @@ void K2ServerDriver::parse_message(const ktvr::K2Message& message)
 			PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE,
 			1, 4096, 4096, 1000L, nullptr);
 		DWORD Written;
-		
+
 		// Let the client know that we'll be writing soon
 		ReleaseSemaphore(k2api_from_Semaphore, 1, 0);
 
