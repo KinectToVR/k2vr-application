@@ -29,5 +29,38 @@ public:
 
 	// Value should not be discarded, it'd be useless
 	[[nodiscard]] bool isActive() const { return _isActive; }
-	std::vector<K2Tracker> trackerVector;
+
+	// Tracker vector with pre-appended 3 default lower body trackers
+	std::vector<K2Tracker> trackerVector
+	{
+		K2Tracker( // WAIST TRACKER
+			ktvr::K2TrackerBase(
+			ktvr::K2TrackerPose(), // Default pose 
+			ktvr::K2TrackerData(
+				"LHR-CB9AD1T0", // Serial
+				ktvr::Tracker_Waist, // Role
+				false // AutoAdd
+			)
+		)),
+
+		K2Tracker( // LEFT FOOT TRACKER
+			ktvr::K2TrackerBase(
+			ktvr::K2TrackerPose(), // Default pose 
+			ktvr::K2TrackerData(
+				"LHR-CB9AD1T1", // Serial
+				ktvr::Tracker_LeftFoot, // Role
+				false // AutoAdd
+			)
+		)),
+
+		K2Tracker( // RIGHT FOOT TRACKER
+			ktvr::K2TrackerBase(
+			ktvr::K2TrackerPose(), // Default pose 
+			ktvr::K2TrackerData(
+				"LHR-CB9AD1T2", // Serial
+				ktvr::Tracker_RightFoot, // Role
+				false // AutoAdd
+			)
+		))
+	};
 };

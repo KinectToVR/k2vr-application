@@ -72,6 +72,10 @@ int K2ServerDriver::init_ServerDriver(
 		return -1;
 	}
 
+	// Log the prepended trackers
+	for (auto& _tracker : trackerVector)
+		LOG(INFO) << "Registered a pre-added tracker: " << _tracker.get_serial();
+
 	std::thread([&]()
 		{
 			// create chrono for limiting loop timing
