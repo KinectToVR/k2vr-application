@@ -10,14 +10,15 @@ class K2Tracker : public vr::ITrackedDeviceServerDriver
 {
 public:
 
-	//K2Tracker() = default;
+	explicit K2Tracker(ktvr::K2TrackerBase const& tracker_base);
 	virtual ~K2Tracker() = default;
+	
+	K2Tracker(const K2Tracker& other) = delete;
+	K2Tracker& operator=(const K2Tracker& other) = delete;
 
-	/*K2Tracker(K2Tracker&&) = delete;
+	K2Tracker(K2Tracker&&) = delete;
 	K2Tracker& operator=(K2Tracker&&) = delete;
-	K2Tracker(const K2Tracker&) = delete;
-	K2Tracker& operator=(const K2Tracker&) = delete;*/
-
+	
 	/**
 	 * \brief Get tracker serial number
 	 * \return Returns tracker's serial in std::string
@@ -44,38 +45,42 @@ public:
 	 * \brief Activate device (called from OpenVR)
 	 * \return InitError for OpenVR if we're set up correctly
 	 */
-	vr::EVRInitError Activate(vr::TrackedDeviceIndex_t index) override;
+	virtual vr::EVRInitError Activate(vr::TrackedDeviceIndex_t index);
 
 	/**
 	 * \brief Deactivate tracker (remove)
 	 */
-	void Deactivate() override;
+	virtual void Deactivate() {
+		// Clear device id
+		_index = vr::k_unTrackedDeviceIndexInvalid;
+	}
+	
+	/**
+	 * \brief Handle debug request (not needed/implemented)
+	 */
+	virtual void DebugRequest(const char* request, char* response_buffer, uint32_t response_buffer_size) {
+		// No custom debug requests defined
+		if (response_buffer_size >= 1)
+			response_buffer[0] = 0;
+	}
+	
+	virtual void EnterStandby() { }
+	virtual void LeaveStandby() { }
+	virtual bool ShouldBlockStandbyMode() { return false; }
 
 	/**
 	 * \brief Get component handle (for OpenVR)
 	 */
-	void* GetComponent(const char* component) override;
-
-	/**
-	 * \brief Handle debug request (not needed/implemented)
-	 */
-	void DebugRequest(const char* request, char* response_buffer, uint32_t response_buffer_size) override;
-
-	/**
-	 * \brief Enter Standby mode
-	 */
-	void EnterStandby() override;
+	void* GetComponent(const char* component) {
+		// No extra components on this device so always return nullptr
+		return NULL;
+	}
 
 	/**
 	 * \brief Return device's actual pose
 	 */
 	vr::DriverPose_t GetPose() override;
-
-	/**
-	 * \brief Construct new tracker from given tracker base
-	 */
-	K2Tracker(ktvr::K2TrackerBase const& tracker_base);
-
+	
 	// Update pose
 	void set_pose(ktvr::K2PosePacket const& pose);
 

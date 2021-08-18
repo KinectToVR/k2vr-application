@@ -264,30 +264,6 @@ vr::EVRInitError K2Tracker::Activate(vr::TrackedDeviceIndex_t index)
 	return vr::VRInitError_None;
 }
 
-void K2Tracker::Deactivate()
-{
-	// Clear device id
-	_index = vr::k_unTrackedDeviceIndexInvalid;
-}
-
-void* K2Tracker::GetComponent(const char* component)
-{
-	// No extra components on this device so always return nullptr
-	return nullptr;
-}
-
-void K2Tracker::DebugRequest(const char* request, char* response_buffer, uint32_t response_buffer_size)
-{
-	// No custom debug requests defined
-	if (response_buffer_size >= 1)
-		response_buffer[0] = 0;
-}
-
-void K2Tracker::EnterStandby()
-{
-	// Enter standby mode
-}
-
 vr::DriverPose_t K2Tracker::GetPose()
 {
 	return _pose;
