@@ -13,12 +13,6 @@ public:
 	explicit K2Tracker(ktvr::K2TrackerBase const& tracker_base);
 	virtual ~K2Tracker() = default;
 	
-	K2Tracker(const K2Tracker& other) = delete;
-	K2Tracker& operator=(const K2Tracker& other) = delete;
-
-	K2Tracker(K2Tracker&&) = delete;
-	K2Tracker& operator=(K2Tracker&&) = delete;
-	
 	/**
 	 * \brief Get tracker serial number
 	 * \return Returns tracker's serial in std::string
