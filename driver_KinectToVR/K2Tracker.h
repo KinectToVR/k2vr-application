@@ -99,6 +99,7 @@ private:
 	
 	// Is tracker added/active
 	bool _added = false, _active = false;
+	bool _activated = false;
 
 	// Stores the openvr supplied device index.
 	vr::TrackedDeviceIndex_t _index;

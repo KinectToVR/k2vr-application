@@ -36,7 +36,7 @@ std::string K2Tracker::get_serial() const
 
 void K2Tracker::update()
 {
-	if (_index != vr::k_unTrackedDeviceIndexInvalid) {
+	if (_index != vr::k_unTrackedDeviceIndexInvalid && _activated) {
 		// If _active is false, then disconnect the tracker
 		_pose.poseIsValid = _active;
 		_pose.deviceIsConnected = _active;
@@ -89,7 +89,7 @@ void K2Tracker::set_data(ktvr::K2DataPacket const& data)
 				_active = data.isActive;
 
 				// Data may only change if the tracker isn't spawned
-				if (!_added)
+				if (!_added && !_activated)
 				{
 					LOG(INFO) << "Updating tracker's role: " << 
 						ktvr::ITrackerType_Role_String.at(static_cast<ktvr::ITrackerType>(_role)) << 
@@ -261,6 +261,9 @@ vr::EVRInitError K2Tracker::Activate(vr::TrackedDeviceIndex_t index)
 	vr::VRSettings()->SetString(vr::k_pch_Trackers_Section, l_registeredDevice.c_str(),
 		ktvr::ITrackerType_Role_String.at(static_cast<ktvr::ITrackerType>(_role)));
 
+	/*Mark tracker as activated*/
+	_activated = true;
+	
 	return vr::VRInitError_None;
 }
 
