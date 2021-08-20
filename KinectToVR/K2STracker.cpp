@@ -41,12 +41,12 @@ void K2STracker::updatePositionFilters()
 void K2STracker::updateOrientationFilters()
 {
 	/* Update the SLERP filter */
-	SLERPOrientation = lastSLERPOrientation.slerp(0.8, pose.orientation);
-	lastSLERPOrientation = pose.orientation; // Backup the position
+	SLERPOrientation = lastSLERPOrientation.slerp(0.6, pose.orientation);
+	lastSLERPOrientation = pose.orientation; // Backup the orientation
 
 	/* Update the Slower SLERP filter */
-	SLERPSlowOrientation = lastSLERPSlowOrientation.slerp(0.5, pose.orientation);
-	lastSLERPSlowOrientation = pose.orientation; // Backup the position
+	SLERPSlowOrientation = lastSLERPSlowOrientation.slerp(0.3, pose.orientation);
+	lastSLERPSlowOrientation = pose.orientation; // Backup the orientation
 }
 
 void K2STracker::initAllFilters()
