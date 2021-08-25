@@ -242,9 +242,9 @@ private:
 
 	// Internal position filters
 	LowPassFilter lowPassFilter[3] = {
-				LowPassFilter(18.7, .005),
-				LowPassFilter(18.7, .005),
-				LowPassFilter(18.7, .005)
+				LowPassFilter(7.2, .005),
+				LowPassFilter(7.2, .005),
+				LowPassFilter(7.2, .005)
 	};
 
 	// Internal Kalman filter, must be initialized

@@ -1,8 +1,8 @@
 #include "K2STracker.h"
 
 template <typename _Scalar>
-Eigen::Vector3<_Scalar> lerp(const Eigen::Vector3<_Scalar>& x, const Eigen::Vector3<_Scalar>& y, float a) {
-	return x * (1.0 - a) + y * a; // Same as glm::mix - https://glm.g-truc.net/0.9.4/api/a00129.html#ga3f64b3986efe205cf30300700667e761
+Eigen::Vector3<_Scalar> lerp(const Eigen::Vector3<_Scalar>& to, const Eigen::Vector3<_Scalar>& from, float t) {
+	return from * t + to * ((_Scalar)1.f - t);
 }
 
 void K2STracker::updatePositionFilters()
@@ -34,8 +34,8 @@ void K2STracker::updatePositionFilters()
 		lowPassFilter[2].update(pose.position.z()));
 
 	/* Update the LERP (mix) filter */
-	LERPPosition = lerp(lastLERPPosition, pose.position, .5f);
-	lastLERPPosition = pose.position; // Backup the position
+	LERPPosition = lerp(lastLERPPosition, pose.position, 0.15);
+	lastLERPPosition = LERPPosition; // Backup the position
 }
 
 void K2STracker::updateOrientationFilters()
