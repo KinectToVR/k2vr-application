@@ -1,12 +1,14 @@
-# KinectToVR (Qt6 rewrite)
+# DEPRECATED, WILL BE REPLACED WITH AMETHYST
+## The K2QT projects and wikis were removed, stick back to K2EX for now<br>This repo is gonna hold KinectToVR's SteamVR driver & K2API until then
+## Don't worry, removed files are still in the commit history
+<br>
 
 ## KinectToVR API (w/ OpenVR driver)
-KinectToVR provides simple to use driver and bindings for operating it, later called K2API.<br>
-Thanks to it you can easily add and manage virtual trackers without writing your own OpenVR driver.<br>
-For the quick (although descriptive) sample please see [this sample project](https://github.com/KinectToVR/k2vr-application/tree/master/docs/K2API_example).<br>
-Everything is documented in ```KinectToVR_API.h``` header file, and [the wiki](https://github.com/KinectToVR/k2vr-application/wiki).<br>
-Everything there, related to or connected with K2API has a ```K2API:``` prefix.<br>
-If you're working in Unity/C#, ~~(or just hate KinectToVR)~~, please see [the VMT Project](https://github.com/gpsnmeajp/VirtualMotionTracker).
+Current KinectToVR API is also a bit deprecated and not version-interchangeable,<br>
+due to boost serialization dependency. If you really really wanna use it, please try<br>
+looking around in the wiki and find out how to use it for yourself.<br>
+(Though I may help a bit when asked to... Don't guarantee how much is a bit tho, heh)<br>
+The OpenVR/SteamVR driver protocol has also changed in amethyst (KinectToVR >1.0)
 
 ## Build instructions
 0. Note: Repository may be chaotically updated, please check out<br>
@@ -14,11 +16,6 @@ repository before posting an issue with building or missing files.
 
 1. Prerequisites
    - Visual Studio 2019 (Personally, I'm on VS2019 Preview, probably latest)
-   - Kinect SDK 1.8 and 2.0 installed and visible in PATH<br>
-
-   And if you're planning on building overlay projects:
-   - Qt plugin for Visual Studio installed (Will be described later)
-   - Qt 6.0.0 (Current) with all needed plugins
 
 2. Set up the project
    - Take a deep breath and make yourself some coffee, <br>
@@ -60,16 +57,6 @@ repository before posting an issue with building or missing files.
    ```cmake -DBUILD_SHARED_LIBS=ON ..```<br>
    ```msbuild gflags.vcxproj "/p:Configuration=Release;Platform=x64;WindowsTargetPlatformVersion=10.0"```<br>
 
-   - Install and setup Qt Visual Studio Tools (If you're planning on building overlay projects)
-      + Download and install [for VS2019](https://marketplace.visualstudio.com/items?itemName=TheQtCompany.QtVisualStudioTools2019)
-
-      + Add your Qt installation to the available installations list in Qt Visual Studio plugin<br>
-      You have to search for msvc2019_64 folder<br><br>
-      ![](https://imgur.com/mNDTWb3.png)<br><br>
-      ![](https://imgur.com/IVFJE5Q.png)
-      + Select Qt installation you've just added in each project properties (except driver and API projects)<br><br>
-      ![](https://imgur.com/au878Tb.png)
-
 3. Build and deploy
    - Make sure you're building for x64 platform in release mode<br><br>
    ![](https://imgur.com/75ZXiqQ.png)
@@ -78,11 +65,7 @@ repository before posting an issue with building or missing files.
 
    - All needed dlls from ```vcpkg``` should be automatically moved to deploy directory<br>
    (For general it's ```x64/Release/``` and for driver ```x64/Release/driver/```<br>
-   You can find there KinectToVR driver fully set-up and ready to be registered.)<br>
-   For the overlay app we'll need Qt modules - post build command will copy them automatically.<br>
-   (```windeployqt``` command with correct arguments for both ```qml``` and output file will be run,<br>
-   you will be able to find output log in deploy directory - possibly ```x64/Release/```<br>
-   I've also decided to remove ```D3Dcompiler_47.dll```, since all it does for us is increasing CPU usage)
+   You can find there KinectToVR driver fully set-up and ready to be registered.)
 
 ## Debugging OpenVR driver
 

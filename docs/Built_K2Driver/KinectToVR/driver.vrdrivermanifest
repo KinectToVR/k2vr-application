@@ -1,7 +1,0 @@
-{
-  "alwaysActivate": true,
-  "name": "KinectToVR",
-  "directory": "",
-  "resourceOnly": false,
-  "hmd_presence": []
-}
